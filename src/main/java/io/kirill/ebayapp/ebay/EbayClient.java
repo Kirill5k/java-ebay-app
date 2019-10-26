@@ -11,7 +11,7 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @Component
-public class EbayClient {
+class EbayClient {
   private static final String GRANT_FIELD = "grant_type";
   private static final String BASIC_GRANT = "client_credentials";
   private static final String SCOPE_FIELD = "scope";
@@ -20,14 +20,14 @@ public class EbayClient {
   private final EbayConfig ebayConfig;
   private final WebClient webClient;
 
-  public EbayClient(WebClient.Builder webClientBuilder, EbayConfig ebayConfig) {
+  EbayClient(WebClient.Builder webClientBuilder, EbayConfig ebayConfig) {
     this.ebayConfig = ebayConfig;
     this.webClient = webClientBuilder
         .baseUrl(ebayConfig.getBaseUrl())
         .build();
   }
 
-  public Mono<AuthToken> authenticate() {
+  Mono<AuthToken> authenticate() {
     return webClient
         .post()
         .uri(ebayConfig.getAuthPath())
