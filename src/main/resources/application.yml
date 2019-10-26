@@ -1,0 +1,8 @@
+app:
+  ebay:
+    base-url: https://api.ebay.com
+    auth-path: /identity/v1/oauth2/token
+    search-path: /buy/browse/v1/item_summary/search
+    item-path: /
+    client-id: ${EBAY_CLIENT_ID}
+    client-secret: ${EBAY_CLIENT_SECRET}
