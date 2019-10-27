@@ -3,22 +3,20 @@ package io.kirill.ebayapp.ebay.models;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @RequiredArgsConstructor
 public class AuthToken {
   @Getter
   private final String token;
-  private final Long expiresIn;
-  private final LocalDateTime creationTime;
+  private final Instant expiryTime;
 
   public AuthToken(String token, Long expiresIn) {
     this.token = token;
-    this.expiresIn = expiresIn;
-    this.creationTime = LocalDateTime.now();
+    this.expiryTime = Instant.now().plusSeconds(expiresIn);
   }
 
-  public boolean hasExpired() {
-    return creationTime.plusSeconds(expiresIn).isBefore(LocalDateTime.now());
+  public boolean isValid() {
+    return expiryTime.isAfter(Instant.now());
   }
 }
