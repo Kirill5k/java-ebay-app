@@ -52,8 +52,8 @@ class EbayClientTest {
     var searchResult = List.of(
         SearchResult.builder().itemId("item-1").seller(new Seller("s", 99.0, 15.0, "s")).build(),
         SearchResult.builder().itemId("item-2").seller(new Seller("s", 99.0, 15.0, "s")).build(),
-        SearchResult.builder().itemId("item-3").seller(new Seller("s", 99.0, 5.0, "s")).build(),
-        SearchResult.builder().itemId("item-4").seller(new Seller("s", 80.0, 15.0, "s")).build(),
+        SearchResult.builder().itemId("item-3").seller(new Seller("s", 99.0, 9.99, "s")).build(),
+        SearchResult.builder().itemId("item-4").seller(new Seller("s", 89.0, 15.0, "s")).build(),
         SearchResult.builder().itemId("item-5").seller(null).build()
     );
 
