@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.ebay.models;
+package io.kirill.ebayapp.ebay.models.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,5 @@ import java.util.List;
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchResponse {
-
-  private final List<SearchItem> itemSummaries;
+  private final List<SearchResult> itemSummaries;
 }

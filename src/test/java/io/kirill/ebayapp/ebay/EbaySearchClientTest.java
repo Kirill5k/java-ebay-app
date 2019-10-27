@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
+import java.time.LocalDateTime;
+
+import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -37,18 +40,19 @@ class EbaySearchClientTest {
   }
 
   @Test
-  void getAllMobilesPhonesPostedInTheLast15Mins() throws Exception {
+  void searchForAllInCategory() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
-        .setBody("{\"itemSummaries\": [{\"itemId\": \"item-1\"}, {\"itemId\": \"item-2\"}]}")
+        .setBody("{\"itemSummaries\": [{\"itemId\": \"item-1\", \"price\": {\"value\": \"99.99\"}}, {\"itemId\": \"item-2\", \"seller\": {\"feedbackPercentage\": \"100.0\"}}]}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var items = ebaySearchClient.getAllMobilesPhonesPostedInTheLast15Mins(accessToken);
+    var startingTime = LocalDateTime.of(2019, 12, 1, 12, 0, 0).toInstant(UTC);
+    var items = ebaySearchClient.searchForAllInCategory(accessToken, 9355, startingTime);
 
     StepVerifier
         .create(items)
-        .expectNextMatches(item -> item.getItemId().equals("item-1"))
-        .expectNextMatches(item -> item.getItemId().equals("item-2"))
+        .expectNextMatches(item -> item.getItemId().equals("item-1") && item.getPrice().getValue().doubleValue() == 99.99)
+        .expectNextMatches(item -> item.getItemId().equals("item-2") && item.getSeller().getFeedbackPercentage() == 100.0)
         .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
@@ -56,8 +60,30 @@ class EbaySearchClientTest {
     assertThat(recordedRequest.getHeader(CONTENT_TYPE)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader(ACCEPT)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader("X-EBAY-C-MARKETPLACE-ID")).isEqualTo("EBAY_GB");
-    assertThat(recordedRequest.getPath()).startsWith("/ebay/search?category_ids=9355&filter=conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,buyingOptions:%257BFIXED_PRICE%257D,deliveryCountry:GB,price:%5B10..500%5D,priceCurrency:GBP,itemLocationCountry:GB,itemStartDate:%5B");
+    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/search?category_ids=9355&filter=conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,buyingOptions:%257BFIXED_PRICE%257D,deliveryCountry:GB,price:%5B10..500%5D,priceCurrency:GBP,itemLocationCountry:GB,itemStartDate:%5B2019-12-01T12:00:00Z%5D");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+  }
 
+  @Test
+  void getItem() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(200)
+        .setBody("{\"itemId\": \"item-1\", \"price\": {\"value\": \"99.99\"}, \"seller\": {\"feedbackPercentage\": \"100.0\"}}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var item = ebaySearchClient.getItem(accessToken, "item-1");
+
+    StepVerifier
+        .create(item)
+        .expectNextMatches(i -> i.getItemId().equals("item-1"))
+        .verifyComplete();
+
+    var recordedRequest = mockWebServer.takeRequest();
+    assertThat(recordedRequest.getHeader(AUTHORIZATION)).isEqualTo("Bearer access-token");
+    assertThat(recordedRequest.getHeader(CONTENT_TYPE)).isEqualTo(APPLICATION_JSON_VALUE);
+    assertThat(recordedRequest.getHeader(ACCEPT)).isEqualTo(APPLICATION_JSON_VALUE);
+    assertThat(recordedRequest.getHeader("X-EBAY-C-MARKETPLACE-ID")).isEqualTo("EBAY_GB");
+    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/item/item-1");
+    assertThat(recordedRequest.getMethod()).isEqualTo("GET");
   }
 }
