@@ -25,7 +25,7 @@ public class ItemMapper {
 
     return MobilePhone.builder()
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
-        .storageCapacity(properties.get(STORAGE_CAPACITY_PROPERTY))
+        .storageCapacity(properties.getOrDefault(STORAGE_CAPACITY_PROPERTY, "").replaceAll(" ", ""))
         .model(properties.getOrDefault(MODEL_PROPERTY, item.getMpn()))
         .colour(properties.getOrDefault(MAN_COLOUR_PROPERTY, properties.getOrDefault(COLOUR_PROPERTY, item.getColor())))
         .network(properties.get(NETWORK_PROPERTY))

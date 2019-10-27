@@ -6,3 +6,6 @@ app:
     item-path: /buy/browse/v1/item
     client-id: ${EBAY_CLIENT_ID}
     client-secret: ${EBAY_CLIENT_SECRET}
+  cex:
+    base-url: https://wss2.cex.uk.webuy.io
+    search-path: /v3/boxes/predictivesearch

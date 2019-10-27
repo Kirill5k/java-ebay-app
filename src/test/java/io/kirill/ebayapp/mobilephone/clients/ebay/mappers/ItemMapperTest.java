@@ -44,7 +44,7 @@ class ItemMapperTest {
     var phone = itemMapper.toMobilePhone(item);
 
     assertThat(phone.getNetwork()).isEqualTo("Unlocked");
-    assertThat(phone.getStorageCapacity()).isEqualTo("16 GB");
+    assertThat(phone.getStorageCapacity()).isEqualTo("16GB");
     assertThat(phone.getMake()).isEqualTo("Apple");
     assertThat(phone.getModel()).isEqualTo("Iphone 6s");
     assertThat(phone.getColour()).isEqualTo("Space Grey");

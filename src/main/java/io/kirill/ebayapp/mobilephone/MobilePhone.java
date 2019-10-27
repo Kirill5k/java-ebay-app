@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Value
 @Document
@@ -29,4 +32,10 @@ public class MobilePhone {
   private final String listingDescription;
   private final Instant datePosted;
   private final String url;
+
+  public String fullName() {
+    return Stream.of(make, model, storageCapacity, colour, network)
+        .filter(Objects::nonNull)
+        .collect(Collectors.joining(" "));
+  }
 }
