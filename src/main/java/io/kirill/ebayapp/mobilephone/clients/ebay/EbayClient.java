@@ -24,7 +24,7 @@ public class EbayClient {
   public Flux<MobilePhone> getPhonesListedInLast10Mins() {
     return authClient.accessToken()
         .flatMapMany(token -> searchClient.searchForAllInCategory(token, MOBILES_PHONES_CATEGORY_ID, Instant.now().minusSeconds(TIME_OFFSET)))
-        .filter(sr -> sr.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT && sr.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE)
+        .filter(sr -> sr.getSeller() != null && sr.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT && sr.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE)
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))
         .map(itemMapper::toMobilePhone);
   }

@@ -3,10 +3,12 @@ package io.kirill.ebayapp.mobilephone.clients.ebay.models.search;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Seller;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 @Value
+@Builder
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchResult {
