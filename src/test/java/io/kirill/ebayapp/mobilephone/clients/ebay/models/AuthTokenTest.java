@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.ebay.models;
+package io.kirill.ebayapp.mobilephone.clients.ebay.models;
 
 import org.junit.jupiter.api.Test;
 

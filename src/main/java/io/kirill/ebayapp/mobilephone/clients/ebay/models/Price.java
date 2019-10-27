@@ -1,14 +1,15 @@
-package io.kirill.ebayapp.ebay.models.item;
+package io.kirill.ebayapp.mobilephone.clients.ebay.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
+import java.math.BigDecimal;
+
 @Value
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ItemProperty {
-  private final String type;
-  private final String name;
-  private final String value;
+public class Price {
+  private final BigDecimal value;
+  private final String currency;
 }

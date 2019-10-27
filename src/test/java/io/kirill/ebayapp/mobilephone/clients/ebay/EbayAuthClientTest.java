@@ -1,7 +1,7 @@
-package io.kirill.ebayapp.ebay;
+package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.configs.EbayConfig;
-import io.kirill.ebayapp.ebay.models.AuthToken;
+import io.kirill.ebayapp.common.configs.EbayConfig;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.AuthToken;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -58,6 +58,20 @@ class EbayAuthClientTest {
     assertThat(recordedRequest.getPath()).isEqualTo("/ebay/auth");
     assertThat(recordedRequest.getMethod()).isEqualTo("POST");
     assertThat(recordedRequest.getBody().readUtf8()).isEqualTo("scope=https%3A%2F%2Fapi.ebay.com%2Foauth%2Fapi_scope&grant_type=client_credentials");
+  }
+
+  @Test
+  void accessTokenWhenError() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(400)
+        .setBody("{\"error\": \"unsupported_grant_type\", \"error_description\": \"error sending request\"}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var authToken = ebayAuthClient.accessToken();
+
+    StepVerifier
+        .create(authToken)
+        .verifyErrorMatches(error -> error.getMessage().equals("error authenticating with ebay: error sending request"));
   }
 
   @Test

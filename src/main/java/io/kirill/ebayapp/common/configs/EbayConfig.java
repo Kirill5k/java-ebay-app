@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.configs;
+package io.kirill.ebayapp.common.configs;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

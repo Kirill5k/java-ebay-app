@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.ebay.models;
+package io.kirill.ebayapp.mobilephone.clients.ebay.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.RequiredArgsConstructor;

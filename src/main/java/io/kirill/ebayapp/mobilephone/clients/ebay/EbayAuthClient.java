@@ -1,8 +1,11 @@
-package io.kirill.ebayapp.ebay;
+package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.configs.EbayConfig;
-import io.kirill.ebayapp.ebay.models.AuthResponse;
-import io.kirill.ebayapp.ebay.models.AuthToken;
+import io.kirill.ebayapp.common.configs.EbayConfig;
+import io.kirill.ebayapp.mobilephone.clients.ebay.exceptions.EbayAuthError;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.auth.AuthResponse;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.AuthToken;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.auth.AuthErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -13,6 +16,8 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 
 @Component
 class EbayAuthClient {
+  private static final long TOKEN_EXPIRY_OFFSET = 30;
+
   private static final String GRANT_FIELD = "grant_type";
   private static final String BASIC_GRANT = "client_credentials";
   private static final String SCOPE_FIELD = "scope";
@@ -43,7 +48,8 @@ class EbayAuthClient {
         .post()
         .body(fromFormData(SCOPE_FIELD, BASIC_API_SCOPE).with(GRANT_FIELD, BASIC_GRANT))
         .retrieve()
+        .onStatus(HttpStatus::isError, r -> r.bodyToMono(AuthErrorResponse.class).map(e -> new EbayAuthError(r.statusCode(), e.getDescription())))
         .bodyToMono(AuthResponse.class)
-        .map(authResponse -> new AuthToken(authResponse.getAccessToken(), authResponse.getExpiresIn()));
+        .map(authResponse -> new AuthToken(authResponse.getAccessToken(), authResponse.getExpiresIn() - TOKEN_EXPIRY_OFFSET));
   }
 }

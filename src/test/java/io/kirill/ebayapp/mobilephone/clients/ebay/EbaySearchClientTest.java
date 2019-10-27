@@ -1,6 +1,6 @@
-package io.kirill.ebayapp.ebay;
+package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.configs.EbayConfig;
+import io.kirill.ebayapp.common.configs.EbayConfig;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -62,6 +62,21 @@ class EbaySearchClientTest {
     assertThat(recordedRequest.getHeader("X-EBAY-C-MARKETPLACE-ID")).isEqualTo("EBAY_GB");
     assertThat(recordedRequest.getPath()).isEqualTo("/ebay/search?category_ids=9355&filter=conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,buyingOptions:%257BFIXED_PRICE%257D,deliveryCountry:GB,price:%5B10..500%5D,priceCurrency:GBP,itemLocationCountry:GB,itemStartDate:%5B2019-12-01T12:00:00Z%5D");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+  }
+
+  @Test
+  void searchForAllInCategoryWhenError() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(400)
+        .setBody("{\"errors\": [{\"longMessage\": \"error from ebay\"}]}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var startingTime = LocalDateTime.of(2019, 12, 1, 12, 0, 0).toInstant(UTC);
+    var items = ebaySearchClient.searchForAllInCategory(accessToken, 9355, startingTime);
+
+    StepVerifier
+        .create(items)
+        .verifyErrorMatches(e -> e.getMessage().equals("error sending search req to ebay: error from ebay"));
   }
 
   @Test
