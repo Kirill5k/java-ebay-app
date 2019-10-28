@@ -6,8 +6,10 @@ import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Map;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 
 @Component
@@ -19,7 +21,8 @@ public class ItemMapper {
   private static final String NETWORK_PROPERTY = "Network";
 
   public MobilePhone toMobilePhone(Item item) {
-    Map<String, String> properties = item.getLocalizedAspects().stream()
+    Map<String, String> properties = ofNullable(item.getLocalizedAspects())
+        .stream().flatMap(Collection::stream)
         .collect(toMap(ItemProperty::getName, ItemProperty::getValue));
 
     return MobilePhone.builder()
