@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AppRunner {
   private static final int MINUTES_PERIOD = 5;
-  private static final int MIN_MARGIN_PERCENTAGE = 30;
+  private static final int MIN_MARGIN_PERCENTAGE = 25;
 
   private final MobilePhoneService mobilePhoneService;
 
@@ -24,8 +24,8 @@ public class AppRunner {
         .delayElements(Duration.ofSeconds(1))
         .flatMap(mobilePhoneService::findResellPrice)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
-        .doOnNext(phone -> log.info("good deal on \"{}\": asking price {}, cex price {} {}", phone.fullName(), phone.getPrice(), phone.getResellPrice(), phone.getUrl()))
-        .onErrorContinue((error, arg) -> log.error("error during app run: {} {}", error.getMessage(), arg, error))
+        .flatMap(mobilePhoneService::informAboutThePhone)
+        .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
         .subscribe();
   }
 }

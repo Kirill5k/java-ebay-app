@@ -50,6 +50,7 @@ public class CexClient {
         .doOnNext(results -> log.info("query \"{}\" returned {} results", query, results.size()))
         .filter(results -> !results.isEmpty())
         .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).average().getAsDouble())
+        .map(Math::floor)
         .map(BigDecimal::valueOf);
   }
 

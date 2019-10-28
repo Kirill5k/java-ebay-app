@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
+import io.kirill.ebayapp.mobilephone.clients.telegram.TelegramClient;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,9 @@ class MobilePhoneServiceTest {
 
   @Mock
   CexClient cexClient;
+
+  @Mock
+  TelegramClient telegramClient;
 
   @Mock
   MobilePhoneRepository mobilePhoneRepository;
@@ -85,5 +89,18 @@ class MobilePhoneServiceTest {
 
     verify(cexClient).getAveragePrice(iphone6s);
     verify(mobilePhoneRepository, never()).save(any());
+  }
+
+  @Test
+  void informAboutThePhone() {
+    doAnswer(inv -> Mono.empty())
+        .when(telegramClient)
+        .informAboutThePhone(any());
+
+    StepVerifier
+        .create(mobilePhoneService.informAboutThePhone(iphone6s))
+        .verifyComplete();
+
+    verify(telegramClient).informAboutThePhone(iphone6s);
   }
 }

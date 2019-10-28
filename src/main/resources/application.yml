@@ -16,3 +16,7 @@ app:
   cex:
     base-url: https://wss2.cex.uk.webuy.io
     search-path: /v3/boxes
+  telegram:
+    base-url: https://api.telegram.org
+    message-path: /bot${TELEGRAM_BOT_API_KEY}/sendMessage
+    channel-id: ${TELEGRAM_CHANNEL_ID}

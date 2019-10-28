@@ -43,14 +43,14 @@ class CexClientTest {
   void getAveragePrice() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
-        .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"exchangePrice\": 15.0}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
+        .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"exchangePrice\": 12.99}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
     var averagePrice = cexClient.getAveragePrice(iphone6s);
 
       StepVerifier
           .create(averagePrice)
-          .expectNextMatches(price -> price.doubleValue() == 17.5)
+          .expectNextMatches(price -> price.doubleValue() == 16.0)
           .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
