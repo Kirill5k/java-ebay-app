@@ -38,4 +38,8 @@ public class MobilePhone {
         .filter(Objects::nonNull)
         .collect(Collectors.joining(" "));
   }
+
+  public boolean hasAllDetails() {
+    return Stream.of(make, model, storageCapacity, colour, network).noneMatch(Objects::isNull);
+  }
 }
