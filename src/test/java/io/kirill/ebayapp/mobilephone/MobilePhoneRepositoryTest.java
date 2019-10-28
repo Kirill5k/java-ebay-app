@@ -17,7 +17,7 @@ class MobilePhoneRepositoryTest {
 
   @Test
   void save() {
-    var mobilePhone = MobilePhone.builder().model("iphone 6s").build();
+    var mobilePhone = MobilePhoneBuilder.iphone6s().build();
     var savedMobilePhone = mobilePhoneRepository.save(mobilePhone)
         .map(MobilePhone::getId)
         .flatMap(id -> template.findById(id, MobilePhone.class));

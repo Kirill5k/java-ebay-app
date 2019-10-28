@@ -8,13 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MobilePhoneTest {
 
-  final MobilePhone iphone6s = MobilePhone.builder()
-      .make("Apple")
-      .model("Iphone 6s")
-      .storageCapacity("16GB")
-      .colour("Space Grey")
-      .network("Unlocked")
-      .build();
+  final MobilePhone iphone6s = MobilePhoneBuilder.iphone6s().build();
 
   @Test
   void fullName() {

@@ -2,6 +2,7 @@ package io.kirill.ebayapp.mobilephone.clients.cex;
 
 import io.kirill.ebayapp.common.configs.CexConfig;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.MobilePhoneBuilder;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -24,13 +25,7 @@ class CexClientTest {
 
   CexClient cexClient;
 
-  MobilePhone iphone6s = MobilePhone.builder()
-      .make("Apple")
-      .model("Iphone 6s")
-      .storageCapacity("16GB")
-      .colour("Space Grey")
-      .network("Unlocked")
-      .build();
+  MobilePhone iphone6s = MobilePhoneBuilder.iphone6s().build();
 
   @BeforeEach
   void setup() {
