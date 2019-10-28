@@ -28,7 +28,7 @@ class ItemMapperTest {
         .condition("new")
         .color("silver")
         .title("title")
-        .description("description")
+        .shortDescription("description")
         .brand("apple")
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
         .itemWebUrl(itemUrl)

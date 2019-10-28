@@ -32,7 +32,7 @@ public class ItemMapper {
         .condition(item.getCondition())
         .price(item.getPrice().getValue())
         .listingTitle(item.getTitle())
-        .listingDescription(item.getDescription())
+        .listingDescription(item.getShortDescription())
         .datePosted(Instant.now())
         .url(item.getItemWebUrl())
         .build();
