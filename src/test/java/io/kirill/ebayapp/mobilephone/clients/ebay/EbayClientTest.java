@@ -19,6 +19,7 @@ import reactor.test.StepVerifier;
 import java.time.Instant;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -48,7 +49,7 @@ class EbayClientTest {
   String accessToken = "access-token";
 
   @Test
-  void getPhonesListedInLast10Mins() {
+  void getPhonesListedInTheLastMinutes() {
     var searchResult = List.of(
         SearchResult.builder().itemId("item-1").seller(new Seller("s", 99.0, 15.0, "s")).build(),
         SearchResult.builder().itemId("item-2").seller(new Seller("s", 99.0, 15.0, "s")).build(),
@@ -62,7 +63,7 @@ class EbayClientTest {
     doAnswer(inv -> Mono.just(Item.builder().itemId(inv.getArgument(1)).build())).when(ebaySearchClient).getItem(anyString(), anyString());
     doAnswer(inv -> MobilePhone.builder().id(((Item)inv.getArgument(0)).getItemId()).build()).when(itemMapper).toMobilePhone(any());
 
-    var mobilePhones = ebayClient.getPhonesListedInLast10Mins();
+    var mobilePhones = ebayClient.getPhonesListedInTheLastMinutes(10);
 
     StepVerifier
         .create(mobilePhones)
@@ -74,5 +75,8 @@ class EbayClientTest {
     verify(ebaySearchClient).searchForAllInCategory(eq(accessToken), eq(9355), any());
     verify(ebaySearchClient).getItem(accessToken, "item-1");
     verify(ebaySearchClient).getItem(accessToken, "item-2");
+
+    var startDate = instantCaptor.getValue();
+    assertThat(startDate).isBetween(Instant.now().minusSeconds(10 * 60 + 5), Instant.now().plusSeconds(10 * 60 + 5));
   }
 }

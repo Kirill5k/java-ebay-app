@@ -8,10 +8,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties({EbayConfig.class, CexConfig.class})
-public class EbayAppApplication {
+public class EbayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EbayAppApplication.class, args);
+		SpringApplication.run(EbayApplication.class, args);
 	}
 
 }

@@ -1,5 +1,6 @@
 package io.kirill.ebayapp.mobilephone;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,5 +28,14 @@ class MobilePhoneTest {
     assertThat(iphone6s.hasAllDetails()).isTrue();
     assertThat(iphone6s.withColour(null).hasAllDetails()).isFalse();
     assertThat(iphone6s.withMake(null).hasAllDetails()).isFalse();
+  }
+
+  @Test
+  void isProfitableToResell() {
+    var goodDealPhone = iphone6s.withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(160));
+    assertThat(goodDealPhone.isProfitableToResell(50)).isTrue();
+
+    var badDealPhone = iphone6s.withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(140));
+    assertThat(badDealPhone.isProfitableToResell(50)).isFalse();
   }
 }

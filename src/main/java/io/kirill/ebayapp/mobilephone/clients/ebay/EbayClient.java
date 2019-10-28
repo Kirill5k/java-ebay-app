@@ -11,7 +11,6 @@ import java.time.Instant;
 @Component
 @RequiredArgsConstructor
 public class EbayClient {
-  private static final long TIME_OFFSET = 10 * 60;
   private static final int MOBILES_PHONES_CATEGORY_ID = 9355;
 
   private static final int MIN_FEEDBACK_SCORE = 10;
@@ -21,9 +20,9 @@ public class EbayClient {
   private final EbaySearchClient searchClient;
   private final ItemMapper itemMapper;
 
-  public Flux<MobilePhone> getPhonesListedInLast10Mins() {
+  public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
     return authClient.accessToken()
-        .flatMapMany(token -> searchClient.searchForAllInCategory(token, MOBILES_PHONES_CATEGORY_ID, Instant.now().minusSeconds(TIME_OFFSET)))
+        .flatMapMany(token -> searchClient.searchForAllInCategory(token, MOBILES_PHONES_CATEGORY_ID, Instant.now().minusSeconds(minutes * 60)))
         .filter(sr -> sr.getSeller() != null && sr.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT && sr.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE)
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))
         .map(itemMapper::toMobilePhone);

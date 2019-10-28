@@ -9,6 +9,7 @@ import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchError;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResponse;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResponseWrapper;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResult;
+import java.math.BigDecimal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class CexClient {
         .build();
   }
 
-  public Mono<Double> getAveragePrice(MobilePhone phone) {
+  public Mono<BigDecimal> getAveragePrice(MobilePhone phone) {
     var query = phone.fullName();
     log.info("getting price for {}", query);
     return webClient
@@ -41,7 +42,8 @@ public class CexClient {
         .bodyToMono(SearchResponseWrapper.class)
         .map(respWrapper -> respWrapper.getResponse().getData().getResults())
         .doOnNext(results -> log.info("query \"{}\" returned {} results", query, results.size()))
-        .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).average().orElse(Double.MAX_VALUE));
+        .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).average().orElse(Double.MAX_VALUE))
+        .map(BigDecimal::valueOf);
   }
 
   private Function<ClientResponse, Mono<? extends Throwable>> mapToError = r -> r.bodyToMono(SearchErrorResponseWrapper.class)

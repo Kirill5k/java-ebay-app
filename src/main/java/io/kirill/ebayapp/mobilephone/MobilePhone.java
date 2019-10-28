@@ -27,11 +27,12 @@ public class MobilePhone {
   private final String storageCapacity;
   private final String network;
   private final String condition;
-  private final BigDecimal price;
   private final String listingTitle;
   private final String listingDescription;
   private final Instant datePosted;
   private final String url;
+  private final BigDecimal price;
+  private final BigDecimal resellPrice;
 
   public String fullName() {
     return Stream.of(make, model, storageCapacity, colour, network)
@@ -41,5 +42,9 @@ public class MobilePhone {
 
   public boolean hasAllDetails() {
     return Stream.of(make, model, storageCapacity, colour, network).noneMatch(Objects::isNull);
+  }
+
+  public boolean isProfitableToResell(int expectedMarginPercentage) {
+    return (resellPrice.multiply(BigDecimal.valueOf(100)).divide(price).intValue() - 100) > expectedMarginPercentage;
   }
 }
