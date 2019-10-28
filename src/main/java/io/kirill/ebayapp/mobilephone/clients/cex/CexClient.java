@@ -3,6 +3,8 @@ package io.kirill.ebayapp.mobilephone.clients.cex;
 import io.kirill.ebayapp.common.configs.CexConfig;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.cex.exceptions.CexSearchError;
+import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchErrorResponse;
+import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchErrorResponseWrapper;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchError;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResponse;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResponseWrapper;
@@ -42,9 +44,9 @@ public class CexClient {
         .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).average().orElse(Double.MAX_VALUE));
   }
 
-  private Function<ClientResponse, Mono<? extends Throwable>> mapToError = r -> r.bodyToMono(SearchResponseWrapper.class)
-      .map(SearchResponseWrapper::getResponse)
-      .map(SearchResponse::getError)
+  private Function<ClientResponse, Mono<? extends Throwable>> mapToError = r -> r.bodyToMono(SearchErrorResponseWrapper.class)
+      .map(SearchErrorResponseWrapper::getResponse)
+      .map(SearchErrorResponse::getError)
       .map(SearchError::getMessage)
       .map(m -> new CexSearchError(r.statusCode(), m));
 }

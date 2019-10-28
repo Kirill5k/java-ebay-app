@@ -63,7 +63,7 @@ class CexClientTest {
   @Test
   void getAveragePriceWhenReturnsError() throws Exception {
     mockWebServer.enqueue(new MockResponse()
-        .setResponseCode(200)
+        .setResponseCode(400)
         .setBody("{\"response\": {\"data\": \"\", \"error\": {\"internal_message\": \"error-message\"}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
@@ -71,7 +71,7 @@ class CexClientTest {
 
     StepVerifier
         .create(averagePrice)
-        .verifyErrorMessage("");
+        .verifyErrorMessage("error sending search req to cex: error-message");
 
     var recordedRequest = mockWebServer.takeRequest();
     assertThat(recordedRequest.getPath()).isEqualTo("/cex/search?q=Apple%20Iphone%206s%2016GB%20Space%20Grey%20Unlocked");
