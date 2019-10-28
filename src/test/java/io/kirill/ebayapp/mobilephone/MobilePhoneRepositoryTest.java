@@ -24,7 +24,7 @@ class MobilePhoneRepositoryTest {
 
     StepVerifier
         .create(savedMobilePhone)
-        .expectNextMatches(order -> order.getId() != null && order.getModel().equals("iphone 6s"))
+        .expectNextMatches(order -> order.getId() != null && order.getModel().equals("Iphone 6s"))
         .verifyComplete();
   }
 }

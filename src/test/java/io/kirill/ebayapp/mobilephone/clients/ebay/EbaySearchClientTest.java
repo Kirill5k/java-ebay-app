@@ -65,6 +65,21 @@ class EbaySearchClientTest {
   }
 
   @Test
+  void searchForAllInCategoryWhenNoResult() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(200)
+        .setBody("{\"itemSummaries\": null}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var startingTime = LocalDateTime.of(2019, 12, 1, 12, 0, 0).toInstant(UTC);
+    var items = ebaySearchClient.searchForAllInCategory(accessToken, 9355, startingTime);
+
+    StepVerifier
+        .create(items)
+        .verifyComplete();
+  }
+
+  @Test
   void searchForAllInCategoryWhenError() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(400)

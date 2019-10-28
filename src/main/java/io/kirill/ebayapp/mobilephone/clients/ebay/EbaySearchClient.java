@@ -66,6 +66,7 @@ class EbaySearchClient {
         .onStatus(HttpStatus::isError, mapErrorResponse)
         .bodyToMono(SearchResponse.class)
         .doOnNext(searchResponse -> log.info("search returned {} items", searchResponse.getTotal()))
+        .filter(searchResponse -> searchResponse != null && searchResponse.getItemSummaries() != null)
         .map(SearchResponse::getItemSummaries)
         .flatMapMany(Flux::fromIterable);
   }
