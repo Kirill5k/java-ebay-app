@@ -10,5 +10,5 @@ import java.util.List;
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchData {
-  private final List<SearchResult> results;
+  private final List<SearchResult> boxes;
 }

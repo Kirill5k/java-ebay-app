@@ -7,10 +7,13 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -45,7 +48,7 @@ class CexClientTest {
   void getAveragePrice() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
-        .setBody("{\"response\": {\"data\": {\"results\": [{\"boxName\": \"box-1\", \"exchangePrice\": 15.0}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
+        .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"exchangePrice\": 15.0}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
     var averagePrice = cexClient.getAveragePrice(iphone6s);
@@ -56,8 +59,24 @@ class CexClientTest {
           .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
+    assertThat(recordedRequest.getHeader(CONTENT_TYPE)).isEqualTo(APPLICATION_JSON_VALUE);
+    assertThat(recordedRequest.getHeader(ACCEPT)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getPath()).isEqualTo("/cex/search?q=Apple%20Iphone%206s%2016GB%20Space%20Grey%20Unlocked");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+  }
+
+  @Test
+  void getAveragePriceWhenNoResults() {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(200)
+        .setBody("{\"response\": {\"data\": {\"results\": []}}}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var averagePrice = cexClient.getAveragePrice(iphone6s);
+
+    StepVerifier
+        .create(averagePrice)
+        .verifyComplete();
   }
 
   @Test

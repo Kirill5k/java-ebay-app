@@ -1,5 +1,7 @@
 package io.kirill.ebayapp.mobilephone;
 
+import static java.util.stream.Collectors.joining;
+
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -37,7 +39,7 @@ public class MobilePhone {
   public String fullName() {
     return Stream.of(make, model, storageCapacity, colour, network)
         .filter(Objects::nonNull)
-        .collect(Collectors.joining(" "));
+        .collect(joining(" "));
   }
 
   public boolean hasAllDetails() {
@@ -45,6 +47,6 @@ public class MobilePhone {
   }
 
   public boolean isProfitableToResell(int expectedMarginPercentage) {
-    return (resellPrice.multiply(BigDecimal.valueOf(100)).divide(price).intValue() - 100) > expectedMarginPercentage;
+    return (resellPrice.doubleValue() * 100 / price.doubleValue() - 100) > expectedMarginPercentage;
   }
 }
