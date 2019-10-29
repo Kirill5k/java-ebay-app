@@ -2,11 +2,12 @@ package io.kirill.ebayapp.mobilephone.clients.ebay;
 
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.mappers.ItemMapper;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
+import java.time.Instant;
+import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-
-import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
@@ -23,8 +24,12 @@ public class EbayClient {
   public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
     return authClient.accessToken()
         .flatMapMany(token -> searchClient.searchForAllInCategory(token, MOBILES_PHONES_CATEGORY_ID, Instant.now().minusSeconds(minutes * 60)))
-        .filter(sr -> sr.getSeller() != null && sr.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT && sr.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE)
+        .filter(hasTrustedSeller)
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))
         .map(itemMapper::toMobilePhone);
   }
+
+  private Predicate<SearchResult> hasTrustedSeller = searchResult -> searchResult.getSeller() != null &&
+      searchResult.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT &&
+      searchResult.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE;
 }
