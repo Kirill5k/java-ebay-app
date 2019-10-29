@@ -1,5 +1,8 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
+import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import io.kirill.ebayapp.common.configs.EbayConfig;
 import io.kirill.ebayapp.mobilephone.clients.ebay.exceptions.EbaySearchError;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
@@ -7,6 +10,9 @@ import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchError;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchErrorResponse;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResponse;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
+import java.time.Instant;
+import java.util.List;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -14,13 +20,6 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.function.Function;
-
-import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
 @Component
@@ -34,7 +33,7 @@ class EbaySearchClient {
   private final static String DEFAULT_FILTER = "conditionIds:{1000|1500|2000|2500|3000|4000|5000}," +
       "buyingOptions:{FIXED_PRICE}," +
       "deliveryCountry:GB," +
-      "price:[10..500]," +
+      "price:[45..500]," +
       "priceCurrency:GBP," +
       "itemLocationCountry:GB," +
       "itemStartDate:[%s]";
