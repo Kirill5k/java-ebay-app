@@ -1,0 +1,23 @@
+os: osx
+
+language: java
+jdk: openjdk11
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - "$HOME/.gradle/caches/"
+    - "$HOME/.gradle/wrapper/"
+    -
+script:
+  - "./gradlew test"
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: RTrDcgorWmlJYlymfJRu3YBWth0LdUv9HeKWxyXkXGP9nUlIQ7z96jvbkLMFD/kJG8e6MITdRXcu5lQ+8r8ws4doreuI9qdlu8NZnJrocfb20wvL6rFgcc6h8Yag8GjSrjDzamDguAW0+vPwAIe2KjBUrTmH3A742qHsX9Dujygb7ElZVh88yZUIBW6NRqrtRdi0aOeBzxgUd39hEU1sAjJRyfB/OdFHYWSaJBi1ynb/g3LrP45AAeanrxvxHT1PAiFiGYBcvDKgF2URp0+Ro6I5/0hBQuq+GRG93T1VWh2YQHZVgUrDTzPaxcdImCUvcNBY6Xv3xxz39P58Yk8N4QVx/Dr15LgN9qdBBWMJAXM1vYUtJbUWDxISEScxmq6ABhSBBF8Nxco8lCWwLpPK1Zs14rnlXlNpv3NYNT56TUz2QbikWtLQXzhddmpFvJAiTdbBtbLWwxm8LuUvaeJYauojXLBiFG0XYg2GlEI7xTjw+/GMbdWsZIWl/aFTOMM1ImsOVRdrp3eaRokPOXdZKC3I9XwergFVzwoyeITnlq9IKShao4HqAAjRkPmFt4JD9LORJdJA/pbqyzfFEsU+p20PdLsp2agVpRMglQZN4WNiH0KzFakG945KMUY4cemcZNev0m2UiM4tN4JuSKYmOt0EE3E3o9C0MvflxXonvH4=
+  app: java-ebay-app
+  on:
+    repo: kirill5k/java-ebay-app
