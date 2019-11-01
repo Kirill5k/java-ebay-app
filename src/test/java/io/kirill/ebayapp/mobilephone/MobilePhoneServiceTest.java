@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -102,5 +104,20 @@ class MobilePhoneServiceTest {
         .verifyComplete();
 
     verify(telegramClient).informAboutThePhone(iphone6s);
+  }
+
+  @Test
+  void getAll() {
+    doAnswer(inv -> Flux.just(iphone6s, iphone6s, iphone6s))
+        .when(mobilePhoneRepository)
+        .findAll(any(Sort.class));
+
+    StepVerifier
+        .create(mobilePhoneService.getAll(2))
+        .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
+        .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
+        .verifyComplete();
+
+    verify(mobilePhoneRepository).findAll(Sort.by(new Sort.Order(DESC, "datePosted")));
   }
 }
