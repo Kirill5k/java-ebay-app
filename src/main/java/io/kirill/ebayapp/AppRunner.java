@@ -22,7 +22,7 @@ public class AppRunner {
   void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofSeconds(1))
-        .flatMap(phone -> phone.hasAllDetails() ? mobilePhoneService.findResellPrice(phone) : Mono.just(phone))
+        .flatMap(phone ->mobilePhoneService.findResellPrice(phone).switchIfEmpty(Mono.just(phone)))
         .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
