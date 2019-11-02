@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -22,7 +21,7 @@ public class AppRunner {
   void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofSeconds(1))
-        .flatMap(phone ->mobilePhoneService.findResellPrice(phone).switchIfEmpty(Mono.just(phone)))
+        .flatMap(phone ->mobilePhoneService.findResellPrice(phone))
         .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)

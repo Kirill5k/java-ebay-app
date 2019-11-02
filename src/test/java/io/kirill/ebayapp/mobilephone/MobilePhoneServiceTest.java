@@ -79,6 +79,20 @@ class MobilePhoneServiceTest {
   }
 
   @Test
+  void findResellPriceWhenNotFound() {
+    doAnswer(inv -> Mono.empty())
+        .when(cexClient)
+        .getAveragePrice(any());
+
+    StepVerifier
+        .create(mobilePhoneService.findResellPrice(iphone6s))
+        .expectNextMatches(phone -> phone.getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
+        .verifyComplete();
+
+    verify(cexClient).getAveragePrice(iphone6s);
+  }
+
+  @Test
   void informAboutThePhone() {
     doAnswer(inv -> Mono.empty())
         .when(telegramClient)

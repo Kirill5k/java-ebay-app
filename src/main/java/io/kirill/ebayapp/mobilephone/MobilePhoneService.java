@@ -38,7 +38,9 @@ public class MobilePhoneService {
   }
 
   public Mono<MobilePhone> findResellPrice(MobilePhone phone) {
-    return cexClient.getAveragePrice(phone).map(phone::withResellPrice);
+    return cexClient.getAveragePrice(phone)
+        .map(phone::withResellPrice)
+        .defaultIfEmpty(phone);
   }
 
   public Mono<Void> informAboutThePhone(MobilePhone phone) {
