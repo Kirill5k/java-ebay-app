@@ -1,12 +1,13 @@
 package io.kirill.ebayapp;
 
-import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.MobilePhoneService;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -20,9 +21,9 @@ public class AppRunner {
   @Scheduled(fixedDelay = MINUTES_PERIOD * 60000)
   public void run() {
     mobilePhoneService.getLatestPhonesFromEbay(MINUTES_PERIOD)
-        .filter(MobilePhone::hasAllDetails)
         .delayElements(Duration.ofSeconds(1))
-        .flatMap(mobilePhoneService::findResellPrice)
+        .flatMap(phone -> phone.hasAllDetails() ? mobilePhoneService.findResellPrice(phone) : Mono.just(phone))
+        .doOnNext(mobilePhoneService::save)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
