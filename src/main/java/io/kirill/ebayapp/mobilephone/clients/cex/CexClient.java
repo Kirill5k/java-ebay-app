@@ -10,6 +10,7 @@ import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchErrorResponseWrapp
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResponseWrapper;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -39,7 +40,11 @@ public class CexClient {
   }
 
   public Mono<BigDecimal> getAveragePrice(MobilePhone phone) {
-    var query = phone.fullName();
+    return getAveragePrice(phone.fullName(), phone.getPrice());
+  }
+
+  @Cacheable("cexQueries")
+  public Mono<BigDecimal> getAveragePrice(String query, BigDecimal originalPrice) {
     return webClient
         .get()
         .uri(builder -> builder.queryParam("q", query).build())
@@ -48,7 +53,7 @@ public class CexClient {
         .bodyToMono(SearchResponseWrapper.class)
         .map(SearchResponseWrapper::getResponse)
         .map(response -> ofNullable(response.getData()).map(SearchData::getBoxes).orElse(emptyList()))
-        .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, phone.getPrice(), results.size()))
+        .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, originalPrice, results.size()))
         .filter(results -> !results.isEmpty())
         .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).average().getAsDouble())
         .map(Math::floor)

@@ -20,10 +20,10 @@ public class AppRunner {
 
   @Scheduled(fixedDelay = MINUTES_PERIOD * 60000)
   public void run() {
-    mobilePhoneService.getLatestPhonesFromEbay(MINUTES_PERIOD)
+    mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofSeconds(1))
         .flatMap(phone -> phone.hasAllDetails() ? mobilePhoneService.findResellPrice(phone) : Mono.just(phone))
-        .doOnNext(mobilePhoneService::save)
+        .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))

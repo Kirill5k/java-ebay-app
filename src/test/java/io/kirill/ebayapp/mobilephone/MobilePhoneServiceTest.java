@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -52,13 +51,13 @@ class MobilePhoneServiceTest {
   MobilePhone iphone6s = MobilePhoneBuilder.iphone6s().build();
 
   @Test
-  void getLatestPhonesFromEbay() {
+  void getLatestFromEbay() {
     doAnswer(inv -> Flux.just(iphone6s))
         .when(ebayClient)
         .getPhonesListedInTheLastMinutes(anyInt());
 
     StepVerifier
-        .create(mobilePhoneService.getLatestPhonesFromEbay(10))
+        .create(mobilePhoneService.getLatestFromEbay(10))
         .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
@@ -93,13 +92,13 @@ class MobilePhoneServiceTest {
   }
 
   @Test
-  void getAll() {
+  void getLatest() {
     doAnswer(inv -> Flux.just(iphone6s, iphone6s, iphone6s))
         .when(mobilePhoneRepository)
         .findAll(any(Sort.class));
 
     StepVerifier
-        .create(mobilePhoneService.getAll(2))
+        .create(mobilePhoneService.getLatest(2))
         .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
         .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();

@@ -25,7 +25,7 @@ public class MobilePhoneService {
     return mobilePhoneRepository.save(mobilePhone);
   }
 
-  public Flux<MobilePhone> getAll(int limit) {
+  public Flux<MobilePhone> getLatest(int limit) {
     return mobilePhoneRepository.findAll(Sort.by(new Sort.Order(DESC, "datePosted"))).limitRequest(limit);
   }
 
@@ -33,7 +33,7 @@ public class MobilePhoneService {
     return mobilePhoneRepository.findByDatePostedAfter(Instant.now().minusSeconds(1800));
   }
 
-  public Flux<MobilePhone> getLatestPhonesFromEbay(int minutes) {
+  public Flux<MobilePhone> getLatestFromEbay(int minutes) {
     return ebayClient.getPhonesListedInTheLastMinutes(minutes);
   }
 

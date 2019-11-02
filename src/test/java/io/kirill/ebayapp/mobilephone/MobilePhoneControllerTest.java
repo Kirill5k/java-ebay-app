@@ -30,7 +30,7 @@ class MobilePhoneControllerTest {
   void getAll() {
     doAnswer(inv -> Flux.just(iphone6s, iphone6s, iphone6s))
         .when(mobilePhoneService)
-        .getAll(anyInt());
+        .getLatest(anyInt());
 
     client
         .get()
@@ -41,7 +41,7 @@ class MobilePhoneControllerTest {
         .expectBody()
         .jsonPath("$[0].model").isEqualTo("Iphone 6s");
 
-    verify(mobilePhoneService).getAll(100);
+    verify(mobilePhoneService).getLatest(100);
   }
 
 

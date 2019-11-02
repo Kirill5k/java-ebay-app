@@ -18,7 +18,7 @@ public class MobilePhoneController {
 
   @GetMapping
   public Flux<MobilePhone> getAll(@RequestParam Optional<Integer> limit) {
-    return mobilePhoneService.getAll(limit.orElse(100));
+    return mobilePhoneService.getLatest(limit.orElse(100));
   }
 
   @GetMapping(value = "/feed", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
