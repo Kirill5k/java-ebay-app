@@ -19,7 +19,7 @@ public class AppRunner {
   private final MobilePhoneService mobilePhoneService;
 
   @Scheduled(fixedDelay = MINUTES_PERIOD * 60000)
-  public void run() {
+  void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofSeconds(1))
         .flatMap(phone -> phone.hasAllDetails() ? mobilePhoneService.findResellPrice(phone) : Mono.just(phone))

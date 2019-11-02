@@ -1,17 +1,77 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Java Ebay App</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css"
-        integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <title>Ebay app</title>
+
+  <script>
+      var sse = new EventSource("/api/mobile-phones/feed");
+      console.log("starting mobile phones event source feed...");
+      sse.onmessage = function (event) {
+          console.log("received event", event.data);
+          var phone = JSON.parse(event.data);
+
+          var card = document.createElement("div");
+          card.className = "card mb-2";
+          var cardBody = document.createElement("div");
+          cardBody.className = "card-body";
+          card.append(cardBody);
+
+          var title = document.createElement("a");
+          title.href = phone.url
+          title.className = "card-title";
+          title.innerText = phone.listingTitle;
+
+          var description = document.createElement("p");
+          description.className = "card-text";
+          description.innerText = phone.listingDescription;
+
+          var price = document.createElement("p");
+          price.className = "card-text mb-0";
+          var priceText = document.createElement("small");
+          priceText.innerText = "Ebay price: " + phone.price + " / CEX price: " + (phone.resellPrice ? phone.resellPrice : "Unknown");
+          price.append(priceText);
+
+          var datePosted = document.createElement("p");
+          datePosted.className = "card-text";
+          var datePostedText = document.createElement("small");
+          datePostedText.className = "text-muted";
+          datePostedText.innerText = phone.datePosted.replace("T", " ").slice(0, 19);
+          datePosted.append(datePostedText);
+
+          cardBody.append(title);
+          cardBody.append(description);
+          cardBody.append(document.createElement("hr"));
+          cardBody.append(price);
+          cardBody.append(datePosted);
+
+          document.getElementById("mobile-phones").prepend(card);
+      };
+      sse.onopen = function (ev) {
+          console.log("mobiles phones feed is opened")
+      };
+      sse.onerror = function (error) {
+          console.log("error during mobile phones stream:", error);
+      }
+
+  </script>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light">
-  <span class="navbar-brand mb-0 h1">Hello, World!</span>
-</nav>
+<header>
+  <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Hello, World!</h5>
+  </div>
+</header>
+
+<main role="main" class="container">
+  <div class="my-3 p-3 bg-white" id="mobile-phones">
+  </div>
+</main>
+
 </body>
 </html>
