@@ -23,7 +23,7 @@ public class AppRunner {
         .delayElements(Duration.ofSeconds(1))
         .flatMap(phone ->mobilePhoneService.findResellPrice(phone))
         .flatMap(mobilePhoneService::save)
-        .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
+        .filter(phone -> phone.getResellPrice() != null && phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
         .subscribe();
