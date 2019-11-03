@@ -40,21 +40,21 @@
 
           var title = document.createElement("a");
           title.href = phone.url
-          title.className = "card-title";
+          title.className = "card-title pl-3";
           title.innerText = phone.listingTitle;
 
           var description = document.createElement("p");
-          description.className = "card-text";
+          description.className = "card-text pl-3";
           description.innerText = phone.listingDescription;
 
           var price = document.createElement("p");
-          price.className = "card-text mb-0";
+          price.className = "card-text mb-0 pl-3";
           var priceText = document.createElement("small");
           priceText.innerText = "Ebay price: " + phone.price + " / CEX price: " + (phone.resellPrice ? phone.resellPrice : "Unknown");
           price.append(priceText);
 
           var datePosted = document.createElement("p");
-          datePosted.className = "card-text";
+          datePosted.className = "card-text pl-3";
           var datePostedText = document.createElement("small");
           datePostedText.className = "text-muted";
           datePostedText.innerText = phone.datePosted.replace("T", " ").slice(0, 19);
