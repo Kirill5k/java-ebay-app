@@ -12,7 +12,7 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class AppRunner {
-  private static final int MINUTES_PERIOD = 2;
+  private static final int MINUTES_PERIOD = 5;
   private static final int MIN_MARGIN_PERCENTAGE = 25;
 
   private final MobilePhoneService mobilePhoneService;
@@ -21,7 +21,7 @@ public class AppRunner {
   void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofSeconds(1))
-        .flatMap(phone ->mobilePhoneService.findResellPrice(phone))
+        .flatMap(mobilePhoneService::findResellPrice)
         .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.getResellPrice() != null && phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
