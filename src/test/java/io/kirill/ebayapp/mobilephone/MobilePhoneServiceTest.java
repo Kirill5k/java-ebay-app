@@ -146,4 +146,15 @@ class MobilePhoneServiceTest {
 
     verify(mobilePhoneRepository).save(iphone6s);
   }
+
+  @Test
+  void isNew() {
+    doAnswer(inv -> Mono.just(true))
+        .when(mobilePhoneRepository).existsByUrl(any());
+
+    StepVerifier
+        .create(mobilePhoneService.isNew(iphone6s))
+        .expectNextMatches(isNew -> !isNew)
+        .verifyComplete();
+  }
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -12,15 +13,16 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class AppRunner {
-  private static final int MINUTES_PERIOD = 5;
+  private static final int MINUTES_PERIOD = 15;
   private static final int MIN_MARGIN_PERCENTAGE = 25;
 
   private final MobilePhoneService mobilePhoneService;
 
-  @Scheduled(fixedDelay = MINUTES_PERIOD * 60000)
+  @Scheduled(fixedDelay = 120000)
   void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
-        .delayElements(Duration.ofSeconds(1))
+        .flatMap(phone -> mobilePhoneService.isNew(phone).flatMap(isNew -> isNew ? Mono.just(phone) : Mono.empty()))
+        .delayElements(Duration.ofMillis(500))
         .flatMap(mobilePhoneService::findResellPrice)
         .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.getResellPrice() != null && phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))

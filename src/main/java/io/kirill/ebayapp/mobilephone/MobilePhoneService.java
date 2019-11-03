@@ -21,6 +21,10 @@ public class MobilePhoneService {
   private final TelegramClient telegramClient;
   private final MobilePhoneRepository mobilePhoneRepository;
 
+  public Mono<Boolean> isNew(MobilePhone mobilePhone) {
+    return mobilePhoneRepository.existsByUrl(mobilePhone.getUrl()).map(exists -> !exists);
+  }
+
   public Mono<MobilePhone> save(MobilePhone mobilePhone) {
     return mobilePhoneRepository.save(mobilePhone);
   }

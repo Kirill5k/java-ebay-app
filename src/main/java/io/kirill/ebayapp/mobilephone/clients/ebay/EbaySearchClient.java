@@ -8,6 +8,7 @@ import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchErrorRespo
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResponse;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -71,6 +72,7 @@ class EbaySearchClient {
         .flatMapMany(Flux::fromIterable);
   }
 
+  @Cacheable("ebayQueries")
   Mono<Item> getItem(String accessToken, String itemId) {
     return webClient
         .get()
