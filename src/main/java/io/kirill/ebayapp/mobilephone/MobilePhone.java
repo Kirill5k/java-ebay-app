@@ -1,7 +1,5 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static java.util.stream.Collectors.joining;
-
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -12,8 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Value
 @Document
@@ -33,6 +32,7 @@ public class MobilePhone {
   private final String listingDescription;
   private final Instant datePosted;
   private final String url;
+  private final String image;
   private final BigDecimal price;
   private final BigDecimal resellPrice;
 

@@ -2,6 +2,7 @@ package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,7 @@ public class ItemMapper {
         .listingDescription(item.getShortDescription())
         .datePosted(Instant.now())
         .url(item.getItemWebUrl())
+        .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .build();
   }
 }

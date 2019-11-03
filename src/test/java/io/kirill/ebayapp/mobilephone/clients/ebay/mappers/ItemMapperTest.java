@@ -2,6 +2,7 @@ package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
+import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ItemMapperTest {
   String itemUrl = "http://ebay.com/item";
+  String imageUrl = "http://ebay.com/item.jpg";
 
   ItemMapper itemMapper;
 
@@ -32,6 +34,7 @@ class ItemMapperTest {
         .brand("apple")
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
         .itemWebUrl(itemUrl)
+        .image(new ItemImage(imageUrl))
         .localizedAspects(List.of(
             new ItemProperty("type", "Brand", "Apple"),
             new ItemProperty("type", "Network", "Unlocked"),
@@ -54,5 +57,6 @@ class ItemMapperTest {
     assertThat(phone.getListingTitle()).isEqualTo("title");
     assertThat(phone.getListingDescription()).isEqualTo("description");
     assertThat(phone.getDatePosted()).isBetween(Instant.now().minusSeconds(10), Instant.now().plusSeconds(10));
+    assertThat(phone.getImage()).isEqualTo(imageUrl);
   }
 }

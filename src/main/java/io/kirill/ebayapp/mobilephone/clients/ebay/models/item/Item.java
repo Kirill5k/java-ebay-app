@@ -25,4 +25,5 @@ public class Item {
   private final String condition;
   private final String itemWebUrl;
   private final List<ItemProperty> localizedAspects;
+  private final ItemImage image;
 }
