@@ -24,11 +24,12 @@
 
           if (phone.image) {
             var imageWrapper = document.createElement("div");
-            imageWrapper.className = "col-md-4 pr-3";
+            imageWrapper.className = "pr-3";
             var image = document.createElement("img");
             image.src = phone.image;
             image.className = "card-img";
             image.alt = phone.listingTitle;
+            image.style = "max-width:250px;height:auto;"
             imageWrapper.append(image);
             cardRow.append(imageWrapper);
           }
