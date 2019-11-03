@@ -22,11 +22,11 @@
           cardRow.className = "row no-gutters";
           card.append(cardRow);
 
-          if (phone.imageUrl) {
+          if (phone.image) {
             var imageWrapper = document.createElement("div");
-            imageWrapper.className = "col-md-4";
+            imageWrapper.className = "col-md-4 pr-3";
             var image = document.createElement("img");
-            image.src = phone.imageUrl;
+            image.src = phone.image;
             image.className = "card-img";
             image.alt = phone.listingTitle;
             imageWrapper.append(image);
@@ -34,7 +34,7 @@
           }
 
           var cardBody = document.createElement("div");
-          cardBody.className = phone.imageUrl ? "card-body col-md-8" : "card-body";
+          cardBody.className = phone.image ? "card-body col-md-8" : "card-body";
           cardRow.append(cardBody);
 
           var title = document.createElement("a");
