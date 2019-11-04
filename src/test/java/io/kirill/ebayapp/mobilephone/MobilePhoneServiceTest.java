@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -75,6 +76,16 @@ class MobilePhoneServiceTest {
         .verifyComplete();
 
     verify(cexClient).getAveragePrice(iphone6s);
+  }
+
+  @Test
+  void findResellPriceWithIncompleteDetails() {
+    StepVerifier
+        .create(mobilePhoneService.findResellPrice(iphone6s.withColour(null)))
+        .expectNextMatches(phone -> phone.getResellPrice() == null)
+        .verifyComplete();
+
+    verify(cexClient, never()).getAveragePrice(iphone6s);
   }
 
   @Test
