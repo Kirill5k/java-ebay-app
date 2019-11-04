@@ -1,5 +1,8 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
+import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import io.kirill.ebayapp.common.configs.EbayConfig;
 import io.kirill.ebayapp.mobilephone.clients.ebay.exceptions.EbaySearchError;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
@@ -7,21 +10,16 @@ import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchError;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchErrorResponse;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResponse;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
+import java.time.Instant;
+import java.util.List;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.function.Function;
-
-import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
 @Component
@@ -72,7 +70,6 @@ class EbaySearchClient {
         .flatMapMany(Flux::fromIterable);
   }
 
-  @Cacheable("ebayQueries")
   Mono<Item> getItem(String accessToken, String itemId) {
     return webClient
         .get()

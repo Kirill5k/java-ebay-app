@@ -1,8 +1,20 @@
 package io.kirill.ebayapp.mobilephone;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
 import io.kirill.ebayapp.mobilephone.clients.telegram.TelegramClient;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,18 +26,6 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class MobilePhoneServiceTest {
@@ -76,6 +76,16 @@ class MobilePhoneServiceTest {
         .verifyComplete();
 
     verify(cexClient).getAveragePrice(iphone6s);
+  }
+
+  @Test
+  void findResellPriceWithIncompleteDetails() {
+    StepVerifier
+        .create(mobilePhoneService.findResellPrice(iphone6s.withColour(null)))
+        .expectNextMatches(phone -> phone.getResellPrice() == null)
+        .verifyComplete();
+
+    verify(cexClient, never()).getAveragePrice(iphone6s);
   }
 
   @Test
@@ -145,16 +155,5 @@ class MobilePhoneServiceTest {
         .verifyComplete();
 
     verify(mobilePhoneRepository).save(iphone6s);
-  }
-
-  @Test
-  void isNew() {
-    doAnswer(inv -> Mono.just(true))
-        .when(mobilePhoneRepository).existsByUrl(any());
-
-    StepVerifier
-        .create(mobilePhoneService.isNew(iphone6s))
-        .expectNextMatches(isNew -> !isNew)
-        .verifyComplete();
   }
 }
