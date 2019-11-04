@@ -1,17 +1,16 @@
 package io.kirill.ebayapp.mobilephone;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
 import io.kirill.ebayapp.mobilephone.clients.telegram.TelegramClient;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.Instant;
-
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
 @RequiredArgsConstructor
@@ -20,10 +19,6 @@ public class MobilePhoneService {
   private final CexClient cexClient;
   private final TelegramClient telegramClient;
   private final MobilePhoneRepository mobilePhoneRepository;
-
-  public Mono<Boolean> isNew(MobilePhone mobilePhone) {
-    return mobilePhoneRepository.existsByUrl(mobilePhone.getUrl()).map(exists -> !exists);
-  }
 
   public Mono<MobilePhone> save(MobilePhone mobilePhone) {
     return mobilePhoneRepository.save(mobilePhone);
