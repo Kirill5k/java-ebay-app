@@ -35,8 +35,8 @@ public class ItemMapper {
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
         .storageCapacity(properties.getOrDefault(STORAGE_CAPACITY_PROPERTY, "").replaceAll(" ", ""))
         .model(properties.getOrDefault(MODEL_PROPERTY, item.getMpn()))
-        .colour(mapColour(properties))
-        .manufacturerColour(properties.get(MANUFACTURER_COLOR_PROPERTY))
+        .colour(mapColour(properties.getOrDefault(MANUFACTURER_COLOR_PROPERTY, properties.get(COLOUR_PROPERTY))))
+        .manufacturerColour(mapColour(properties.get(MANUFACTURER_COLOR_PROPERTY)))
         .network(mapNetwork(properties))
         .condition(item.getCondition())
         .price(item.getPrice().getValue())
@@ -55,9 +55,9 @@ public class ItemMapper {
         .orElse(UNLOCKED_NETWORK);
   }
 
-  private String mapColour(Map<String, String> properties) {
-    return Optional.ofNullable(properties.get(COLOUR_PROPERTY))
-        .map(colour -> colour.split("/")[0].trim())
+  private String mapColour(String colour) {
+    return Optional.ofNullable(colour)
+        .map(c -> c.split("/")[0].trim())
         .orElse(null);
   }
 }
