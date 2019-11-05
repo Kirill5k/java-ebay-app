@@ -55,7 +55,7 @@ public class CexClient {
         .map(response -> ofNullable(response.getData()).map(SearchData::getBoxes).orElse(emptyList()))
         .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, originalPrice, results.size()))
         .filter(results -> !results.isEmpty())
-        .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).average().getAsDouble())
+        .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).min().getAsDouble())
         .map(Math::floor)
         .map(BigDecimal::valueOf);
   }

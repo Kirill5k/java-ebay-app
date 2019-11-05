@@ -50,7 +50,7 @@ class CexClientTest {
 
       StepVerifier
           .create(averagePrice)
-          .expectNextMatches(price -> price.doubleValue() == 16.0)
+          .expectNextMatches(price -> price.doubleValue() == 12)
           .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();

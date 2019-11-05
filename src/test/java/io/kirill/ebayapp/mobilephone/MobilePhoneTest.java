@@ -1,10 +1,9 @@
 package io.kirill.ebayapp.mobilephone;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MobilePhoneTest {
 
@@ -18,10 +17,10 @@ class MobilePhoneTest {
   }
 
   @Test
-  void hasAllDetails() {
-    assertThat(iphone6s.hasAllDetails()).isTrue();
-    assertThat(iphone6s.withColour(null).hasAllDetails()).isFalse();
-    assertThat(iphone6s.withMake(null).hasAllDetails()).isFalse();
+  void hasMinAmountOfDetails() {
+    assertThat(iphone6s.hasMinAmountOfDetails()).isTrue();
+    assertThat(iphone6s.withModel(null).hasMinAmountOfDetails()).isFalse();
+    assertThat(iphone6s.withMake(null).hasMinAmountOfDetails()).isFalse();
   }
 
   @Test
