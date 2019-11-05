@@ -33,6 +33,5 @@ class EbayApplicationTests {
 				.expectHeader().contentType(MediaType.TEXT_HTML)
 				.expectStatus().isOk()
 				.expectBody(String.class).value(startsWithIgnoringCase("<!DOCTYPE html>"));
-
 	}
 }
