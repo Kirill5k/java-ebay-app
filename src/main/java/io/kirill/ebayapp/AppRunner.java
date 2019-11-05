@@ -1,11 +1,12 @@
 package io.kirill.ebayapp;
 
 import io.kirill.ebayapp.mobilephone.MobilePhoneService;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -21,7 +22,7 @@ public class AppRunner {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofMillis(500))
         .flatMap(mobilePhoneService::findResellPrice)
-        .flatMap(mobilePhoneService::save)
+//        .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.getResellPrice() != null && phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
