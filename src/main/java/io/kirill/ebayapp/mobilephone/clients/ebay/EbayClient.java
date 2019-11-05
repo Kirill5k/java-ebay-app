@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -38,4 +39,10 @@ public class EbayClient {
   private Predicate<SearchResult> hasTrustedSeller = searchResult -> searchResult.getSeller() != null &&
       searchResult.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT &&
       searchResult.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE;
+
+
+  @Scheduled(cron = "0 0 4 * * *")
+  void clearIds() {
+    ids.clear();
+  }
 }

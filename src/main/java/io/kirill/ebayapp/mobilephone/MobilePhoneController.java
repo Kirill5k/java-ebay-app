@@ -23,6 +23,6 @@ public class MobilePhoneController {
 
   @GetMapping(value = "/feed", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   public Flux<MobilePhone> feed() {
-    return mobilePhoneService.feedLatest();
+    return mobilePhoneService.feedLatest().onErrorStop();
   }
 }
