@@ -37,6 +37,8 @@ public class EbayClient {
   }
 
   private Predicate<SearchResult> hasTrustedSeller = searchResult -> searchResult.getSeller() != null &&
+      searchResult.getSeller().getFeedbackPercentage() != null &&
+      searchResult.getSeller().getFeedbackScore() != null &&
       searchResult.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT &&
       searchResult.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE;
 
