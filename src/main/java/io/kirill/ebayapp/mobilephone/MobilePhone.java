@@ -43,8 +43,8 @@ public class MobilePhone {
         .collect(joining(" "));
   }
 
-  public boolean hasAllDetails() {
-    return Stream.of(make, model, storageCapacity, colour, network).noneMatch(Objects::isNull);
+  public boolean hasMinAmountOfDetails() {
+    return Stream.of(make, model, network).noneMatch(Objects::isNull);
   }
 
   public boolean isProfitableToResell(int expectedMarginPercentage) {

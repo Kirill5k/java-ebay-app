@@ -81,7 +81,7 @@ class MobilePhoneServiceTest {
   @Test
   void findResellPriceWithIncompleteDetails() {
     StepVerifier
-        .create(mobilePhoneService.findResellPrice(iphone6s.withColour(null)))
+        .create(mobilePhoneService.findResellPrice(iphone6s.withModel(null)))
         .expectNextMatches(phone -> phone.getResellPrice() == null)
         .verifyComplete();
 

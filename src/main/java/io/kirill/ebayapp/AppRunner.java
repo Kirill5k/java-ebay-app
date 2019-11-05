@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AppRunner {
   private static final int MINUTES_PERIOD = 15;
-  private static final int MIN_MARGIN_PERCENTAGE = 30;
+  private static final int MIN_MARGIN_PERCENTAGE = 25;
 
   private final MobilePhoneService mobilePhoneService;
 

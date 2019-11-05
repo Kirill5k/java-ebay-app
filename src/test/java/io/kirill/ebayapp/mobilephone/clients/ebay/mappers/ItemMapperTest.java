@@ -41,7 +41,7 @@ class ItemMapperTest {
             new ItemProperty("type", "Model", "Iphone 6s"),
             new ItemProperty("type", "Colour", "Grey"),
             new ItemProperty("type", "Manufacturer Colour", "Space Grey / Blue"),
-            new ItemProperty("type", "Storage Capacity", "16 GB")
+            new ItemProperty("type", "Storage Capacity", "16 GB / 32 GB")
         ))
         .build();
 

@@ -33,7 +33,7 @@ public class ItemMapper {
 
     return MobilePhone.builder()
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
-        .storageCapacity(properties.getOrDefault(STORAGE_CAPACITY_PROPERTY, "").replaceAll(" ", ""))
+        .storageCapacity(mapStorage(properties))
         .model(properties.getOrDefault(MODEL_PROPERTY, item.getMpn()))
         .colour(mapColour(properties.getOrDefault(MANUFACTURER_COLOR_PROPERTY, properties.get(COLOUR_PROPERTY))))
         .manufacturerColour(mapColour(properties.get(MANUFACTURER_COLOR_PROPERTY)))
@@ -58,6 +58,13 @@ public class ItemMapper {
   private String mapColour(String colour) {
     return Optional.ofNullable(colour)
         .map(c -> c.split("[/,]")[0].trim())
+        .orElse(null);
+  }
+
+  private String mapStorage(Map<String, String> properties) {
+    return Optional.ofNullable(properties.get(STORAGE_CAPACITY_PROPERTY))
+        .map(s -> s.split("[/,]")[0].trim())
+        .map(s -> s.replaceAll(" ", ""))
         .orElse(null);
   }
 }
