@@ -57,7 +57,7 @@ public class ItemMapper {
 
   private String mapColour(String colour) {
     return Optional.ofNullable(colour)
-        .map(c -> c.split("/")[0].trim())
+        .map(c -> c.split("[/,]")[0].trim())
         .orElse(null);
   }
 }
