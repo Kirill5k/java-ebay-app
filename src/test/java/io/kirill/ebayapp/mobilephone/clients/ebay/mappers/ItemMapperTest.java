@@ -39,7 +39,7 @@ class ItemMapperTest {
             new ItemProperty("type", "Brand", "Apple"),
             new ItemProperty("type", "Network", "Unlocked"),
             new ItemProperty("type", "Model", "Iphone 6s"),
-            new ItemProperty("type", "Colour", "Grey"),
+            new ItemProperty("type", "Colour", "Grey / Blue"),
             new ItemProperty("type", "Manufacturer Colour", "Space Grey"),
             new ItemProperty("type", "Storage Capacity", "16 GB")
         ))

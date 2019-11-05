@@ -9,11 +9,16 @@ import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ItemMapper {
+  private static final List<String> VALID_NETWORKS = List.of("unlocked", "o2", "three", "ee", "vodafone", "three", "tesco");
+  private static final String UNLOCKED_NETWORK = "Unlocked";
+
   private static final String MAKE_PROPERTY = "Brand";
   private static final String MODEL_PROPERTY = "Model";
   private static final String MANUFACTURER_COLOR_PROPERTY = "Manufacturer Colour";
@@ -30,9 +35,9 @@ public class ItemMapper {
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
         .storageCapacity(properties.getOrDefault(STORAGE_CAPACITY_PROPERTY, "").replaceAll(" ", ""))
         .model(properties.getOrDefault(MODEL_PROPERTY, item.getMpn()))
-        .colour(properties.getOrDefault(COLOUR_PROPERTY, item.getColor()))
+        .colour(mapColour(properties))
         .manufacturerColour(properties.get(MANUFACTURER_COLOR_PROPERTY))
-        .network(properties.get(NETWORK_PROPERTY))
+        .network(mapNetwork(properties))
         .condition(item.getCondition())
         .price(item.getPrice().getValue())
         .listingTitle(item.getTitle())
@@ -42,5 +47,17 @@ public class ItemMapper {
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .mpn(item.getMpn())
         .build();
+  }
+
+  private String mapNetwork(Map<String, String> properties) {
+    return Optional.ofNullable(properties.get(NETWORK_PROPERTY))
+        .filter(network -> VALID_NETWORKS.contains(network.toLowerCase()))
+        .orElse(UNLOCKED_NETWORK);
+  }
+
+  private String mapColour(Map<String, String> properties) {
+    return Optional.ofNullable(properties.get(COLOUR_PROPERTY))
+        .map(colour -> colour.split("/")[0].trim())
+        .orElse(null);
   }
 }
