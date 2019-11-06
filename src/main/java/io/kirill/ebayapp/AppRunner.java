@@ -22,7 +22,7 @@ public class AppRunner {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofMillis(500))
         .flatMap(mobilePhoneService::findResellPrice)
-//        .flatMap(mobilePhoneService::save)
+        .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.getResellPrice() != null && phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE))
         .flatMap(mobilePhoneService::informAboutThePhone)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
