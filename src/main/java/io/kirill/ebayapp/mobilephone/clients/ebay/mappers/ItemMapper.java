@@ -21,7 +21,9 @@ public class ItemMapper {
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
   private static final String CONDITION_TRIGGER_WORDS = String.join("|",
-      "has crackes", "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has cracked");
+      "has crackes", "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has cracked",
+      "spares or parts"
+  );
   private static final String FAULTY_CONDITION = "Faulty";
 
   private static final String MAKE_PROPERTY = "Brand";

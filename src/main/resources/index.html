@@ -10,7 +10,9 @@
   <title>Ebay app</title>
 
   <script>
-      var ws = new WebSocket("ws://localhost:8080/ws/mobile-phones/feed");
+      var loc = window.location;
+      var uri = "ws://" + loc.host + loc.pathname + "ws/mobile-phones/feed";
+      var ws = new WebSocket(uri);
       ws.addEventListener("open", function(e) {
         ws.send("give me phone");
       });
