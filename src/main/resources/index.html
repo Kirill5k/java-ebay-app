@@ -10,9 +10,11 @@
   <title>Ebay app</title>
 
   <script>
-      var sse = new EventSource("/api/mobile-phones/feed");
-      console.log("starting mobile phones event source feed...");
-      sse.onmessage = function (event) {
+      var ws = new WebSocket("ws://localhost:8080/ws/mobile-phones/feed");
+      ws.addEventListener("open", function(e) {
+        ws.send("give me phone");
+      });
+      ws.onmessage = function (event) {
           console.log("received event", event.data);
           var phone = JSON.parse(event.data);
 
@@ -53,6 +55,12 @@
           priceText.innerText = "Ebay price: " + phone.price + " / CEX price: " + (phone.resellPrice ? phone.resellPrice : "Unknown");
           price.append(priceText);
 
+          var condition = document.createElement("p");
+          condition.className = "card-text mb-0 pl-3";
+          var conditionText = document.createElement("small");
+          conditionText.innerText = phone.condition;
+          condition.append(conditionText);
+
           var datePosted = document.createElement("p");
           datePosted.className = "card-text pl-3";
           var datePostedText = document.createElement("small");
@@ -64,14 +72,15 @@
           cardBody.append(description);
           cardBody.append(document.createElement("hr"));
           cardBody.append(price);
+          cardBody.append(condition);
           cardBody.append(datePosted);
 
           document.getElementById("mobile-phones").prepend(card);
       };
-      sse.onopen = function (ev) {
+      ws.onopen = function (ev) {
           console.log("mobiles phones feed is opened")
       };
-      sse.onerror = function (error) {
+      ws.onerror = function (error) {
           console.log("error during mobile phones stream:", error);
       }
 

@@ -1,6 +1,5 @@
 package io.kirill.ebayapp.mobilephone;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -13,8 +12,6 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
-import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import static java.util.stream.Collectors.joining;
 
 @Value
@@ -22,7 +19,6 @@ import static java.util.stream.Collectors.joining;
 @Builder
 @With
 @RequiredArgsConstructor
-@JsonAutoDetect(fieldVisibility= ANY, getterVisibility= NONE, isGetterVisibility= NONE, setterVisibility= NONE)
 public class MobilePhone {
   @Id
   private final String id;

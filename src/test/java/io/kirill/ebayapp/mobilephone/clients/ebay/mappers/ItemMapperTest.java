@@ -72,4 +72,11 @@ class ItemMapperTest {
     var item = Item.builder().description(description).build();
     assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
   }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"blah blah has touchid blah blah"})
+  void toMobilePhoneWithGoodCondition(String description) {
+    var item = Item.builder().description(description).condition("Working").build();
+    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Working");
+  }
 }
