@@ -1,16 +1,19 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ItemMapperTest {
   String itemUrl = "http://ebay.com/item";
@@ -61,5 +64,12 @@ class ItemMapperTest {
     assertThat(phone.getDatePosted()).isBetween(Instant.now().minusSeconds(10), Instant.now().plusSeconds(10));
     assertThat(phone.getImage()).isEqualTo(imageUrl);
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"blah blah no touchid blah blah", "no touchid", "has cracked screen"})
+  void toMobilePhoneWithFaultyCondition(String description) {
+    var item = Item.builder().description(description).build();
+    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
   }
 }

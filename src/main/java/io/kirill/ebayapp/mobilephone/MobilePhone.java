@@ -1,17 +1,18 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static java.util.stream.Collectors.joining;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Value
 @Document
@@ -49,5 +50,9 @@ public class MobilePhone {
 
   public boolean isProfitableToResell(int expectedMarginPercentage) {
     return (resellPrice.doubleValue() * 100 / price.doubleValue() - 100) > expectedMarginPercentage;
+  }
+
+  public boolean isInWorkingCondition() {
+    return !condition.equals("Faulty");
   }
 }
