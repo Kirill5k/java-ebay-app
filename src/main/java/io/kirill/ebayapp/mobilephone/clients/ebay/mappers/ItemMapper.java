@@ -20,7 +20,8 @@ public class ItemMapper {
   private static final List<String> VALID_NETWORKS = List.of("unlocked", "o2", "three", "ee", "vodafone", "three", "tesco");
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
-  private static final String CONDITION_TRIGGER_WORDS = String.join("|", "cracked", "no touchid", "no touch id", "no faceid");
+  private static final String CONDITION_TRIGGER_WORDS = String.join("|",
+      "has crackes", "cracked", "no touchid", "no touch id", "no faceid");
   private static final String FAULTY_CONDITION = "Faulty";
 
   private static final String MAKE_PROPERTY = "Brand";
