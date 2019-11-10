@@ -3,6 +3,7 @@ package io.kirill.ebayapp;
 import io.kirill.ebayapp.mobilephone.MobilePhoneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -16,7 +17,7 @@ public class AppRunner {
 
   private final MobilePhoneService mobilePhoneService;
 
-//  @Scheduled(fixedDelay = 120000)
+  @Scheduled(fixedDelay = 120000)
   void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofMillis(500))
