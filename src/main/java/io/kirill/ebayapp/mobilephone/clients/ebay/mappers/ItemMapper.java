@@ -22,7 +22,7 @@ public class ItemMapper {
   private static final String CONDITION_TRIGGER_WORDS = String.join("|",
       "has cracks", "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has cracked",
       "spares or parts", "screen cracked", "smashed screen", "cracked screen", "is faulty",
-      "is cracked", "spares or repair", "doesn't work", "not working"
+      "is cracked", "spares or repair", "doesn't work", "not working", "few dents"
   );
   private static final String FAULTY_CONDITION = "Faulty";
 

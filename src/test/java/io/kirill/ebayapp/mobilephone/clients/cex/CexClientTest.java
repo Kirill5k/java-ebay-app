@@ -8,8 +8,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
@@ -46,7 +44,7 @@ class CexClientTest {
         .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"exchangePrice\": 12.99}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getAveragePrice(iphone6s);
+    var averagePrice = cexClient.getMinPrice(iphone6s);
 
       StepVerifier
           .create(averagePrice)
@@ -67,7 +65,7 @@ class CexClientTest {
         .setBody("{\"response\": {\"data\": {\"results\": []}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getAveragePrice(iphone6s);
+    var averagePrice = cexClient.getMinPrice(iphone6s);
 
     StepVerifier
         .create(averagePrice)
@@ -81,7 +79,7 @@ class CexClientTest {
         .setBody("{\"response\": {\"data\": \"\", \"error\": {\"internal_message\": \"error-message\"}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getAveragePrice(iphone6s);
+    var averagePrice = cexClient.getMinPrice(iphone6s);
 
     StepVerifier
         .create(averagePrice)

@@ -33,7 +33,7 @@ class EbaySearchClient {
   private final static String DEFAULT_FILTER = "conditionIds:{1000|1500|2000|2500|3000|4000|5000}," +
       "buyingOptions:{FIXED_PRICE}," +
       "deliveryCountry:GB," +
-      "price:[45..800]," +
+      "price:[39..800]," +
       "priceCurrency:GBP," +
       "itemLocationCountry:GB," +
       "itemStartDate:[%s]";

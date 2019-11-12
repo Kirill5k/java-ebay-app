@@ -59,7 +59,7 @@ class EbaySearchClientTest {
     assertThat(recordedRequest.getHeader(CONTENT_TYPE)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader(ACCEPT)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader("X-EBAY-C-MARKETPLACE-ID")).isEqualTo("EBAY_GB");
-    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/search?category_ids=9355&filter=conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,buyingOptions:%257BFIXED_PRICE%257D,deliveryCountry:GB,price:%5B45..800%5D,priceCurrency:GBP,itemLocationCountry:GB,itemStartDate:%5B2019-12-01T12:00:00Z%5D");
+    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/search?category_ids=9355&filter=conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,buyingOptions:%257BFIXED_PRICE%257D,deliveryCountry:GB,price:%5B39..800%5D,priceCurrency:GBP,itemLocationCountry:GB,itemStartDate:%5B2019-12-01T12:00:00Z%5D");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
   }
 

@@ -68,14 +68,14 @@ class MobilePhoneServiceTest {
   void findResellPrice() {
     doAnswer(inv -> Mono.just(BigDecimal.valueOf(10.0)))
         .when(cexClient)
-        .getAveragePrice(any());
+        .getMinPrice(any());
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
         .expectNextMatches(phone -> phone.getResellPrice().equals(BigDecimal.valueOf(10.0)) && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
-    verify(cexClient).getAveragePrice(iphone6s);
+    verify(cexClient).getMinPrice(iphone6s);
   }
 
   @Test
@@ -85,21 +85,21 @@ class MobilePhoneServiceTest {
         .expectNextMatches(phone -> phone.getResellPrice() == null)
         .verifyComplete();
 
-    verify(cexClient, never()).getAveragePrice(iphone6s);
+    verify(cexClient, never()).getMinPrice(iphone6s);
   }
 
   @Test
   void findResellPriceWhenNotFound() {
     doAnswer(inv -> Mono.empty())
         .when(cexClient)
-        .getAveragePrice(any());
+        .getMinPrice(any());
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
         .expectNextMatches(phone -> phone.getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
-    verify(cexClient).getAveragePrice(iphone6s);
+    verify(cexClient).getMinPrice(iphone6s);
   }
 
   @Test
