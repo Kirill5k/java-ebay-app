@@ -85,8 +85,9 @@
       ws.onerror = function (error) {
           console.log("error during mobile phones stream:", error);
       };
-      window.onunload = function (ev) {
+      window.onbeforeunload = function (ev) {
           console.log("closing websocket");
+          ws.onclose = function (ev1) {  };
           ws.close();
       }
   </script>
