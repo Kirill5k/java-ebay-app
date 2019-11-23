@@ -1,18 +1,19 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
-
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
+import org.springframework.stereotype.Component;
+
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Component;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
 
 @Component
 public class ItemMapper {
@@ -23,7 +24,8 @@ public class ItemMapper {
       "has cracks", "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has cracked",
       "spares or parts", "screen cracked", "smashed screen", "cracked screen", "is faulty", "is a crack", "faulty screen",
       "is cracked", "spares or repair", "doesn't work", "not work", "few dents", "is damaged", "damaged screen", "for parts only",
-      "is a slight crack", "needs a new screen", "isn't working", "has a slight crack"
+      "is a slight crack", "needs a new screen", "isn't working", "has a slight crack", "spares/repair", "are broken", "is smashed",
+      "got cracks", "got a crack", "has activation lock"
   );
   private static final String FAULTY_CONDITION = "Faulty";
 
