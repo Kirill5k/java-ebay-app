@@ -21,11 +21,11 @@ public class ItemMapper {
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
   private static final String CONDITION_TRIGGER_WORDS = String.join("|",
-      "has cracks", "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has cracked",
-      "spares or parts", "screen cracked", "smashed screen", "cracked screen", "is faulty", "is a crack", "faulty screen",
-      "is cracked", "spares or repair", "doesn't work", "not work", "few dents", "is damaged", "damaged screen", "for parts only",
-      "is a slight crack", "needs a new screen", "isn't working", "has a slight crack", "spares/repair", "are broken", "is smashed",
-      "got cracks", "got a crack", "has activation lock"
+      "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has crack", "has cracks", "is badly crack",
+      "spares/repair", "spares or parts", "is fault", "is a crack", "faulty screen", "is crack", "spares or repair", "doesn't work",
+      "not work", "few dents", "is damage", "damaged screen", "for parts only", "is a slight crack", "needs a new screen",
+      "isn't working", "has a slight crack", "are broken", "is smashed", "got crack", "got a crack", "has activation lock",
+      "has some screen burn", "has screen burn"
   );
   private static final String FAULTY_CONDITION = "Faulty";
 
