@@ -1,19 +1,18 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
+
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
-import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ItemMapper {
@@ -21,12 +20,14 @@ public class ItemMapper {
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
   private static final String CONDITION_TRIGGER_WORDS = String.join("|",
-      "no touchid", "no touch id", "no faceid", "home button fault", "has a crack", "has crack", "has cracks", "is badly crack",
-      "spares/repair", "spares or parts", "is fault", "is a crack", "faulty screen", "is crack", "spares or repair", "doesn't work",
-      "not work", "few dents", "is damage", "damaged screen", "for parts only", "is a slight crack", "needs a new screen",
-      "isn't working", "has a slight crack", "are broken", "is smashed", "got crack", "got a crack", "has activation lock",
-      "has some screen burn", "has screen burn"
-  );
+      "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "is icloud lock", "has icloud lock",  "has activation lock",
+      "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen",
+      "has crack", "is badly crack", "is crack", "is slight crack", "has slight crack", "got crack",
+      "spares/repair", "spares or parts", "spares or repair", "for parts only",
+      "nt work", "not work",
+      "are broke", "is smashed", "is broke",
+      "has some screen burn", "has screen burn", "needs replac", "needs glass replac", "needs new screen", "few dents"
+      );
   private static final String FAULTY_CONDITION = "Faulty";
 
   private static final String MAKE_PROPERTY = "Brand";
@@ -81,6 +82,7 @@ public class ItemMapper {
   private String mapCondition(Item item) {
     return ofNullable(item.getDescription())
         .map(String::toLowerCase)
+        .map(cond -> cond.replaceAll(" a ", " ").replaceAll("'", ""))
         .filter(d -> d.matches(String.format("^.*?(%s).*$", CONDITION_TRIGGER_WORDS)))
         .map($ -> FAULTY_CONDITION)
         .orElseGet(item::getCondition);
