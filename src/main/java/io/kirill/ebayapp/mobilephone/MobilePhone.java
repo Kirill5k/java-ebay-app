@@ -31,6 +31,7 @@ public class MobilePhone {
   private final String condition;
   private final String listingTitle;
   private final String listingDescription;
+  private final String fullDescription;
   private final Instant datePosted;
   private final String url;
   private final String image;

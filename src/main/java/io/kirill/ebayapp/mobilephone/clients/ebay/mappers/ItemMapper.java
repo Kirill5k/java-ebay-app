@@ -55,6 +55,7 @@ public class ItemMapper {
         .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
         .listingTitle(item.getTitle())
         .listingDescription(item.getShortDescription())
+        .fullDescription(item.getDescription())
         .datePosted(Instant.now())
         .url(item.getItemWebUrl())
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))

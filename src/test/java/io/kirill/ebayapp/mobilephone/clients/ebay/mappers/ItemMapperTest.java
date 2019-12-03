@@ -1,18 +1,19 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ItemMapperTest {
   String itemUrl = "http://ebay.com/item";
@@ -33,6 +34,7 @@ class ItemMapperTest {
         .color("silver")
         .title("title")
         .shortDescription("description")
+        .description("full description")
         .brand("apple")
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
         .itemWebUrl(itemUrl)
@@ -60,6 +62,7 @@ class ItemMapperTest {
     assertThat(phone.getUrl()).isEqualTo(itemUrl);
     assertThat(phone.getListingTitle()).isEqualTo("title");
     assertThat(phone.getListingDescription()).isEqualTo("description");
+    assertThat(phone.getFullDescription()).isEqualTo("full description");
     assertThat(phone.getDatePosted()).isBetween(Instant.now().minusSeconds(10), Instant.now().plusSeconds(10));
     assertThat(phone.getImage()).isEqualTo(imageUrl);
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
