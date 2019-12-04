@@ -11,6 +11,8 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
@@ -21,13 +23,13 @@ public class ItemMapper {
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
   private static final String CONDITION_TRIGGER_WORDS = String.join("|",
-      "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home",
-      "is icloud lock", "has icloud lock",  "has activation lock",
+      "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
+      "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
       "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen",
       "has crack", "have crack", "is badly crack", "is crack", "is slight crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "cracked display",
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only",
       "nt work", "not work",
-      "are broke", "is smashed", "is broke", "is smashed",
+      "are broke", "is smashed", "is broke", "is smashed", "smashed screen",
       "has some screen burn", "has screen burn", "needs replac", "needs glass replac", "needs new screen", "few dents"
       );
   private static final String FAULTY_CONDITION = "Faulty";
@@ -55,7 +57,6 @@ public class ItemMapper {
         .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
         .listingTitle(item.getTitle())
         .listingDescription(item.getShortDescription())
-        .fullDescription(item.getDescription())
         .datePosted(Instant.now())
         .url(item.getItemWebUrl())
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
@@ -83,8 +84,10 @@ public class ItemMapper {
   }
 
   private String mapCondition(Item item) {
-    return ofNullable(item.getDescription())
+    return Stream.of(item.getDescription(), item.getShortDescription())
+        .filter(Objects::nonNull)
         .map(String::toLowerCase)
+        .reduce(String::concat)
         .map(cond -> cond.replaceAll(" a ", " ").replaceAll("'", ""))
         .filter(d -> d.matches(String.format("^.*?(%s).*$", CONDITION_TRIGGER_WORDS)))
         .map($ -> FAULTY_CONDITION)

@@ -62,7 +62,6 @@ class ItemMapperTest {
     assertThat(phone.getUrl()).isEqualTo(itemUrl);
     assertThat(phone.getListingTitle()).isEqualTo("title");
     assertThat(phone.getListingDescription()).isEqualTo("description");
-    assertThat(phone.getFullDescription()).isEqualTo("full description");
     assertThat(phone.getDatePosted()).isBetween(Instant.now().minusSeconds(10), Instant.now().plusSeconds(10));
     assertThat(phone.getImage()).isEqualTo(imageUrl);
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
@@ -82,7 +81,25 @@ class ItemMapperTest {
       "blah spares/repairs blah"
   })
   void toMobilePhoneWithFaultyCondition(String description) {
-    var item = Item.builder().description(description).build();
+    var item = Item.builder().shortDescription(null).description(description).build();
+    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "blah blah has a crack blah",
+      "blah blah no touchid blah blah",
+      "no touchid",
+      "has cracked screen",
+      "bla bla touch id doesn't work blah blah",
+      "bla bla touch id doesnt work blah blah",
+      "bla bla touch id can't work blah blah",
+      "blah blah screen is cracked blah blah",
+      "blah blah there is a crack blah blah",
+      "blah spares/repairs blah"
+  })
+  void toMobilePhoneWithFaultyConditionByAnalyzingShortDescription(String description) {
+    var item = Item.builder().shortDescription(description).description(null).build();
     assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
   }
 
