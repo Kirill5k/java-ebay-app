@@ -1,21 +1,20 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
+
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
-import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ItemMapper {
@@ -57,6 +56,7 @@ public class ItemMapper {
         .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
         .listingTitle(item.getTitle())
         .listingDescription(item.getShortDescription())
+        .listingCondition(item.getCondition())
         .datePosted(Instant.now())
         .url(item.getItemWebUrl())
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
