@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,11 @@ public class ItemMapper {
   private static final List<String> VALID_NETWORKS = List.of("unlocked", "o2", "three", "ee", "vodafone", "three", "tesco");
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
-  private static final String CONDITION_TRIGGER_WORDS = String.join("|",
+
+  private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
+      "cracked", "faulty", "spares", "repair", "smashed");
+
+  private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
       "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
       "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen",
@@ -84,13 +89,23 @@ public class ItemMapper {
   }
 
   private String mapCondition(Item item) {
+    return mapConditionFromTitle(item).or(() -> mapConditionFromDescription(item)).orElseGet(item::getCondition);
+  }
+
+  private Optional<String> mapConditionFromTitle(Item item) {
+    return ofNullable(item.getTitle())
+        .map(String::toLowerCase)
+        .filter(title -> title.matches(String.format("^.*?(%s).*$", TITLE_CONDITION_TRIGGER_WORDS)))
+        .map($ -> FAULTY_CONDITION);
+  }
+
+  private Optional<String> mapConditionFromDescription(Item item) {
     return Stream.of(item.getDescription(), item.getShortDescription())
         .filter(Objects::nonNull)
         .map(String::toLowerCase)
         .reduce(String::concat)
         .map(cond -> cond.replaceAll(" a ", " ").replaceAll("'", ""))
-        .filter(d -> d.matches(String.format("^.*?(%s).*$", CONDITION_TRIGGER_WORDS)))
-        .map($ -> FAULTY_CONDITION)
-        .orElseGet(item::getCondition);
+        .filter(d -> d.matches(String.format("^.*?(%s).*$", DESCRIPTION_CONDITION_TRIGGER_WORDS)))
+        .map($ -> FAULTY_CONDITION);
   }
 }

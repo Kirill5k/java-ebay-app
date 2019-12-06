@@ -99,7 +99,7 @@ class ItemMapperTest {
       "blah spares/repairs blah"
   })
   void toMobilePhoneWithFaultyConditionByAnalyzingShortDescription(String description) {
-    var item = Item.builder().shortDescription(description).description(null).build();
+    var item = Item.builder().title("best").shortDescription(description).description(null).build();
     assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
   }
 
@@ -108,5 +108,18 @@ class ItemMapperTest {
   void toMobilePhoneWithGoodCondition(String description) {
     var item = Item.builder().description(description).condition("Working").build();
     assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Working");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "good but smashed",
+      "galaxy s8 smashed screen",
+      "iphone for spares repairs",
+      "iphone with cracked screen",
+      "blah spares/repairs blah"
+  })
+  void toMobilePhoneWithFaultyConditionByAnalyzingListingTitle(String title) {
+    var item = Item.builder().title(title).description("10 out of 10").shortDescription(null).build();
+    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
   }
 }
