@@ -91,6 +91,8 @@ class ItemMapperTest {
       "blah blah has a crack blah",
       "blah blah no touchid blah blah",
       "no touchid",
+      "has a crack",
+      "has a small crack",
       "has cracked screen",
       "bla bla touch id don't work blah blah",
       "bla bla touch id doesn't work blah blah",

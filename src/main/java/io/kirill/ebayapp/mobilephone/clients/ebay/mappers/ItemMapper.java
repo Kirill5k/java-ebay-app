@@ -31,8 +31,9 @@ public class ItemMapper {
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
       "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
       "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen",
-      "has crack", "have crack", "is badly crack", "is crack", "is slight crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "cracked display",
-      "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair",
+      "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack",
+      "is badly crack", "is crack", "is slight crack", "cracked display",
+      "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work",
       "are broke", "is smashed", "is broke", "smashed screen",
       "has some screen burn", "has screen burn", "needs replac", "needs glass replac", "needs new screen", "few dents"
