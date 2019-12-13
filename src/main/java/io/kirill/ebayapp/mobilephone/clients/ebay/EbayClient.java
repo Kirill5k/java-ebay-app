@@ -1,18 +1,20 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
-
+import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
+import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
+import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
-import io.kirill.ebayapp.mobilephone.clients.ebay.mappers.ItemMapper;
-import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
-import java.time.Instant;
-import java.util.Map;
-import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class EbayClient {
 
   public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
     return authClient.accessToken()
-        .flatMapMany(token -> searchClient.searchForAllInCategory(token, MOBILES_PHONES_CATEGORY_ID, Instant.now().minusSeconds(minutes * 60)))
+        .flatMapMany(token -> searchClient.searchForNewestInCategoryFrom(token, MOBILES_PHONES_CATEGORY_ID, Instant.now().minusSeconds(minutes * 60)))
         .filter(hasTrustedSeller)
         .filter(searchResult -> !ids.containsKey(searchResult.getItemId()))
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))

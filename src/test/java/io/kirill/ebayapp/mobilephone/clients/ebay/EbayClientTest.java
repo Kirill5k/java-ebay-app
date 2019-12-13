@@ -9,11 +9,12 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
+import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
-import io.kirill.ebayapp.mobilephone.clients.ebay.mappers.ItemMapper;
-import io.kirill.ebayapp.mobilephone.clients.ebay.models.Seller;
-import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
-import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
+import io.kirill.ebayapp.common.clients.ebay.models.Seller;
+import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
+import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ class EbayClientTest {
     );
 
     doAnswer(inv -> Mono.just(accessToken)).when(ebayAuthClient).accessToken();
-    doAnswer(inv -> Flux.fromIterable(searchResult)).when(ebaySearchClient).searchForAllInCategory(anyString(), anyInt(), instantCaptor.capture());
+    doAnswer(inv -> Flux.fromIterable(searchResult)).when(ebaySearchClient).searchForNewestInCategoryFrom(anyString(), anyInt(), instantCaptor.capture());
     doAnswer(inv -> Mono.just(Item.builder().itemId(inv.getArgument(1)).build())).when(ebaySearchClient).getItem(anyString(), anyString());
     doAnswer(inv -> MobilePhone.builder().id(((Item)inv.getArgument(0)).getItemId()).build()).when(itemMapper).toMobilePhone(any());
 
@@ -72,7 +73,7 @@ class EbayClientTest {
         .verifyComplete();
 
     verify(ebayAuthClient, times(3)).accessToken();
-    verify(ebaySearchClient).searchForAllInCategory(eq(accessToken), eq(9355), any());
+    verify(ebaySearchClient).searchForNewestInCategoryFrom(eq(accessToken), eq(9355), any());
     verify(ebaySearchClient).getItem(accessToken, "item-1");
     verify(ebaySearchClient).getItem(accessToken, "item-2");
 

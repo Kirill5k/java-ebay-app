@@ -11,7 +11,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
-import io.kirill.ebayapp.mobilephone.clients.telegram.TelegramClient;
+import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
