@@ -16,6 +16,8 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 @RequiredArgsConstructor
 public class MobilePhoneService {
+  private final static String MESSAGE_TEMPLATE = "good deal on \"%s\": asking price %s, cex price %s %s";
+
   private final EbayClient ebayClient;
   private final CexClient cexClient;
   private final TelegramClient telegramClient;
@@ -46,6 +48,7 @@ public class MobilePhoneService {
   }
 
   public Mono<Void> informAboutThePhone(MobilePhone phone) {
-    return telegramClient.informAboutThePhone(phone);
+    var message = String.format(MESSAGE_TEMPLATE, phone.fullName(), phone.getPrice(), phone.getResellPrice(), phone.getUrl());
+    return telegramClient.sendMessageToMainChannel(message);
   }
 }

@@ -1,20 +1,8 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
+import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
-import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,6 +14,20 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class MobilePhoneServiceTest {
@@ -106,13 +108,13 @@ class MobilePhoneServiceTest {
   void informAboutThePhone() {
     doAnswer(inv -> Mono.empty())
         .when(telegramClient)
-        .informAboutThePhone(any());
+        .sendMessageToMainChannel(anyString());
 
     StepVerifier
-        .create(mobilePhoneService.informAboutThePhone(iphone6s))
+        .create(mobilePhoneService.informAboutThePhone(iphone6s.withUrl("google.com").withPrice(BigDecimal.ONE).withResellPrice(BigDecimal.TEN)))
         .verifyComplete();
 
-    verify(telegramClient).informAboutThePhone(iphone6s);
+    verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": asking price 1, cex price 10 google.com");
   }
 
   @Test
