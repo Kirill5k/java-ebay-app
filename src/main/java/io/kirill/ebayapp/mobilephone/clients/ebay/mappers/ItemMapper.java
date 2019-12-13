@@ -1,13 +1,12 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay.mappers;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
-
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.Price;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.item.ItemProperty;
+import org.springframework.stereotype.Component;
+
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +14,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
 
 @Component
 public class ItemMapper {
@@ -30,10 +31,11 @@ public class ItemMapper {
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
       "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
       "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen",
-      "has crack", "have crack", "is badly crack", "is crack", "is slight crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "cracked display",
-      "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only",
-      "nt work", "not work",
-      "are broke", "is smashed", "is broke", "is smashed", "smashed screen",
+      "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack",
+      "is badly crack", "is crack", "is slight crack", "cracked display",
+      "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
+      "doesnt work", "dont work", "not work", "cant work",
+      "are broke", "is smashed", "is broke", "smashed screen",
       "has some screen burn", "has screen burn", "needs replac", "needs glass replac", "needs new screen", "few dents"
       );
   private static final String FAULTY_CONDITION = "Faulty";
