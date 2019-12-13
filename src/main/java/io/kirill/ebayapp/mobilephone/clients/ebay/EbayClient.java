@@ -1,16 +1,16 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
 
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.ebay.mappers.ItemMapper;
 import io.kirill.ebayapp.mobilephone.clients.ebay.models.search.SearchResult;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
+import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -26,7 +26,10 @@ public class EbayClient {
   private final EbaySearchClient searchClient;
   private final ItemMapper itemMapper;
 
-  private Map<String, Instant> ids = new HashMap<>();
+  private Map<String, String> ids = ExpiringMap.builder()
+      .expirationPolicy(CREATED)
+      .expiration(30, MINUTES)
+      .build();
 
   public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
     return authClient.accessToken()
@@ -34,7 +37,7 @@ public class EbayClient {
         .filter(hasTrustedSeller)
         .filter(searchResult -> !ids.containsKey(searchResult.getItemId()))
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))
-        .doOnNext(item -> ids.put(item.getItemId(), Instant.now()))
+        .doOnNext(item -> ids.put(item.getItemId(), ""))
         .map(itemMapper::toMobilePhone);
   }
 
@@ -43,14 +46,4 @@ public class EbayClient {
       searchResult.getSeller().getFeedbackScore() != null &&
       searchResult.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT &&
       searchResult.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE;
-
-
-  @Scheduled(fixedRate = 900000)
-  void clearIds() {
-    var idsToRemove = ids.entrySet().stream()
-        .filter(e -> e.getValue().isBefore(Instant.now().minusSeconds(1800)))
-        .map(Map.Entry::getKey)
-        .collect(toList());
-    idsToRemove.forEach(ids::remove);
-  }
 }
