@@ -14,5 +14,5 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 public class TelegramConfig {
     private final String baseUrl;
     private final String messagePath;
-    private final String channelId;
+    private final String mainChannelId;
 }
