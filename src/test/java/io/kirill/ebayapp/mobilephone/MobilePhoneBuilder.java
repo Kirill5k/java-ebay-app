@@ -3,12 +3,15 @@ package io.kirill.ebayapp.mobilephone;
 import io.kirill.ebayapp.mobilephone.domain.ListingDetails;
 import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 public class MobilePhoneBuilder {
 
   public static MobilePhone.MobilePhoneBuilder iphone6s() {
     var listingDetails = ListingDetails.builder()
+        .price(BigDecimal.ONE)
+        .resellPrice(BigDecimal.TEN)
         .originalCondition("new")
         .url("ebay.com")
         .image("ebay.com/image.jpeg")

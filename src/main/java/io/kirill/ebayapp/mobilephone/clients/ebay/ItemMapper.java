@@ -1,11 +1,11 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.mobilephone.domain.ListingDetails;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.common.clients.ebay.models.Price;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
+import io.kirill.ebayapp.mobilephone.domain.ListingDetails;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -62,6 +62,7 @@ class ItemMapper {
         .description(item.getShortDescription())
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .url(item.getItemWebUrl())
+        .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
         .build();
 
     return MobilePhone.builder()
@@ -72,7 +73,6 @@ class ItemMapper {
         .manufacturerColour(mapColour(properties.get(MANUFACTURER_COLOR_PROPERTY)))
         .network(mapNetwork(properties))
         .condition(mapCondition(item))
-        .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
         .mpn(item.getMpn())
         .listingDetails(listingDetails)
         .build();

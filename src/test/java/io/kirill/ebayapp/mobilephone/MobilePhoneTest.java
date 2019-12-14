@@ -1,11 +1,11 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MobilePhoneTest {
 
@@ -27,10 +27,13 @@ class MobilePhoneTest {
 
   @Test
   void isProfitableToResell() {
-    var goodDealPhone = iphone6s.withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(160));
-    assertThat(goodDealPhone.isProfitableToResell(50)).isTrue();
+    var goodDealPhoneDetails = iphone6s.getListingDetails().withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(160));
+    assertThat(iphone6s.withListingDetails(goodDealPhoneDetails).isProfitableToResell(50)).isTrue();
 
-    var badDealPhone = iphone6s.withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(140));
-    assertThat(badDealPhone.isProfitableToResell(50)).isFalse();
+    var badDealPhoneDetails = iphone6s.getListingDetails().withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(140));
+    assertThat(iphone6s.withListingDetails(badDealPhoneDetails).isProfitableToResell(50)).isFalse();
+
+    var detailsWithoutResellPrice = iphone6s.getListingDetails().withPrice(BigDecimal.valueOf(100)).withResellPrice(null);
+    assertThat(iphone6s.withListingDetails(detailsWithoutResellPrice).isProfitableToResell(50)).isFalse();
   }
 }

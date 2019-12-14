@@ -59,7 +59,6 @@ class ItemMapperTest {
     assertThat(phone.getModel()).isEqualTo("Iphone 6s");
     assertThat(phone.getColour()).isEqualTo("Space Grey");
     assertThat(phone.getManufacturerColour()).isEqualTo("Space Grey");
-    assertThat(phone.getPrice()).isEqualTo(BigDecimal.valueOf(9.99));
     assertThat(phone.getCondition()).isEqualTo("new and awesome");
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
 
@@ -72,6 +71,7 @@ class ItemMapperTest {
     assertThat(listingDetails.getImage()).isEqualTo(imageUrl);
     assertThat(listingDetails.getOriginalCondition()).isEqualTo("new and awesome");
     assertThat(listingDetails.getDateEnded()).isEqualTo(itemEndDate);
+    assertThat(listingDetails.getPrice()).isEqualTo(BigDecimal.valueOf(9.99));
   }
 
   @ParameterizedTest

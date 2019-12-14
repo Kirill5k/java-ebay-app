@@ -51,7 +51,7 @@ class MobilePhoneServiceTest {
   @Captor
   ArgumentCaptor<Instant> dateCaptor;
 
-  MobilePhone iphone6s = MobilePhoneBuilder.iphone6s().build();
+  MobilePhone iphone6s = MobilePhoneBuilder.iphone6s().build().withResellPrice(null);
 
   @Test
   void getLatestFromEbay() {
@@ -75,7 +75,7 @@ class MobilePhoneServiceTest {
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
-        .expectNextMatches(phone -> phone.getResellPrice().equals(BigDecimal.valueOf(10.0)) && phone.getModel().equals(iphone6s.getModel()))
+        .expectNextMatches(phone -> phone.getListingDetails().getResellPrice().equals(BigDecimal.valueOf(10.0)) && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
     verify(cexClient).getMinPrice(iphone6s);
@@ -84,8 +84,8 @@ class MobilePhoneServiceTest {
   @Test
   void findResellPriceWithIncompleteDetails() {
     StepVerifier
-        .create(mobilePhoneService.findResellPrice(iphone6s.withModel(null)))
-        .expectNextMatches(phone -> phone.getResellPrice() == null)
+        .create(mobilePhoneService.findResellPrice(iphone6s.withModel(null).withResellPrice(null)))
+        .expectNextMatches(phone -> phone.getListingDetails().getResellPrice() == null)
         .verifyComplete();
 
     verify(cexClient, never()).getMinPrice(iphone6s);
@@ -99,7 +99,7 @@ class MobilePhoneServiceTest {
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
-        .expectNextMatches(phone -> phone.getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
+        .expectNextMatches(phone -> phone.getListingDetails().getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
     verify(cexClient).getMinPrice(iphone6s);
@@ -112,7 +112,7 @@ class MobilePhoneServiceTest {
         .sendMessageToMainChannel(anyString());
 
     StepVerifier
-        .create(mobilePhoneService.informAboutThePhone(iphone6s.withPrice(BigDecimal.ONE).withResellPrice(BigDecimal.TEN)))
+        .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(BigDecimal.TEN)))
         .verifyComplete();
 
     verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": asking price 1, cex price 10 ebay.com");

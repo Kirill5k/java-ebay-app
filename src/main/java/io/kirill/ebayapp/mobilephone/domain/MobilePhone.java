@@ -29,8 +29,6 @@ public class MobilePhone {
   private final String network;
   private final String condition;
   private final String mpn;
-  private final BigDecimal price;
-  private final BigDecimal resellPrice;
   private final ListingDetails listingDetails;
 
   public String fullName() {
@@ -44,10 +42,14 @@ public class MobilePhone {
   }
 
   public boolean isProfitableToResell(int expectedMarginPercentage) {
-    return (resellPrice.doubleValue() * 100 / price.doubleValue() - 100) > expectedMarginPercentage;
+    return listingDetails.getResellPrice() != null && listingDetails.isProfitableToResell(expectedMarginPercentage);
   }
 
   public boolean isInWorkingCondition() {
     return !condition.equals("Faulty");
+  }
+
+  public MobilePhone withResellPrice(BigDecimal resellPrice) {
+    return withListingDetails(listingDetails.withResellPrice(resellPrice));
   }
 }

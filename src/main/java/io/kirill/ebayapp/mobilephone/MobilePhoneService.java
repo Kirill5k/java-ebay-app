@@ -49,8 +49,8 @@ public class MobilePhoneService {
   }
 
   public Mono<Void> informAboutThePhone(MobilePhone phone) {
-    var url = phone.getListingDetails().getUrl();
-    var message = String.format(MESSAGE_TEMPLATE, phone.fullName(), phone.getPrice(), phone.getResellPrice(), url);
+    var details = phone.getListingDetails();
+    var message = String.format(MESSAGE_TEMPLATE, phone.fullName(), details.getPrice(), details.getResellPrice(), details.getUrl());
     return telegramClient.sendMessageToMainChannel(message);
   }
 }
