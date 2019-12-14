@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
+import java.time.Instant;
 import java.util.List;
 
 @Value
@@ -21,9 +22,12 @@ public class Item {
   private final String color;
   private final String brand;
   private final Price price;
+  private final Price currentBidPrice;
   private final String categoryPath;
   private final String condition;
   private final String itemWebUrl;
   private final List<ItemProperty> localizedAspects;
   private final ItemImage image;
+  private final Instant itemEndDate;
+  private final List<String> buyingOptions;
 }

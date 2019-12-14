@@ -17,4 +17,6 @@ public class SearchResult {
   private final String itemWebUrl;
   private final Seller seller;
   private final Price price;
+  private final Price currentBidPrice;
+  private final Integer bidCount;
 }

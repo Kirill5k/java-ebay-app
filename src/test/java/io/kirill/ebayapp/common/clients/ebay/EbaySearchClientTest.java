@@ -1,5 +1,6 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
+import io.kirill.ebayapp.TestUtils;
 import io.kirill.ebayapp.common.configs.EbayConfig;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -98,14 +99,14 @@ class EbaySearchClientTest {
   void getItem() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
-        .setBody("{\"itemId\": \"item-1\", \"price\": {\"value\": \"99.99\"}, \"seller\": {\"feedbackPercentage\": \"100.0\"}}")
+        .setBody(TestUtils.getFileContent("classpath:ebay-item.json"))
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
     var item = ebaySearchClient.getItem(accessToken, "item-1");
 
     StepVerifier
         .create(item)
-        .expectNextMatches(i -> i.getItemId().equals("item-1"))
+        .expectNextMatches(i -> i.getItemId().equals("v1|264565980510|0"))
         .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
