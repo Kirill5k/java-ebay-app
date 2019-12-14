@@ -1,17 +1,17 @@
-package io.kirill.ebayapp.mobilephone;
+package io.kirill.ebayapp.mobilephone.domain;
 
-import static java.util.stream.Collectors.joining;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Value
 @Document
@@ -28,15 +28,10 @@ public class MobilePhone {
   private final String storageCapacity;
   private final String network;
   private final String condition;
-  private final String listingCondition;
-  private final String listingTitle;
-  private final String listingDescription;
-  private final Instant datePosted;
-  private final String url;
-  private final String image;
+  private final String mpn;
   private final BigDecimal price;
   private final BigDecimal resellPrice;
-  private final String mpn;
+  private final ListingDetails listingDetails;
 
   public String fullName() {
     return Stream.of(make, model, storageCapacity, colour, network)

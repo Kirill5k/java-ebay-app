@@ -5,7 +5,7 @@ import static java.util.Optional.ofNullable;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import io.kirill.ebayapp.common.configs.CexConfig;
-import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.mobilephone.clients.cex.exceptions.CexSearchError;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchData;
 import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchError;

@@ -3,6 +3,7 @@ package io.kirill.ebayapp.mobilephone;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -111,10 +112,10 @@ class MobilePhoneServiceTest {
         .sendMessageToMainChannel(anyString());
 
     StepVerifier
-        .create(mobilePhoneService.informAboutThePhone(iphone6s.withUrl("google.com").withPrice(BigDecimal.ONE).withResellPrice(BigDecimal.TEN)))
+        .create(mobilePhoneService.informAboutThePhone(iphone6s.withPrice(BigDecimal.ONE).withResellPrice(BigDecimal.TEN)))
         .verifyComplete();
 
-    verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": asking price 1, cex price 10 google.com");
+    verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": asking price 1, cex price 10 ebay.com");
   }
 
   @Test
@@ -129,14 +130,14 @@ class MobilePhoneServiceTest {
         .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
-    verify(mobilePhoneRepository).findAll(Sort.by(new Sort.Order(DESC, "datePosted")));
+    verify(mobilePhoneRepository).findAll(Sort.by(new Sort.Order(DESC, "listingDetails.datePosted")));
   }
 
   @Test
   void feedLatest() {
     doAnswer(inv -> Flux.just(iphone6s, iphone6s, iphone6s))
         .when(mobilePhoneRepository)
-        .findByDatePostedAfter(dateCaptor.capture());
+        .findByListingDetailsDatePostedAfter(dateCaptor.capture());
 
     StepVerifier
         .create(mobilePhoneService.feedLatest())

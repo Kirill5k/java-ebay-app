@@ -1,7 +1,7 @@
 package io.kirill.ebayapp.mobilephone.clients.cex;
 
 import io.kirill.ebayapp.common.configs.CexConfig;
-import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.mobilephone.MobilePhoneBuilder;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

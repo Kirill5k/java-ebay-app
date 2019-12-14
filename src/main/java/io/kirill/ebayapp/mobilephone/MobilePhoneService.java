@@ -3,6 +3,7 @@ package io.kirill.ebayapp.mobilephone;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,11 @@ public class MobilePhoneService {
   }
 
   public Flux<MobilePhone> getLatest(int limit) {
-    return mobilePhoneRepository.findAll(Sort.by(new Sort.Order(DESC, "datePosted"))).limitRequest(limit);
+    return mobilePhoneRepository.findAll(Sort.by(new Sort.Order(DESC, "listingDetails.datePosted"))).limitRequest(limit);
   }
 
   public Flux<MobilePhone> feedLatest() {
-    return mobilePhoneRepository.findByDatePostedAfter(Instant.now().minusSeconds(1800));
+    return mobilePhoneRepository.findByListingDetailsDatePostedAfter(Instant.now().minusSeconds(1800));
   }
 
   public Flux<MobilePhone> getLatestFromEbay(int minutes) {
@@ -48,7 +49,8 @@ public class MobilePhoneService {
   }
 
   public Mono<Void> informAboutThePhone(MobilePhone phone) {
-    var message = String.format(MESSAGE_TEMPLATE, phone.fullName(), phone.getPrice(), phone.getResellPrice(), phone.getUrl());
+    var url = phone.getListingDetails().getUrl();
+    var message = String.format(MESSAGE_TEMPLATE, phone.fullName(), phone.getPrice(), phone.getResellPrice(), url);
     return telegramClient.sendMessageToMainChannel(message);
   }
 }

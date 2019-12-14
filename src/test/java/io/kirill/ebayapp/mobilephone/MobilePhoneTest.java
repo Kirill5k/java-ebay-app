@@ -3,6 +3,8 @@ package io.kirill.ebayapp.mobilephone;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import org.junit.jupiter.api.Test;
 
 class MobilePhoneTest {

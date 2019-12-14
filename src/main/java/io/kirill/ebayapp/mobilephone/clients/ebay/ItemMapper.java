@@ -1,6 +1,7 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.domain.ListingDetails;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.common.clients.ebay.models.Price;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemImage;
@@ -52,6 +53,17 @@ class ItemMapper {
         .stream().flatMap(Collection::stream)
         .collect(toMap(ItemProperty::getName, ItemProperty::getValue));
 
+    var listingDetails = ListingDetails.builder()
+        .type(ofNullable(item.getBuyingOptions()).filter(opts -> opts.contains("FIXED_PRICE")).map($ -> "BUY_IT_NOW").orElse("AUCTION"))
+        .originalCondition(item.getCondition())
+        .title(item.getTitle())
+        .dateEnded(item.getItemEndDate())
+        .datePosted(Instant.now())
+        .description(item.getShortDescription())
+        .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
+        .url(item.getItemWebUrl())
+        .build();
+
     return MobilePhone.builder()
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
         .storageCapacity(mapStorage(properties))
@@ -61,13 +73,8 @@ class ItemMapper {
         .network(mapNetwork(properties))
         .condition(mapCondition(item))
         .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
-        .listingTitle(item.getTitle())
-        .listingDescription(item.getShortDescription())
-        .listingCondition(item.getCondition())
-        .datePosted(Instant.now())
-        .url(item.getItemWebUrl())
-        .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .mpn(item.getMpn())
+        .listingDetails(listingDetails)
         .build();
   }
 

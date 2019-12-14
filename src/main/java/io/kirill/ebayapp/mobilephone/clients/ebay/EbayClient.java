@@ -3,7 +3,7 @@ package io.kirill.ebayapp.mobilephone.clients.ebay;
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
-import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import lombok.RequiredArgsConstructor;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Component;

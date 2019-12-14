@@ -28,6 +28,7 @@ class ItemMapperTest {
 
   @Test
   void toMobilePhone() {
+    var itemEndDate = Instant.now();
     var item = Item.builder()
         .condition("new and awesome")
         .mpn("MN4U2BA")
@@ -39,6 +40,7 @@ class ItemMapperTest {
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
         .itemWebUrl(itemUrl)
         .image(new ItemImage(imageUrl))
+        .itemEndDate(itemEndDate)
         .localizedAspects(List.of(
             new ItemProperty("type", "Brand", "Apple"),
             new ItemProperty("type", "Network", "Unlocked"),
@@ -59,13 +61,17 @@ class ItemMapperTest {
     assertThat(phone.getManufacturerColour()).isEqualTo("Space Grey");
     assertThat(phone.getPrice()).isEqualTo(BigDecimal.valueOf(9.99));
     assertThat(phone.getCondition()).isEqualTo("new and awesome");
-    assertThat(phone.getUrl()).isEqualTo(itemUrl);
-    assertThat(phone.getListingTitle()).isEqualTo("title");
-    assertThat(phone.getListingDescription()).isEqualTo("description");
-    assertThat(phone.getDatePosted()).isBetween(Instant.now().minusSeconds(10), Instant.now().plusSeconds(10));
-    assertThat(phone.getImage()).isEqualTo(imageUrl);
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
-    assertThat(phone.getCondition()).isEqualTo("new and awesome");
+
+    var listingDetails = phone.getListingDetails();
+    assertThat(listingDetails.getType()).isEqualTo("AUCTION");
+    assertThat(listingDetails.getUrl()).isEqualTo(itemUrl);
+    assertThat(listingDetails.getTitle()).isEqualTo("title");
+    assertThat(listingDetails.getDescription()).isEqualTo("description");
+    assertThat(listingDetails.getDatePosted()).isBetween(Instant.now().minusSeconds(10), Instant.now().plusSeconds(10));
+    assertThat(listingDetails.getImage()).isEqualTo(imageUrl);
+    assertThat(listingDetails.getOriginalCondition()).isEqualTo("new and awesome");
+    assertThat(listingDetails.getDateEnded()).isEqualTo(itemEndDate);
   }
 
   @ParameterizedTest

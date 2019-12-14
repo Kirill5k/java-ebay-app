@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
-import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.common.clients.ebay.models.Seller;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
