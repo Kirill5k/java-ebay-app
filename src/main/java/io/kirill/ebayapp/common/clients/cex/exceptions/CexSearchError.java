@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.mobilephone.clients.cex.exceptions;
+package io.kirill.ebayapp.common.clients.cex.exceptions;
 
 import io.kirill.ebayapp.common.exception.ClientException;
 import org.springframework.http.HttpStatus;

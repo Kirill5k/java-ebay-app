@@ -1,7 +1,7 @@
 package io.kirill.ebayapp.mobilephone;
 
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
-import io.kirill.ebayapp.mobilephone.clients.cex.CexClient;
+import io.kirill.ebayapp.common.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
 import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import org.junit.jupiter.api.Test;

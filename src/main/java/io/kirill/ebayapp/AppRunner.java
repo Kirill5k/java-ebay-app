@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -26,6 +27,7 @@ public class AppRunner {
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE) && phone.isInWorkingCondition())
         .flatMap(mobilePhoneService::informAboutThePhone)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
+        .onErrorResume(e -> Mono.empty())
         .subscribe();
   }
 }

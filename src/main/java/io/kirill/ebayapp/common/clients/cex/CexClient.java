@@ -1,14 +1,14 @@
-package io.kirill.ebayapp.mobilephone.clients.cex;
+package io.kirill.ebayapp.common.clients.cex;
 
 import io.kirill.ebayapp.common.configs.CexConfig;
 import io.kirill.ebayapp.common.domain.PriceQuery;
-import io.kirill.ebayapp.mobilephone.clients.cex.exceptions.CexSearchError;
-import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchData;
-import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchError;
-import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchErrorResponse;
-import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchErrorResponseWrapper;
-import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResponseWrapper;
-import io.kirill.ebayapp.mobilephone.clients.cex.models.SearchResult;
+import io.kirill.ebayapp.common.clients.cex.exceptions.CexSearchError;
+import io.kirill.ebayapp.common.clients.cex.models.SearchData;
+import io.kirill.ebayapp.common.clients.cex.models.SearchError;
+import io.kirill.ebayapp.common.clients.cex.models.SearchErrorResponse;
+import io.kirill.ebayapp.common.clients.cex.models.SearchErrorResponseWrapper;
+import io.kirill.ebayapp.common.clients.cex.models.SearchResponseWrapper;
+import io.kirill.ebayapp.common.clients.cex.models.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class CexClient {
 
   private final WebClient webClient;
 
-  CexClient(WebClient.Builder webClientBuilder, CexConfig cexConfig) {
+  public CexClient(WebClient.Builder webClientBuilder, CexConfig cexConfig) {
     this.webClient = webClientBuilder
         .baseUrl(cexConfig.getBaseUrl() + cexConfig.getSearchPath())
         .defaultHeaders(headers -> headers.setContentType(APPLICATION_JSON))

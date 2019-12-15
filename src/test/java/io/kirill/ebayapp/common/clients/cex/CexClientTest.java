@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.mobilephone.clients.cex;
+package io.kirill.ebayapp.common.clients.cex;
 
 import io.kirill.ebayapp.common.configs.CexConfig;
 import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
