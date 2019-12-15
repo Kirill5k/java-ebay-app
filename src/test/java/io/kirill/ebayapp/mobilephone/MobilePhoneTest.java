@@ -13,16 +13,16 @@ class MobilePhoneTest {
 
   @Test
   void fullName() {
-    assertThat(iphone6s.fullName()).isEqualTo("Apple Iphone 6s 16GB Space Grey Unlocked");
-    assertThat(iphone6s.withColour(null).fullName()).isEqualTo("Apple Iphone 6s 16GB Unlocked");
-    assertThat(iphone6s.withMake(null).fullName()).isEqualTo("Iphone 6s 16GB Space Grey Unlocked");
+    assertThat(iphone6s.queryString()).isEqualTo("Apple Iphone 6s 16GB Space Grey Unlocked");
+    assertThat(iphone6s.withColour(null).queryString()).isEqualTo("Apple Iphone 6s 16GB Unlocked");
+    assertThat(iphone6s.withMake(null).queryString()).isEqualTo("Iphone 6s 16GB Space Grey Unlocked");
   }
 
   @Test
   void hasMinAmountOfDetails() {
-    assertThat(iphone6s.hasMinAmountOfDetails()).isTrue();
-    assertThat(iphone6s.withModel(null).hasMinAmountOfDetails()).isFalse();
-    assertThat(iphone6s.withMake(null).hasMinAmountOfDetails()).isFalse();
+    assertThat(iphone6s.isSearchable()).isTrue();
+    assertThat(iphone6s.withModel(null).isSearchable()).isFalse();
+    assertThat(iphone6s.withMake(null).isSearchable()).isFalse();
   }
 
   @Test

@@ -20,7 +20,7 @@ public class AppRunner {
   @Scheduled(fixedDelay = 120000)
   void run() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
-        .delayElements(Duration.ofMillis(400))
+        .delayElements(Duration.ofMillis(450))
         .flatMap(mobilePhoneService::findResellPrice)
         .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE) && phone.isInWorkingCondition())

@@ -1,5 +1,6 @@
 package io.kirill.ebayapp.mobilephone.domain;
 
+import io.kirill.ebayapp.common.domain.PriceQuery;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -18,7 +19,7 @@ import static java.util.stream.Collectors.joining;
 @Builder
 @With
 @RequiredArgsConstructor
-public class MobilePhone {
+public class MobilePhone implements PriceQuery<MobilePhone> {
   @Id
   private final String id;
   private final String make;
@@ -31,25 +32,34 @@ public class MobilePhone {
   private final String mpn;
   private final ListingDetails listingDetails;
 
-  public String fullName() {
+  public boolean isInWorkingCondition() {
+    return !condition.equals("Faulty");
+  }
+
+  @Override
+  public boolean isProfitableToResell(int expectedMarginPercentage) {
+    return listingDetails.getResellPrice() != null && listingDetails.isProfitableToResell(expectedMarginPercentage);
+  }
+
+  @Override
+  public MobilePhone withResellPrice(BigDecimal resellPrice) {
+    return withListingDetails(listingDetails.withResellPrice(resellPrice));
+  }
+
+  @Override
+  public String queryString() {
     return Stream.of(make, model, storageCapacity, colour, network)
         .filter(Objects::nonNull)
         .collect(joining(" "));
   }
 
-  public boolean hasMinAmountOfDetails() {
+  @Override
+  public BigDecimal originalPrice() {
+    return listingDetails.getPrice();
+  }
+
+  @Override
+  public boolean isSearchable() {
     return Stream.of(make, model, network).noneMatch(Objects::isNull);
-  }
-
-  public boolean isProfitableToResell(int expectedMarginPercentage) {
-    return listingDetails.getResellPrice() != null && listingDetails.isProfitableToResell(expectedMarginPercentage);
-  }
-
-  public boolean isInWorkingCondition() {
-    return !condition.equals("Faulty");
-  }
-
-  public MobilePhone withResellPrice(BigDecimal resellPrice) {
-    return withListingDetails(listingDetails.withResellPrice(resellPrice));
   }
 }
