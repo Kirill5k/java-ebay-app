@@ -31,6 +31,6 @@ public class VideoGameService {
   public Mono<Void> sendNotification(VideoGame videoGame) {
     var details = videoGame.getListingDetails();
     var message = String.format(MESSAGE_TEMPLATE, videoGame.queryString(), details.getPrice(), details.getResellPrice(), details.getUrl());
-    return telegramClient.sendMessageToMainChannel(message);
+    return telegramClient.sendMessageToSecondaryChannel(message);
   }
 }
