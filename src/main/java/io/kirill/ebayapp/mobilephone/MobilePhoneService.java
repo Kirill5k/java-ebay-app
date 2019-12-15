@@ -2,7 +2,7 @@ package io.kirill.ebayapp.mobilephone;
 
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.common.clients.cex.CexClient;
-import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
+import io.kirill.ebayapp.mobilephone.clients.ebay.MobilePhoneEbayClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class MobilePhoneService {
   private final static String MESSAGE_TEMPLATE = "good deal on \"%s\": asking price %s, cex price %s %s";
 
-  private final EbayClient ebayClient;
+  private final MobilePhoneEbayClient mobilePhoneEbayClient;
   private final CexClient cexClient;
   private final TelegramClient telegramClient;
   private final MobilePhoneRepository mobilePhoneRepository;
@@ -36,7 +36,7 @@ public class MobilePhoneService {
   }
 
   public Flux<MobilePhone> getLatestFromEbay(int minutes) {
-    return ebayClient.getPhonesListedInTheLastMinutes(minutes);
+    return mobilePhoneEbayClient.getPhonesListedInTheLastMinutes(minutes);
   }
 
   public Mono<MobilePhone> findResellPrice(MobilePhone phone) {

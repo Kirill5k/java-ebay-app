@@ -7,12 +7,10 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
-import java.time.LocalDateTime;
-
-import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -47,8 +45,10 @@ class EbaySearchClientTest {
         .setBody("{\"itemSummaries\": [{\"itemId\": \"item-1\", \"price\": {\"value\": \"99.99\"}}, {\"itemId\": \"item-2\", \"seller\": {\"feedbackPercentage\": \"100.0\"}}]}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var startingTime = LocalDateTime.of(2019, 12, 1, 12, 0, 0).toInstant(UTC);
-    var items = ebaySearchClient.searchForNewestInCategoryFrom(accessToken, 9355, startingTime);
+    var params = new LinkedMultiValueMap<String, String>();
+    params.add("category_ids", "9355");
+    params.add("filter", "conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,deliveryCountry:GB,price:%5B39..800%5D&");
+    var items = ebaySearchClient.search(accessToken, params);
 
     StepVerifier
         .create(items)
@@ -61,7 +61,7 @@ class EbaySearchClientTest {
     assertThat(recordedRequest.getHeader(CONTENT_TYPE)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader(ACCEPT)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader("X-EBAY-C-MARKETPLACE-ID")).isEqualTo("EBAY_GB");
-    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/search?category_ids=9355&filter=conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,deliveryCountry:GB,price:%5B39..800%5D,priceCurrency:GBP,itemLocationCountry:GB,buyingOptions:%257BFIXED_PRICE%257D,itemStartDate:%5B2019-12-01T12:00:00Z%5D");
+    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/search?category_ids=9355&filter=conditionIds:%25257B1000%257C1500%257C2000%257C2500%257C3000%257C4000%257C5000%25257D,deliveryCountry:GB,price:%255B39..800%255D%26");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
   }
 
@@ -72,8 +72,8 @@ class EbaySearchClientTest {
         .setBody("{\"itemSummaries\": null}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var startingTime = LocalDateTime.of(2019, 12, 1, 12, 0, 0).toInstant(UTC);
-    var items = ebaySearchClient.searchForNewestInCategoryFrom(accessToken, 9355, startingTime);
+    var filter = "conditionIds:%257B1000%7C1500%7C2000%7C2500%7C3000%7C4000%7C5000%257D,deliveryCountry:GB,price:%5B39..800%5D";
+    var items = ebaySearchClient.search(accessToken, new LinkedMultiValueMap<String, String>());
 
     StepVerifier
         .create(items)
@@ -87,8 +87,7 @@ class EbaySearchClientTest {
         .setBody("{\"errors\": [{\"longMessage\": \"error from ebay\"}]}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var startingTime = LocalDateTime.of(2019, 12, 1, 12, 0, 0).toInstant(UTC);
-    var items = ebaySearchClient.searchForNewestInCategoryFrom(accessToken, 9355, startingTime);
+    var items = ebaySearchClient.search(accessToken, new LinkedMultiValueMap<String, String>());
 
     StepVerifier
         .create(items)

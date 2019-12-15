@@ -9,7 +9,6 @@ import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -38,25 +37,10 @@ public class MobilePhone implements PriceQuery<MobilePhone> {
   }
 
   @Override
-  public boolean isProfitableToResell(int expectedMarginPercentage) {
-    return listingDetails.getResellPrice() != null && listingDetails.isProfitableToResell(expectedMarginPercentage);
-  }
-
-  @Override
-  public MobilePhone withResellPrice(BigDecimal resellPrice) {
-    return withListingDetails(listingDetails.withResellPrice(resellPrice));
-  }
-
-  @Override
   public String queryString() {
     return Stream.of(make, model, storageCapacity, colour, network)
         .filter(Objects::nonNull)
         .collect(joining(" "));
-  }
-
-  @Override
-  public BigDecimal originalPrice() {
-    return listingDetails.getPrice();
   }
 
   @Override

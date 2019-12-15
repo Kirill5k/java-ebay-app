@@ -13,16 +13,15 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class EbayClientTest {
+class MobilePhoneEbayClientTest {
 
   @Mock
   EbayAuthClient ebayAuthClient;
@@ -42,10 +41,10 @@ class EbayClientTest {
   MobilePhoneMapper mobilePhoneMapper;
 
   @InjectMocks
-  EbayClient ebayClient;
+  MobilePhoneEbayClient mobilePhoneEbayClient;
 
   @Captor
-  ArgumentCaptor<Instant> instantCaptor;
+  ArgumentCaptor<MultiValueMap<String, String>> paramsCaptor;
 
   String accessToken = "access-token";
 
@@ -61,11 +60,11 @@ class EbayClientTest {
     );
 
     doAnswer(inv -> Mono.just(accessToken)).when(ebayAuthClient).accessToken();
-    doAnswer(inv -> Flux.fromIterable(searchResult)).when(ebaySearchClient).searchForNewestInCategoryFrom(anyString(), anyInt(), instantCaptor.capture());
+    doAnswer(inv -> Flux.fromIterable(searchResult)).when(ebaySearchClient).search(anyString(), paramsCaptor.capture());
     doAnswer(inv -> Mono.just(Item.builder().itemId(inv.getArgument(1)).build())).when(ebaySearchClient).getItem(anyString(), anyString());
     doAnswer(inv -> MobilePhone.builder().id(((Item)inv.getArgument(0)).getItemId()).build()).when(mobilePhoneMapper).map(any());
 
-    var mobilePhones = ebayClient.getPhonesListedInTheLastMinutes(10);
+    var mobilePhones = mobilePhoneEbayClient.getPhonesListedInTheLastMinutes(10);
 
     StepVerifier
         .create(mobilePhones)
@@ -74,11 +73,12 @@ class EbayClientTest {
         .verifyComplete();
 
     verify(ebayAuthClient, times(3)).accessToken();
-    verify(ebaySearchClient).searchForNewestInCategoryFrom(eq(accessToken), eq(9355), any());
+    verify(ebaySearchClient).search(eq(accessToken), any());
     verify(ebaySearchClient).getItem(accessToken, "item-1");
     verify(ebaySearchClient).getItem(accessToken, "item-2");
 
-    var startDate = instantCaptor.getValue();
-    assertThat(startDate).isBetween(Instant.now().minusSeconds(10 * 60 + 5), Instant.now().plusSeconds(10 * 60 + 5));
+    var params = paramsCaptor.getValue();
+    assertThat(params.getFirst("category_ids")).isEqualTo("9355");
+    assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,price:[39..800],priceCurrency:GBP,itemLocationCountry:GB,buyingOptions:%7BFIXED_PRICE%7D,itemStartDate:[");
   }
 }

@@ -2,7 +2,7 @@ package io.kirill.ebayapp.mobilephone;
 
 import io.kirill.ebayapp.common.clients.cex.CexClient;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
-import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
+import io.kirill.ebayapp.mobilephone.clients.ebay.MobilePhoneEbayClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -32,7 +32,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 class MobilePhoneServiceTest {
 
   @Mock
-  EbayClient ebayClient;
+  MobilePhoneEbayClient mobilePhoneEbayClient;
 
   @Mock
   CexClient cexClient;
@@ -54,7 +54,7 @@ class MobilePhoneServiceTest {
   @Test
   void getLatestFromEbay() {
     doAnswer(inv -> Flux.just(iphone6s))
-        .when(ebayClient)
+        .when(mobilePhoneEbayClient)
         .getPhonesListedInTheLastMinutes(anyInt());
 
     StepVerifier
@@ -62,7 +62,7 @@ class MobilePhoneServiceTest {
         .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
-    verify(ebayClient).getPhonesListedInTheLastMinutes(10);
+    verify(mobilePhoneEbayClient).getPhonesListedInTheLastMinutes(10);
   }
 
   @Test

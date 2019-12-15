@@ -4,8 +4,19 @@ import java.math.BigDecimal;
 
 public interface PriceQuery<T> {
   String queryString();
-  BigDecimal originalPrice();
   boolean isSearchable();
-  T withResellPrice(BigDecimal resellPrice);
-  boolean isProfitableToResell(int expectedMarginPercentage);
+  ListingDetails getListingDetails();
+  T withListingDetails(ListingDetails listingDetails);
+
+  default BigDecimal originalPrice() {
+    return getListingDetails().getPrice();
+  }
+
+  default T withResellPrice(BigDecimal resellPrice) {
+    return withListingDetails(getListingDetails().withResellPrice(resellPrice));
+  }
+
+  default boolean isProfitableToResell(int expectedMarginPercentage) {
+    return getListingDetails().getResellPrice() != null && getListingDetails().isProfitableToResell(expectedMarginPercentage);
+  }
 }
