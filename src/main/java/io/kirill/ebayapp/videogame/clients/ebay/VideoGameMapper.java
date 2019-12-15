@@ -45,7 +45,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   }
 
   private String mapPlatform(String title, Map<String, String> properties) {
-    if (title.contains(PS4_PLATFORM)) {
+    if (title.toUpperCase().replaceAll(" ", "").contains(PS4_PLATFORM)) {
       return PS4_PLATFORM;
     }
     return ofNullable(properties.get(PLATFORM_PROPERTY))
