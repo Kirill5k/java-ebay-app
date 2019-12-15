@@ -1,7 +1,6 @@
 package io.kirill.ebayapp.mobilephone;
 
-import io.kirill.ebayapp.mobilephone.domain.ListingDetails;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
+import io.kirill.ebayapp.common.domain.ListingDetails;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;

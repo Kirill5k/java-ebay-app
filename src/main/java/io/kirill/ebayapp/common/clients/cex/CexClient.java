@@ -39,8 +39,12 @@ public class CexClient {
         .build();
   }
 
-  public <T> Mono<BigDecimal> getMinPrice(PriceQuery<T> priceQuery) {
+  public <T> Mono<BigDecimal> getMinResellPrice(PriceQuery<T> priceQuery) {
     var query = priceQuery.queryString();
+    if (!priceQuery.isSearchable()) {
+      log.warn("not enough details to query for search price: {}", query);
+      return Mono.empty();
+    }
     return webClient
         .get()
         .uri(builder -> builder.queryParam("q", query).build())

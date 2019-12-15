@@ -3,7 +3,6 @@ package io.kirill.ebayapp.mobilephone;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.common.clients.cex.CexClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -42,8 +41,7 @@ public class MobilePhoneService {
 
   public Mono<MobilePhone> findResellPrice(MobilePhone phone) {
     return Mono.just(phone)
-        .filter(MobilePhone::isSearchable)
-        .flatMap(cexClient::getMinPrice)
+        .flatMap(cexClient::getMinResellPrice)
         .map(phone::withResellPrice)
         .defaultIfEmpty(phone);
   }

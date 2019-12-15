@@ -1,22 +1,11 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.common.clients.ebay.models.Seller;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
-import java.time.Instant;
-import java.util.List;
+import io.kirill.ebayapp.mobilephone.MobilePhone;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +17,18 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.Instant;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class EbayClientTest {
 
@@ -38,7 +39,7 @@ class EbayClientTest {
   EbaySearchClient ebaySearchClient;
 
   @Mock
-  ItemMapper itemMapper;
+  MobilePhoneMapper mobilePhoneMapper;
 
   @InjectMocks
   EbayClient ebayClient;
@@ -62,7 +63,7 @@ class EbayClientTest {
     doAnswer(inv -> Mono.just(accessToken)).when(ebayAuthClient).accessToken();
     doAnswer(inv -> Flux.fromIterable(searchResult)).when(ebaySearchClient).searchForNewestInCategoryFrom(anyString(), anyInt(), instantCaptor.capture());
     doAnswer(inv -> Mono.just(Item.builder().itemId(inv.getArgument(1)).build())).when(ebaySearchClient).getItem(anyString(), anyString());
-    doAnswer(inv -> MobilePhone.builder().id(((Item)inv.getArgument(0)).getItemId()).build()).when(itemMapper).toMobilePhone(any());
+    doAnswer(inv -> MobilePhone.builder().id(((Item)inv.getArgument(0)).getItemId()).build()).when(mobilePhoneMapper).map(any());
 
     var mobilePhones = ebayClient.getPhonesListedInTheLastMinutes(10);
 

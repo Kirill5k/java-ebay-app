@@ -1,6 +1,5 @@
 package io.kirill.ebayapp.mobilephone;
 
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

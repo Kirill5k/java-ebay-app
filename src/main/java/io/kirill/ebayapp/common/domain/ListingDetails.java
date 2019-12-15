@@ -1,4 +1,4 @@
-package io.kirill.ebayapp.mobilephone.domain;
+package io.kirill.ebayapp.common.domain;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

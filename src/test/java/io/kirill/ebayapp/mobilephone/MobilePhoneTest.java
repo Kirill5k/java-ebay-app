@@ -1,6 +1,5 @@
 package io.kirill.ebayapp.mobilephone;
 
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

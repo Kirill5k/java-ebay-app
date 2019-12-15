@@ -1,8 +1,8 @@
 package io.kirill.ebayapp.common.clients.cex;
 
 import io.kirill.ebayapp.common.configs.CexConfig;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import io.kirill.ebayapp.mobilephone.MobilePhoneBuilder;
+import io.kirill.ebayapp.mobilephone.MobilePhone;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -38,13 +38,13 @@ class CexClientTest {
   }
 
   @Test
-  void getAveragePrice() throws Exception {
+  void getMinResellPrice() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
         .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"exchangePrice\": 12.99}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getMinPrice(iphone6s);
+    var averagePrice = cexClient.getMinResellPrice(iphone6s);
 
       StepVerifier
           .create(averagePrice)
@@ -59,13 +59,22 @@ class CexClientTest {
   }
 
   @Test
-  void getAveragePriceWhenNoResults() {
+  void getMinResellPriceWithIncompleteDetails() {
+    StepVerifier
+        .create(cexClient.getMinResellPrice(iphone6s.withModel(null)))
+        .verifyComplete();
+
+    assertThat(mockWebServer.getRequestCount()).isZero();
+  }
+
+  @Test
+  void getMinResellPriceWhenNoResults() {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
         .setBody("{\"response\": {\"data\": {\"results\": []}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getMinPrice(iphone6s);
+    var averagePrice = cexClient.getMinResellPrice(iphone6s);
 
     StepVerifier
         .create(averagePrice)
@@ -73,13 +82,13 @@ class CexClientTest {
   }
 
   @Test
-  void getAveragePriceWhenReturnsError() throws Exception {
+  void getMinResellPriceWhenReturnsError() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(400)
         .setBody("{\"response\": {\"data\": \"\", \"error\": {\"internal_message\": \"error-message\"}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getMinPrice(iphone6s);
+    var averagePrice = cexClient.getMinResellPrice(iphone6s);
 
     StepVerifier
         .create(averagePrice)
@@ -91,13 +100,13 @@ class CexClientTest {
   }
 
   @Test
-  void getAveragePriceWhenReturns429Error() throws Exception {
+  void getMinResellPriceWhenReturns429Error() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(429)
         .setBody("{\"response\": {\"data\": \"\", \"error\": {\"internal_message\": \"error-message\"}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
-    var averagePrice = cexClient.getMinPrice(iphone6s);
+    var averagePrice = cexClient.getMinResellPrice(iphone6s);
 
     StepVerifier
         .create(averagePrice)

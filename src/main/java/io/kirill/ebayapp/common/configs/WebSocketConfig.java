@@ -1,7 +1,7 @@
 package io.kirill.ebayapp.common.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
+import io.kirill.ebayapp.mobilephone.MobilePhone;
 import io.kirill.ebayapp.mobilephone.MobilePhoneService;
 import io.vavr.CheckedFunction1;
 import org.springframework.context.annotation.Bean;

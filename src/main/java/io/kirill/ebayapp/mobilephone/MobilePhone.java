@@ -1,5 +1,6 @@
-package io.kirill.ebayapp.mobilephone.domain;
+package io.kirill.ebayapp.mobilephone;
 
+import io.kirill.ebayapp.common.domain.ListingDetails;
 import io.kirill.ebayapp.common.domain.PriceQuery;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

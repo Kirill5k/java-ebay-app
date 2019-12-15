@@ -1,14 +1,11 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.common.clients.ebay.models.Price;
+import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
-import io.kirill.ebayapp.common.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
-import io.kirill.ebayapp.mobilephone.domain.ListingDetails;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
+import io.kirill.ebayapp.mobilephone.MobilePhone;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +17,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 
 @Component
-class ItemMapper {
+class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   private static final List<String> VALID_NETWORKS = List.of("unlocked", "o2", "three", "ee", "vodafone", "three", "tesco");
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
@@ -48,22 +45,11 @@ class ItemMapper {
   private static final String STORAGE_CAPACITY_PROPERTY = "Storage Capacity";
   private static final String NETWORK_PROPERTY = "Network";
 
-  MobilePhone toMobilePhone(Item item) {
+  @Override
+  public MobilePhone map(Item item) {
     Map<String, String> properties = ofNullable(item.getLocalizedAspects())
         .stream().flatMap(Collection::stream)
         .collect(toMap(ItemProperty::getName, ItemProperty::getValue));
-
-    var listingDetails = ListingDetails.builder()
-        .type(ofNullable(item.getBuyingOptions()).filter(opts -> opts.contains("FIXED_PRICE")).map($ -> "BUY_IT_NOW").orElse("AUCTION"))
-        .originalCondition(item.getCondition())
-        .title(item.getTitle())
-        .dateEnded(item.getItemEndDate())
-        .datePosted(Instant.now())
-        .description(item.getShortDescription())
-        .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
-        .url(item.getItemWebUrl())
-        .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
-        .build();
 
     return MobilePhone.builder()
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
@@ -74,7 +60,7 @@ class ItemMapper {
         .network(mapNetwork(properties))
         .condition(mapCondition(item))
         .mpn(item.getMpn())
-        .listingDetails(listingDetails)
+        .listingDetails(mapDetails(item))
         .build();
   }
 

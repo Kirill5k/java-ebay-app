@@ -1,9 +1,8 @@
 package io.kirill.ebayapp.mobilephone;
 
-import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.common.clients.cex.CexClient;
+import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.EbayClient;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -71,38 +69,28 @@ class MobilePhoneServiceTest {
   void findResellPrice() {
     doAnswer(inv -> Mono.just(BigDecimal.valueOf(10.0)))
         .when(cexClient)
-        .getMinPrice(any());
+        .getMinResellPrice(any());
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
         .expectNextMatches(phone -> phone.getListingDetails().getResellPrice().equals(BigDecimal.valueOf(10.0)) && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
-    verify(cexClient).getMinPrice(iphone6s);
-  }
-
-  @Test
-  void findResellPriceWithIncompleteDetails() {
-    StepVerifier
-        .create(mobilePhoneService.findResellPrice(iphone6s.withModel(null).withResellPrice(null)))
-        .expectNextMatches(phone -> phone.getListingDetails().getResellPrice() == null)
-        .verifyComplete();
-
-    verify(cexClient, never()).getMinPrice(iphone6s);
+    verify(cexClient).getMinResellPrice(iphone6s);
   }
 
   @Test
   void findResellPriceWhenNotFound() {
     doAnswer(inv -> Mono.empty())
         .when(cexClient)
-        .getMinPrice(any());
+        .getMinResellPrice(any());
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
         .expectNextMatches(phone -> phone.getListingDetails().getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
-    verify(cexClient).getMinPrice(iphone6s);
+    verify(cexClient).getMinResellPrice(iphone6s);
   }
 
   @Test

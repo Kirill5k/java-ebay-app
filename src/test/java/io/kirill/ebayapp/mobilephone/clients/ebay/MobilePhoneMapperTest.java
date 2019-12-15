@@ -15,15 +15,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ItemMapperTest {
+class MobilePhoneMapperTest {
   String itemUrl = "http://ebay.com/item";
   String imageUrl = "http://ebay.com/item.jpg";
 
-  ItemMapper itemMapper;
+  MobilePhoneMapper mobilePhoneMapper;
 
   @BeforeEach
   void setUp() {
-    itemMapper = new ItemMapper();
+    mobilePhoneMapper = new MobilePhoneMapper();
   }
 
   @Test
@@ -51,7 +51,7 @@ class ItemMapperTest {
         ))
         .build();
 
-    var phone = itemMapper.toMobilePhone(item);
+    var phone = mobilePhoneMapper.map(item);
 
     assertThat(phone.getNetwork()).isEqualTo("Unlocked");
     assertThat(phone.getStorageCapacity()).isEqualTo("16GB");
@@ -89,7 +89,7 @@ class ItemMapperTest {
   })
   void toMobilePhoneWithFaultyCondition(String description) {
     var item = Item.builder().shortDescription(null).description(description).build();
-    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
+    assertThat(mobilePhoneMapper.map(item).getCondition()).isEqualTo("Faulty");
   }
 
   @ParameterizedTest
@@ -110,14 +110,14 @@ class ItemMapperTest {
   })
   void toMobilePhoneWithFaultyConditionByAnalyzingShortDescription(String description) {
     var item = Item.builder().title("best").shortDescription(description).description(null).build();
-    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
+    assertThat(mobilePhoneMapper.map(item).getCondition()).isEqualTo("Faulty");
   }
 
   @ParameterizedTest
   @ValueSource(strings = {"blah blah has touchid blah blah"})
   void toMobilePhoneWithGoodCondition(String description) {
     var item = Item.builder().description(description).condition("Working").build();
-    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Working");
+    assertThat(mobilePhoneMapper.map(item).getCondition()).isEqualTo("Working");
   }
 
   @ParameterizedTest
@@ -130,6 +130,6 @@ class ItemMapperTest {
   })
   void toMobilePhoneWithFaultyConditionByAnalyzingListingTitle(String title) {
     var item = Item.builder().title(title).description("10 out of 10").shortDescription(null).build();
-    assertThat(itemMapper.toMobilePhone(item).getCondition()).isEqualTo("Faulty");
+    assertThat(mobilePhoneMapper.map(item).getCondition()).isEqualTo("Faulty");
   }
 }

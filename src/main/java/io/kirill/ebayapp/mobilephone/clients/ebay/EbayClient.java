@@ -3,7 +3,7 @@ package io.kirill.ebayapp.mobilephone.clients.ebay;
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
-import io.kirill.ebayapp.mobilephone.domain.MobilePhone;
+import io.kirill.ebayapp.mobilephone.MobilePhone;
 import lombok.RequiredArgsConstructor;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Component;
@@ -26,11 +26,11 @@ public class EbayClient {
 
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;
-  private final ItemMapper itemMapper;
+  private final MobilePhoneMapper mobilePhoneMapper;
 
   private Map<String, String> ids = ExpiringMap.builder()
       .expirationPolicy(CREATED)
-      .expiration(30, MINUTES)
+      .expiration(60, MINUTES)
       .build();
 
   public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
@@ -40,7 +40,7 @@ public class EbayClient {
         .filter(searchResult -> !ids.containsKey(searchResult.getItemId()))
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))
         .doOnNext(item -> ids.put(item.getItemId(), ""))
-        .map(itemMapper::toMobilePhone);
+        .map(mobilePhoneMapper::map);
   }
 
   private Predicate<SearchResult> hasTrustedSeller = searchResult -> searchResult.getSeller() != null &&
