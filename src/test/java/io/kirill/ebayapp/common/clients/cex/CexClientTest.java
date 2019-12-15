@@ -45,6 +45,7 @@ class CexClientTest {
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
     var averagePrice = cexClient.getMinResellPrice(iphone6s);
+    var anotherPrice = cexClient.getMinResellPrice(iphone6s);
 
       StepVerifier
           .create(averagePrice)
@@ -52,6 +53,7 @@ class CexClientTest {
           .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
+    assertThat(mockWebServer.getRequestCount()).isEqualTo(1);
     assertThat(recordedRequest.getHeader(CONTENT_TYPE)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getHeader(ACCEPT)).isEqualTo(APPLICATION_JSON_VALUE);
     assertThat(recordedRequest.getPath()).isEqualTo("/cex/search?q=Apple%20Iphone%206s%2016GB%20Space%20Grey%20Unlocked");
