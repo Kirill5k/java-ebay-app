@@ -21,7 +21,7 @@ import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
 public class EbayClient {
   private static final int MOBILES_PHONES_CATEGORY_ID = 9355;
 
-  private static final int MIN_FEEDBACK_SCORE = 10;
+  private static final int MIN_FEEDBACK_SCORE = 6;
   private static final double MIN_FEEDBACK_PERCENT = 90;
 
   private final EbayAuthClient authClient;
