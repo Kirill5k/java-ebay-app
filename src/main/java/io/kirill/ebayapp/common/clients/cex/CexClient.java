@@ -71,7 +71,8 @@ public class CexClient {
         .filter(results -> !results.isEmpty())
         .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).min().getAsDouble())
         .map(Math::floor)
-        .map(BigDecimal::valueOf);
+        .map(BigDecimal::valueOf)
+        .doOnNext(price -> searchResults.put(query, price));
   }
 
   private Function<ClientResponse, Mono<? extends Throwable>> mapToError = r -> r.bodyToMono(SearchErrorResponseWrapper.class)
