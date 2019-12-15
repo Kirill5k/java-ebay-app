@@ -1,13 +1,17 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
+import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
 
 public interface EbayClient {
   int MIN_FEEDBACK_SCORE = 6;
@@ -38,4 +42,9 @@ public interface EbayClient {
       searchResult.getSeller().getFeedbackScore() != null &&
       searchResult.getSeller().getFeedbackPercentage() > MIN_FEEDBACK_PERCENT &&
       searchResult.getSeller().getFeedbackScore() > MIN_FEEDBACK_SCORE;
+
+  Map<String, String> ids = ExpiringMap.builder()
+      .expirationPolicy(CREATED)
+      .expiration(60, MINUTES)
+      .build();
 }

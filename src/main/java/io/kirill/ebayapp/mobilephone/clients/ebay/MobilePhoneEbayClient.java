@@ -5,15 +5,10 @@ import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import lombok.RequiredArgsConstructor;
-import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.time.Instant;
-import java.util.Map;
-
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
 
 @Component
 @RequiredArgsConstructor
@@ -32,11 +27,6 @@ public class MobilePhoneEbayClient implements EbayClient {
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;
   private final MobilePhoneMapper mobilePhoneMapper;
-
-  private Map<String, String> ids = ExpiringMap.builder()
-      .expirationPolicy(CREATED)
-      .expiration(60, MINUTES)
-      .build();
 
   public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
     var filter = searchFilter(NEWLY_LISTED_FILTER, Instant.now().minusSeconds(minutes * 60));
