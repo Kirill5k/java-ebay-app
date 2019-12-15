@@ -2,11 +2,9 @@ package io.kirill.ebayapp.mobilephone.clients.ebay;
 
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
-import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
 
 @Component
 class MobilePhoneMapper implements ItemMapper<MobilePhone> {
@@ -47,9 +44,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
   @Override
   public MobilePhone map(Item item) {
-    Map<String, String> properties = ofNullable(item.getLocalizedAspects())
-        .stream().flatMap(Collection::stream)
-        .collect(toMap(ItemProperty::getName, ItemProperty::getValue));
+    var properties = mapProperties(item);
 
     return MobilePhone.builder()
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))

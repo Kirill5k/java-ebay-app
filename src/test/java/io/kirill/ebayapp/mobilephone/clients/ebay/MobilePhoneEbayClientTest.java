@@ -78,6 +78,7 @@ class MobilePhoneEbayClientTest {
     verify(ebaySearchClient).getItem(accessToken, "item-2");
 
     var params = paramsCaptor.getValue();
+    assertThat(params.getFirst("limit")).isEqualTo("200");
     assertThat(params.getFirst("category_ids")).isEqualTo("9355");
     assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,price:[39..800],priceCurrency:GBP,itemLocationCountry:GB,buyingOptions:%7BFIXED_PRICE%7D,itemStartDate:[");
   }

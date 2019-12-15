@@ -17,6 +17,13 @@ public interface EbayClient {
     var params = new LinkedMultiValueMap<String, String>();
     params.add("category_ids", Integer.toString(categoryId));
     params.add("filter", filter);
+    params.add("limit", "200");
+    return params;
+  }
+
+  default MultiValueMap<String, String> paramsWithQuery(int categoryId, String filter, String query) {
+    var params = params(categoryId, filter);
+    params.add("q", query);
     return params;
   }
 
