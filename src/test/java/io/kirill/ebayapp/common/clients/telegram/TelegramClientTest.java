@@ -23,7 +23,7 @@ class TelegramClientTest {
   @BeforeEach
   void setup() {
     var baseUri = mockWebServer.url(TELEGRAM_URI).toString();
-    var telegramConfig = new TelegramConfig(baseUri, "message-path", "main-channel-id");
+    var telegramConfig = new TelegramConfig(baseUri, "message-path", "main-channel-id", "secondary-channel-id");
     telegramClient = new TelegramClient(WebClient.builder(), telegramConfig);
   }
 
@@ -45,6 +45,22 @@ class TelegramClientTest {
 
     var recordedRequest = mockWebServer.takeRequest();
     assertThat(recordedRequest.getPath()).isEqualTo("/telegrammessage-path?chat_id=main-channel-id&text=Hello,%20World!");
+    assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+  }
+
+  @Test
+  void sendMessageToSecondaryChannel() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(200)
+        .setBody("{}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var result = telegramClient.sendMessageToSecondaryChannel("Hello, World!");
+
+    StepVerifier.create(result).verifyComplete();
+
+    var recordedRequest = mockWebServer.takeRequest();
+    assertThat(recordedRequest.getPath()).isEqualTo("/telegrammessage-path?chat_id=secondary-channel-id&text=Hello,%20World!");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
   }
 

@@ -20,7 +20,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
-      "cracked", "fault", "spares", "repair", "smashed", "no touch", "broken", "not work", "damag");
+      "cracked", "fault", "spares", "repair", "smashed", "no touch", "broken", "not work", "damag", "no service");
 
   private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",

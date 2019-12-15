@@ -16,9 +16,11 @@ import java.util.function.Function;
 public class TelegramClient {
   private final WebClient webClient;
   private final String mainChannel;
+  private final String secondaryChannel;
 
   TelegramClient(WebClient.Builder webClientBuilder, TelegramConfig telegramConfig) {
     this.mainChannel = telegramConfig.getMainChannelId();
+    this.secondaryChannel = telegramConfig.getSecondaryChannelId();
     this.webClient = webClientBuilder
         .baseUrl(telegramConfig.getBaseUrl() + telegramConfig.getMessagePath())
         .build();
@@ -26,6 +28,10 @@ public class TelegramClient {
 
   public Mono<Void> sendMessageToMainChannel(String message) {
     return sendMessage(mainChannel, message);
+  }
+
+  public Mono<Void> sendMessageToSecondaryChannel(String message) {
+    return sendMessage(secondaryChannel, message);
   }
 
   private Mono<Void> sendMessage(String channelId, String message) {

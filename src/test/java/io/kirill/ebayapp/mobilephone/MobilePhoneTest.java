@@ -34,5 +34,8 @@ class MobilePhoneTest {
 
     var detailsWithoutResellPrice = iphone6s.getListingDetails().withPrice(BigDecimal.valueOf(100)).withResellPrice(null);
     assertThat(iphone6s.withListingDetails(detailsWithoutResellPrice).isProfitableToResell(50)).isFalse();
+
+    var anotherDealPhoneDetails = iphone6s.getListingDetails().withPrice(BigDecimal.valueOf(100)).withResellPrice(BigDecimal.valueOf(100));
+    assertThat(iphone6s.withListingDetails(anotherDealPhoneDetails).isProfitableToResell(-10)).isTrue();
   }
 }

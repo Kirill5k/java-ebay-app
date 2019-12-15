@@ -15,4 +15,5 @@ public class TelegramConfig {
     private final String baseUrl;
     private final String messagePath;
     private final String mainChannelId;
+    private final String secondaryChannelId;
 }
