@@ -34,7 +34,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
         .platform(mapPlatform(item.getTitle(), properties))
         .genre(mapGenre(properties))
         .listingDetails(listingDetails)
-        .year(ofNullable(properties.get(RELEASE_YEAR_PROPERTY)).map(Integer::parseInt).orElse(null))
+        .releaseYear(ofNullable(properties.get(RELEASE_YEAR_PROPERTY)).orElse(null))
         .build();
   }
 

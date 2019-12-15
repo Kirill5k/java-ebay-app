@@ -15,7 +15,7 @@ public class VideoGame implements PriceQuery<VideoGame> {
   private final String name;
   private final String platform;
   private final String genre;
-  private final Integer year;
+  private final String releaseYear;
   private final ListingDetails listingDetails;
 
   @Override
