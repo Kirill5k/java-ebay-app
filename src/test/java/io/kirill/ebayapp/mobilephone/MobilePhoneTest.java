@@ -1,10 +1,11 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.kirill.ebayapp.common.domain.ResellPrice;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MobilePhoneTest {
 
@@ -40,5 +41,10 @@ class MobilePhoneTest {
 
     assertThat(iphone6s.withResellPrice(new ResellPrice(null, BigDecimal.valueOf(100)))
         .isProfitableToResell(-10)).isTrue();
+  }
+
+  @Test
+  void goodDealMessage() {
+    assertThat(iphone6s.goodDealMessage()).isEqualTo("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
   }
 }

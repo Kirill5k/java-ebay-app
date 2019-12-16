@@ -16,7 +16,8 @@ public interface ResellableItem<T> {
   }
 
   default boolean isProfitableToResell(int expectedMarginPercentage) {
-    return ofNullable(getResellPrice()).map(ResellPrice::getExchange)
+    return ofNullable(getResellPrice())
+        .map(ResellPrice::getExchange)
         .map(exchangePrice -> (exchangePrice.doubleValue() * 100 / originalPrice().doubleValue() - 100) > expectedMarginPercentage)
         .orElse(false);
   }
