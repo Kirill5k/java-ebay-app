@@ -26,35 +26,35 @@
           cardRow.className = "row no-gutters";
           card.append(cardRow);
 
-          if (phone.image) {
+          if (phone.listingDetails.image) {
             var imageWrapper = document.createElement("div");
             imageWrapper.className = "d-none d-lg-block pr-3";
             var image = document.createElement("img");
-            image.src = phone.image;
+            image.src = phone.listingDetails.image;
             image.className = "card-img";
-            image.alt = phone.listingTitle;
+            image.alt = phone.listingDetails.title;
             image.style = "max-width:250px;height:auto;"
             imageWrapper.append(image);
             cardRow.append(imageWrapper);
           }
 
           var cardBody = document.createElement("div");
-          cardBody.className = phone.image ? "card-body col-md-8" : "card-body";
+          cardBody.className = phone.listingDetails.image ? "card-body col-md-8" : "card-body";
           cardRow.append(cardBody);
 
           var title = document.createElement("a");
-          title.href = phone.url
+          title.href = phone.listingDetails.url
           title.className = "card-title pl-3";
-          title.innerText = phone.listingTitle;
+          title.innerText = phone.listingDetails.title;
 
           var description = document.createElement("p");
           description.className = "card-text pl-3";
-          description.innerText = phone.listingDescription;
+          description.innerText = phone.listingDetails.descriptions;
 
           var price = document.createElement("p");
           price.className = "card-text mb-0 pl-3";
           var priceText = document.createElement("small");
-          priceText.innerText = "Ebay price: " + phone.price + " / CEX price: " + (phone.resellPrice ? phone.resellPrice : "Unknown");
+          priceText.innerText = "Ebay price: " + phone.listingDetails.price + " / CEX price: " + (phone.resellPrice.exchange ? phone.resellPrice.exchange : "Unknown");
           price.append(priceText);
 
           var condition = document.createElement("p");
@@ -67,7 +67,7 @@
           datePosted.className = "card-text pl-3";
           var datePostedText = document.createElement("small");
           datePostedText.className = "text-muted";
-          datePostedText.innerText = phone.datePosted.replace("T", " ").slice(0, 19);
+          datePostedText.innerText = phone.listingDetails.datePosted.replace("T", " ").slice(0, 19);
           datePosted.append(datePostedText);
 
           cardBody.append(title);

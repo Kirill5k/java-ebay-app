@@ -26,7 +26,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
       "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
       "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag",
-      "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack",
+      "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack", "crack on screen",
       "is badly crack", "is crack", "is slight crack", "cracked display",
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work",
