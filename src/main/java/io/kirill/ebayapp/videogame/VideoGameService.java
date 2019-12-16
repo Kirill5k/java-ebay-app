@@ -11,8 +11,6 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class VideoGameService {
-  private final static String MESSAGE_TEMPLATE = "good deal on \"%s\": ebay: £%s, cex: %s %s";
-
   private final VideoGameEbayClient videoGameEbayClient;
   private final CexClient cexClient;
   private final TelegramClient telegramClient;
@@ -29,8 +27,6 @@ public class VideoGameService {
   }
 
   public Mono<Void> sendNotification(VideoGame videoGame) {
-    var details = videoGame.getListingDetails();
-    var message = String.format(MESSAGE_TEMPLATE, videoGame.searchQuery(), details.getPrice(), videoGame.getResellPrice().getExchange(), details.getUrl());
-    return telegramClient.sendMessageToSecondaryChannel(message);
+    return telegramClient.sendMessageToSecondaryChannel(videoGame.goodDealMessage());
   }
 }

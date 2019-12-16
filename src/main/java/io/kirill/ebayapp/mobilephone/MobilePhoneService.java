@@ -1,22 +1,21 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
 import io.kirill.ebayapp.common.clients.cex.CexClient;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.mobilephone.clients.ebay.MobilePhoneEbayClient;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 @Service
 @RequiredArgsConstructor
 public class MobilePhoneService {
-  private final static String MESSAGE_TEMPLATE = "good deal on \"%s\": ebay: £%s, cex: £%s %s";
-
   private final MobilePhoneEbayClient mobilePhoneEbayClient;
   private final CexClient cexClient;
   private final TelegramClient telegramClient;
@@ -46,8 +45,6 @@ public class MobilePhoneService {
   }
 
   public Mono<Void> informAboutThePhone(MobilePhone phone) {
-    var details = phone.getListingDetails();
-    var message = String.format(MESSAGE_TEMPLATE, phone.searchQuery(), details.getPrice(), phone.getResellPrice().getExchange(), details.getUrl());
-    return telegramClient.sendMessageToMainChannel(message);
+    return telegramClient.sendMessageToMainChannel(phone.goodDealMessage());
   }
 }
