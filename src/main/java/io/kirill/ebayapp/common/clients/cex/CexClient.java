@@ -1,5 +1,11 @@
 package io.kirill.ebayapp.common.clients.cex;
 
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
+import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import io.kirill.ebayapp.common.clients.cex.exceptions.CexSearchError;
 import io.kirill.ebayapp.common.clients.cex.models.SearchData;
 import io.kirill.ebayapp.common.clients.cex.models.SearchError;
@@ -8,7 +14,15 @@ import io.kirill.ebayapp.common.clients.cex.models.SearchErrorResponseWrapper;
 import io.kirill.ebayapp.common.clients.cex.models.SearchResponseWrapper;
 import io.kirill.ebayapp.common.clients.cex.models.SearchResult;
 import io.kirill.ebayapp.common.configs.CexConfig;
+import io.kirill.ebayapp.common.domain.ResellPrice;
 import io.kirill.ebayapp.common.domain.ResellableItem;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.http.HttpStatus;
@@ -17,25 +31,13 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static net.jodah.expiringmap.ExpiringMap.ExpirationPolicy.CREATED;
-import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 @Slf4j
 @Component
 public class CexClient {
 
   private final WebClient webClient;
 
-  private Map<String, BigDecimal> searchResults = ExpiringMap.builder()
+  private Map<String, ResellPrice> searchResults = ExpiringMap.builder()
       .expirationPolicy(CREATED)
       .expiration(24, TimeUnit.HOURS)
       .build();
@@ -48,7 +50,7 @@ public class CexClient {
         .build();
   }
 
-  public <T> Mono<BigDecimal> getMinResellPrice(ResellableItem<T> resellableItem) {
+  public <T> Mono<ResellPrice> getMinResellPrice(ResellableItem<T> resellableItem) {
     var query = resellableItem.searchQuery();
     if (!resellableItem.isSearchable()) {
       log.warn("not enough details to query for search price: {}", query);
@@ -68,11 +70,13 @@ public class CexClient {
         .map(SearchResponseWrapper::getResponse)
         .map(response -> ofNullable(response.getData()).map(SearchData::getBoxes).orElse(emptyList()))
         .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, resellableItem.originalPrice(), results.size()))
-        .filter(results -> !results.isEmpty())
-        .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).min().getAsDouble())
-        .map(Math::floor)
-        .map(BigDecimal::valueOf)
+        .map(results -> new ResellPrice(getMinPrice(results, SearchResult::getCashPrice), getMinPrice(results, SearchResult::getExchangePrice)))
         .doOnNext(price -> searchResults.put(query, price));
+  }
+
+  private BigDecimal getMinPrice(List<SearchResult> results, Function<SearchResult, Integer> priceExtract) {
+    var minPriceOpt = results.stream().map(priceExtract).filter(Objects::nonNull).mapToDouble(Double::valueOf).min();
+    return minPriceOpt.isEmpty() ? null : Optional.of(minPriceOpt.getAsDouble()).map(Math::floor).map(BigDecimal::valueOf).get();
   }
 
   private Function<ClientResponse, Mono<? extends Throwable>> mapToError = r -> r.bodyToMono(SearchErrorResponseWrapper.class)

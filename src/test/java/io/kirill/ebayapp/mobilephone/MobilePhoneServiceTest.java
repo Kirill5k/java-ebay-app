@@ -1,8 +1,21 @@
 package io.kirill.ebayapp.mobilephone;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import io.kirill.ebayapp.common.clients.cex.CexClient;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
+import io.kirill.ebayapp.common.domain.ResellPrice;
 import io.kirill.ebayapp.mobilephone.clients.ebay.MobilePhoneEbayClient;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,19 +27,6 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class MobilePhoneServiceTest {
@@ -67,13 +67,13 @@ class MobilePhoneServiceTest {
 
   @Test
   void findResellPrice() {
-    doAnswer(inv -> Mono.just(BigDecimal.valueOf(10.0)))
+    doAnswer(inv -> Mono.just(new ResellPrice(null, BigDecimal.valueOf(10.0))))
         .when(cexClient)
         .getMinResellPrice(any());
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
-        .expectNextMatches(phone -> phone.getListingDetails().getResellPrice().equals(BigDecimal.valueOf(10.0)) && phone.getModel().equals(iphone6s.getModel()))
+        .expectNextMatches(phone -> phone.getResellPrice().equals(new ResellPrice(null, BigDecimal.valueOf(10.0))) && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
     verify(cexClient).getMinResellPrice(iphone6s);
@@ -87,7 +87,7 @@ class MobilePhoneServiceTest {
 
     StepVerifier
         .create(mobilePhoneService.findResellPrice(iphone6s))
-        .expectNextMatches(phone -> phone.getListingDetails().getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
+        .expectNextMatches(phone -> phone.getResellPrice() == null && phone.getModel().equals(iphone6s.getModel()))
         .verifyComplete();
 
     verify(cexClient).getMinResellPrice(iphone6s);
@@ -100,10 +100,10 @@ class MobilePhoneServiceTest {
         .sendMessageToMainChannel(anyString());
 
     StepVerifier
-        .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(BigDecimal.TEN)))
+        .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(new ResellPrice(null, BigDecimal.TEN))))
         .verifyComplete();
 
-    verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": asking price 1, cex price 10 ebay.com");
+    verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
   }
 
   @Test

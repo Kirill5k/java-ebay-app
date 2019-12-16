@@ -1,22 +1,23 @@
 package io.kirill.ebayapp.common.domain;
 
+import static java.util.Optional.ofNullable;
+
 import java.math.BigDecimal;
 
 public interface ResellableItem<T> {
   String searchQuery();
   boolean isSearchable();
   ListingDetails getListingDetails();
-  T withListingDetails(ListingDetails listingDetails);
+  ResellPrice getResellPrice();
+  T withResellPrice(ResellPrice resellPrice);
 
   default BigDecimal originalPrice() {
     return getListingDetails().getPrice();
   }
 
-  default T withResellPrice(BigDecimal resellPrice) {
-    return withListingDetails(getListingDetails().withResellPrice(resellPrice));
-  }
-
   default boolean isProfitableToResell(int expectedMarginPercentage) {
-    return getListingDetails().getResellPrice() != null && getListingDetails().isProfitableToResell(expectedMarginPercentage);
+    return ofNullable(getResellPrice()).map(ResellPrice::getExchange)
+        .map(exchangePrice -> (exchangePrice.doubleValue() * 100 / originalPrice().doubleValue() - 100) > expectedMarginPercentage)
+        .orElse(false);
   }
 }

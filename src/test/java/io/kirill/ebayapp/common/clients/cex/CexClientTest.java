@@ -1,8 +1,13 @@
 package io.kirill.ebayapp.common.clients.cex;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import io.kirill.ebayapp.common.configs.CexConfig;
-import io.kirill.ebayapp.mobilephone.MobilePhoneBuilder;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
+import io.kirill.ebayapp.mobilephone.MobilePhoneBuilder;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -10,11 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 class CexClientTest {
   private static final String CEX_URI = "/cex";
@@ -41,7 +41,7 @@ class CexClientTest {
   void getMinResellPrice() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
-        .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"exchangePrice\": 12.99}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
+        .setBody("{\"response\": {\"data\": {\"boxes\": [{\"boxName\": \"box-1\", \"cashPrice\": 10.99, \"exchangePrice\": 12.99}, {\"boxName\": \"box-1\", \"exchangePrice\": 20.0}]}}}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
     var averagePrice = cexClient.getMinResellPrice(iphone6s);
@@ -49,7 +49,7 @@ class CexClientTest {
 
       StepVerifier
           .create(averagePrice)
-          .expectNextMatches(price -> price.doubleValue() == 12)
+          .expectNextMatches(price -> price.getExchange().doubleValue() == 12 && price.getCash().doubleValue() == 10)
           .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
@@ -80,6 +80,7 @@ class CexClientTest {
 
     StepVerifier
         .create(averagePrice)
+        .expectNextMatches(price -> price.getExchange() == null && price.getCash() == null)
         .verifyComplete();
   }
 

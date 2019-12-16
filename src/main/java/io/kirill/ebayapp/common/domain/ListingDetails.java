@@ -22,9 +22,4 @@ public class ListingDetails {
   private final String url;
   private final String image;
   private final BigDecimal price;
-  private final BigDecimal resellPrice;
-
-  public boolean isProfitableToResell(int expectedMarginPercentage) {
-    return (resellPrice.doubleValue() * 100 / price.doubleValue() - 100) > expectedMarginPercentage;
-  }
 }

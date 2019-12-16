@@ -1,6 +1,7 @@
 package io.kirill.ebayapp.videogame;
 
 import io.kirill.ebayapp.common.domain.ListingDetails;
+import io.kirill.ebayapp.common.domain.ResellPrice;
 import io.kirill.ebayapp.common.domain.ResellableItem;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class VideoGame implements ResellableItem<VideoGame> {
   private final String genre;
   private final String releaseYear;
   private final ListingDetails listingDetails;
+  private final ResellPrice resellPrice;
 
   @Override
   public String searchQuery() {
