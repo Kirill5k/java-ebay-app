@@ -2,8 +2,8 @@ package io.kirill.ebayapp.common.domain;
 
 import java.math.BigDecimal;
 
-public interface PriceQuery<T> {
-  String queryString();
+public interface ResellableItem<T> {
+  String searchQuery();
   boolean isSearchable();
   ListingDetails getListingDetails();
   T withListingDetails(ListingDetails listingDetails);

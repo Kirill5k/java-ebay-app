@@ -8,7 +8,7 @@ import io.kirill.ebayapp.common.clients.cex.models.SearchErrorResponseWrapper;
 import io.kirill.ebayapp.common.clients.cex.models.SearchResponseWrapper;
 import io.kirill.ebayapp.common.clients.cex.models.SearchResult;
 import io.kirill.ebayapp.common.configs.CexConfig;
-import io.kirill.ebayapp.common.domain.PriceQuery;
+import io.kirill.ebayapp.common.domain.ResellableItem;
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.http.HttpStatus;
@@ -48,14 +48,14 @@ public class CexClient {
         .build();
   }
 
-  public <T> Mono<BigDecimal> getMinResellPrice(PriceQuery<T> priceQuery) {
-    var query = priceQuery.queryString();
-    if (!priceQuery.isSearchable()) {
+  public <T> Mono<BigDecimal> getMinResellPrice(ResellableItem<T> resellableItem) {
+    var query = resellableItem.searchQuery();
+    if (!resellableItem.isSearchable()) {
       log.warn("not enough details to query for search price: {}", query);
       return Mono.empty();
     }
     if (searchResults.containsKey(query)) {
-      log.info("found query \"{}\" in cache (£{})", query, priceQuery.originalPrice());
+      log.info("found query \"{}\" in cache (£{})", query, resellableItem.originalPrice());
       return Mono.just(searchResults.get(query));
     }
     return webClient
@@ -67,7 +67,7 @@ public class CexClient {
         .bodyToMono(SearchResponseWrapper.class)
         .map(SearchResponseWrapper::getResponse)
         .map(response -> ofNullable(response.getData()).map(SearchData::getBoxes).orElse(emptyList()))
-        .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, priceQuery.originalPrice(), results.size()))
+        .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, resellableItem.originalPrice(), results.size()))
         .filter(results -> !results.isEmpty())
         .map(results -> results.stream().mapToDouble(SearchResult::getExchangePrice).min().getAsDouble())
         .map(Math::floor)

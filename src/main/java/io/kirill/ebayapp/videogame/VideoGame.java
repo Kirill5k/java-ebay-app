@@ -1,7 +1,7 @@
 package io.kirill.ebayapp.videogame;
 
 import io.kirill.ebayapp.common.domain.ListingDetails;
-import io.kirill.ebayapp.common.domain.PriceQuery;
+import io.kirill.ebayapp.common.domain.ResellableItem;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -11,7 +11,7 @@ import lombok.With;
 @With
 @Builder
 @RequiredArgsConstructor
-public class VideoGame implements PriceQuery<VideoGame> {
+public class VideoGame implements ResellableItem<VideoGame> {
   private final String name;
   private final String platform;
   private final String genre;
@@ -19,7 +19,7 @@ public class VideoGame implements PriceQuery<VideoGame> {
   private final ListingDetails listingDetails;
 
   @Override
-  public String queryString() {
+  public String searchQuery() {
     return String.format("%s %s", name, platform);
   }
 

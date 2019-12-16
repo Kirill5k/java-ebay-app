@@ -1,7 +1,7 @@
 package io.kirill.ebayapp.mobilephone;
 
 import io.kirill.ebayapp.common.domain.ListingDetails;
-import io.kirill.ebayapp.common.domain.PriceQuery;
+import io.kirill.ebayapp.common.domain.ResellableItem;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.joining;
 @Builder
 @With
 @RequiredArgsConstructor
-public class MobilePhone implements PriceQuery<MobilePhone> {
+public class MobilePhone implements ResellableItem<MobilePhone> {
   @Id
   private final String id;
   private final String make;
@@ -37,7 +37,7 @@ public class MobilePhone implements PriceQuery<MobilePhone> {
   }
 
   @Override
-  public String queryString() {
+  public String searchQuery() {
     return Stream.of(make, model, storageCapacity, colour, network)
         .filter(Objects::nonNull)
         .collect(joining(" "));
