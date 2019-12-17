@@ -17,8 +17,11 @@ public class MobilePhoneController {
   private final MobilePhoneService mobilePhoneService;
 
   @GetMapping
-  public Flux<MobilePhone> getAll(@RequestParam Optional<Integer> limit) {
-    return mobilePhoneService.getLatest(limit.orElse(100));
+  public Flux<MobilePhone> getAll(@RequestParam Optional<Integer> limit, @RequestParam Optional<String> condition) {
+    int lim = limit.orElse(100);
+    return condition
+        .map(cond -> mobilePhoneService.getLatestByCondition(cond, lim))
+        .orElseGet(() -> mobilePhoneService.getLatest(lim));
   }
 
   @GetMapping(value = "/feed", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

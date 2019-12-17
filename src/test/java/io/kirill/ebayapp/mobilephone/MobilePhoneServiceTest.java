@@ -122,6 +122,21 @@ class MobilePhoneServiceTest {
   }
 
   @Test
+  void getLatestByCondition() {
+    doAnswer(inv -> Flux.just(iphone6s, iphone6s, iphone6s))
+        .when(mobilePhoneRepository)
+        .findAllByCondition(anyString(), any(Sort.class));
+
+    StepVerifier
+        .create(mobilePhoneService.getLatestByCondition("Faulty", 2))
+        .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
+        .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
+        .verifyComplete();
+
+    verify(mobilePhoneRepository).findAllByCondition("Faulty", Sort.by(new Sort.Order(DESC, "listingDetails.datePosted")));
+  }
+
+  @Test
   void feedLatest() {
     doAnswer(inv -> Flux.just(iphone6s, iphone6s, iphone6s))
         .when(mobilePhoneRepository)
@@ -146,5 +161,18 @@ class MobilePhoneServiceTest {
         .verifyComplete();
 
     verify(mobilePhoneRepository).save(iphone6s);
+  }
+
+  @Test
+  void isNew() {
+    doAnswer(inv -> Mono.just(true))
+        .when(mobilePhoneRepository).existsByListingDetailsUrl(anyString());
+
+    StepVerifier
+        .create(mobilePhoneService.isNew(iphone6s))
+        .expectNextMatches(exists -> !exists)
+        .verifyComplete();
+
+    verify(mobilePhoneRepository).existsByListingDetailsUrl(iphone6s.getListingDetails().getUrl());
   }
 }

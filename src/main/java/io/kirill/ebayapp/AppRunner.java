@@ -24,6 +24,7 @@ public class AppRunner {
   void searchForPhones() {
     mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofMillis(450))
+        .filterWhen(mobilePhoneService::isNew)
         .flatMap(mobilePhoneService::findResellPrice)
         .flatMap(mobilePhoneService::save)
         .filter(phone -> phone.isProfitableToResell(MIN_MARGIN_PERCENTAGE) && phone.isInWorkingCondition())
