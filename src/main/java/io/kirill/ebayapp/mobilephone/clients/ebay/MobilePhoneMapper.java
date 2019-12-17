@@ -1,17 +1,16 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static java.util.Optional.ofNullable;
+import org.springframework.stereotype.Component;
 
 @Component
 class MobilePhoneMapper implements ItemMapper<MobilePhone> {
@@ -20,7 +19,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
-      "cracked", "fault", "spares", "repair", "smashed", "no touch", "broken", "not work", "damag", "no service");
+      "cracked", "fault", "spares", "repair", "smashed", "no touch", "no face", "broken", "not work", "damag", "no service");
 
   private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
@@ -31,7 +30,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work",
       "are broke", "is smashed", "is broke", "smashed screen",
-      "has some screen burn", "has screen burn", "needs replac", "needs glass replac", "needs new screen", "few dents"
+      "has some screen burn", "has screen burn", "needs glass replac", "needs new screen"
       );
   private static final String FAULTY_CONDITION = "Faulty";
 
