@@ -1,5 +1,8 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbaySearchError;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchError;
@@ -7,6 +10,8 @@ import io.kirill.ebayapp.common.clients.ebay.models.search.SearchErrorResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.common.configs.EbayConfig;
+import java.util.List;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -15,11 +20,6 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.function.Function;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
 @Component
@@ -52,7 +52,7 @@ public class EbaySearchClient {
         .retrieve()
         .onStatus(HttpStatus::isError, mapErrorResponse)
         .bodyToMono(SearchResponse.class)
-        .doOnNext(searchResponse -> log.info("search returned {} items", searchResponse.getTotal()))
+        .doOnNext(searchResponse -> log.info("search {} returned {} items", ofNullable(params.getFirst("q")).orElse(""), searchResponse.getTotal()))
         .filter(searchResponse -> searchResponse != null && searchResponse.getItemSummaries() != null)
         .map(SearchResponse::getItemSummaries)
         .flatMapMany(Flux::fromIterable);
