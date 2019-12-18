@@ -95,7 +95,8 @@ class CexClientTest {
 
     StepVerifier
         .create(averagePrice)
-        .verifyErrorMessage("error sending search req to cex: error-message");
+        .expectNextMatches(price -> price.getExchange() == null && price.getCash() == null)
+        .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
     assertThat(recordedRequest.getPath()).isEqualTo("/cex/search?q=Apple%20Iphone%206s%2016GB%20Space%20Grey%20Unlocked");
@@ -113,7 +114,8 @@ class CexClientTest {
 
     StepVerifier
         .create(averagePrice)
-        .verifyErrorMessage("error sending search req to cex: too many requests");
+        .expectNextMatches(price -> price.getExchange() == null && price.getCash() == null)
+        .verifyComplete();
 
     var recordedRequest = mockWebServer.takeRequest();
     assertThat(recordedRequest.getPath()).isEqualTo("/cex/search?q=Apple%20Iphone%206s%2016GB%20Space%20Grey%20Unlocked");

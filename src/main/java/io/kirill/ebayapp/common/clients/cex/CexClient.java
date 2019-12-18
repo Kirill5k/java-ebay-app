@@ -56,8 +56,9 @@ public class CexClient {
       log.warn("not enough details to query for exchange price: {}", query);
       return Mono.empty();
     }
+    var price = resellableItem.getResellPrice();
     if (searchResults.containsKey(query)) {
-      log.info("found query \"{}\" in cache (£{})", query, resellableItem.originalPrice());
+      log.info("found query \"{}\" in cache (£{})", query, price);
       return Mono.just(searchResults.get(query));
     }
     return webClient
@@ -69,9 +70,11 @@ public class CexClient {
         .bodyToMono(SearchResponseWrapper.class)
         .map(SearchResponseWrapper::getResponse)
         .map(response -> ofNullable(response.getData()).map(SearchData::getBoxes).orElse(emptyList()))
-        .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, resellableItem.originalPrice(), results.size()))
+        .doOnNext(results -> log.info("query \"{}\" (£{}) returned {} results", query, price, results.size()))
         .map(results -> new ResellPrice(getMinPrice(results, SearchResult::getCashPrice), getMinPrice(results, SearchResult::getExchangePrice)))
-        .doOnNext(price -> searchResults.put(query, price));
+        .doOnNext(resellPrice -> searchResults.put(query, resellPrice))
+        .doOnError(error -> log.error("error querying for cex resell price for {} (£{}): {}", query, price, error.getMessage()))
+        .onErrorResume(e -> Mono.just(new ResellPrice(null, null)));
   }
 
   private BigDecimal getMinPrice(List<SearchResult> results, Function<SearchResult, Integer> priceExtract) {
