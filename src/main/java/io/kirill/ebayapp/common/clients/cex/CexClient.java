@@ -56,7 +56,7 @@ public class CexClient {
       log.warn("not enough details to query for exchange price: {}", query);
       return Mono.empty();
     }
-    var price = resellableItem.getResellPrice();
+    var price = resellableItem.originalPrice();
     if (searchResults.containsKey(query)) {
       log.info("found query \"{}\" in cache (£{})", query, price);
       return Mono.just(searchResults.get(query));
