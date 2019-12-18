@@ -53,7 +53,8 @@ public class CexClient {
   public <T> Mono<ResellPrice> getMinResellPrice(ResellableItem<T> resellableItem) {
     var query = resellableItem.searchQuery();
     if (!resellableItem.isSearchable()) {
-      log.warn("not enough details to query for exchange price: {}", query);
+      var listingTitle = resellableItem.getListingDetails().getTitle();
+      log.warn("not enough details to query for exchange price: {}; listing title: {}", query, listingTitle);
       return Mono.empty();
     }
     var price = resellableItem.originalPrice();
