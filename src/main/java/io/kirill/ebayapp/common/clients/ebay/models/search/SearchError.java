@@ -8,5 +8,5 @@ import lombok.Value;
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchError {
-  private final String longMessage;
+  private final String message;
 }

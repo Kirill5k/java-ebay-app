@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -47,6 +48,33 @@ class MobilePhoneEbayClientTest {
   ArgumentCaptor<MultiValueMap<String, String>> paramsCaptor;
 
   String accessToken = "access-token";
+
+  @Test
+  void getPhonesListedInTheLastMinutesWhenItemNotFound() {
+    var searchResult = List.of(
+        SearchResult.builder().itemId("item-6").seller(new Seller("s", 99.0, 15.0, "s")).build(),
+        SearchResult.builder().itemId("item-6").seller(new Seller("s", 99.0, 15.0, "s")).build(),
+        SearchResult.builder().itemId("item-7").seller(new Seller("s", 99.0, 15.0, "s")).build(),
+        SearchResult.builder().itemId("item-8").seller(new Seller("s", 99.0, 3.99, "s")).build(),
+        SearchResult.builder().itemId("item-9").seller(new Seller("s", 89.0, 15.0, "s")).build(),
+        SearchResult.builder().itemId("item-10").seller(null).build()
+    );
+
+    doAnswer(inv -> Mono.just(accessToken)).when(ebayAuthClient).accessToken();
+    doAnswer(inv -> Flux.fromIterable(searchResult)).when(ebaySearchClient).search(anyString(), any());
+    doAnswer(inv -> Mono.empty()).when(ebaySearchClient).getItem(anyString(), anyString());
+
+    var mobilePhones = mobilePhoneEbayClient.getPhonesListedInTheLastMinutes(10);
+
+    StepVerifier
+        .create(mobilePhones)
+        .verifyComplete();
+
+    verify(ebayAuthClient, times(4)).accessToken();
+    verify(ebaySearchClient).search(eq(accessToken), any());
+    verify(ebaySearchClient, times(3)).getItem(anyString(), anyString());
+    verify(mobilePhoneMapper, never()).map(any());
+  }
 
   @Test
   void getPhonesListedInTheLastMinutes() {

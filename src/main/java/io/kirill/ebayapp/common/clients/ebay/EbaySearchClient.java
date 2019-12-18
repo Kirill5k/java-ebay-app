@@ -1,8 +1,5 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbaySearchError;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchError;
@@ -10,8 +7,6 @@ import io.kirill.ebayapp.common.clients.ebay.models.search.SearchErrorResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.common.configs.EbayConfig;
-import java.util.List;
-import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -20,6 +15,12 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.function.Function;
+
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Slf4j
 @Component
@@ -65,10 +66,12 @@ public class EbaySearchClient {
         .headers(headers -> headers.setBearerAuth(accessToken))
         .retrieve()
         .onStatus(HttpStatus::isError, mapErrorResponse)
-        .bodyToMono(Item.class);
+        .bodyToMono(Item.class)
+        .doOnError(error -> log.error("error getting item {} details from ebay: {}", itemId, error.getMessage()))
+        .onErrorResume(error -> Mono.empty());
   }
 
   private Function<ClientResponse, Mono<? extends Throwable>> mapErrorResponse = r -> r.bodyToMono(SearchErrorResponse.class)
-        .map(e -> e.getErrors().stream().findFirst().map(SearchError::getLongMessage).orElse(r.toString()))
+        .map(e -> e.getErrors().stream().findFirst().map(SearchError::getMessage).orElse(r.toString()))
         .map(e -> new EbaySearchError(r.statusCode(), e));
 }
