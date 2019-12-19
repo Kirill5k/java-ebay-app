@@ -20,6 +20,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   private static final String RELEASE_YEAR_PROPERTY = "Release Year";
 
   private static final String PS4_PLATFORM = "PS4";
+  private static final String PLAYSTATION_4_PLATFORM = "PLAYSTATION 4";
   private static final Map<String, String> PLATFORM_MAPPINGS = Map.of(
       "Sony PlayStation 4", PS4_PLATFORM
   );
@@ -42,11 +43,11 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
       return properties.get(NAME_PROPERTY);
     }
 
-    if (title.toUpperCase().contains(PS4_PLATFORM)) {
+    if (title.toUpperCase().contains(PS4_PLATFORM) || title.toUpperCase().contains(PLAYSTATION_4_PLATFORM)) {
       return title.split(PS4_PLATFORM)[0]
           .replaceAll("[(,),/,|]", "")
           .replaceFirst("\\w+(?=\\s+Edition) Edition", "")
-          .replaceAll("Remastered|Playstation 4", "")
+          .replaceAll("Remastered|Playstation 4| - ", "")
           .trim();
     }
 
@@ -60,7 +61,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   }
 
   private String mapPlatform(String title, Map<String, String> properties) {
-    if (title.toUpperCase().replaceAll(" ", "").contains(PS4_PLATFORM)) {
+    if (title.toUpperCase().replaceAll(" ", "").contains(PS4_PLATFORM) || title.toUpperCase().contains(PLAYSTATION_4_PLATFORM)) {
       return PS4_PLATFORM;
     }
     return ofNullable(properties.get(PLATFORM_PROPERTY))
