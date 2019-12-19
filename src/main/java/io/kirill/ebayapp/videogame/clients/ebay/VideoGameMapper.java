@@ -1,16 +1,15 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.videogame.VideoGame;
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Optional.ofNullable;
+import org.springframework.stereotype.Component;
 
 @Component
 public class VideoGameMapper implements ItemMapper<VideoGame> {
@@ -30,12 +29,24 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var properties = mapProperties(item);
     var listingDetails = mapDetails(item);
     return VideoGame.builder()
-        .name(properties.get(NAME_PROPERTY))
+        .name(mapName(item.getTitle(), properties))
         .platform(mapPlatform(item.getTitle(), properties))
         .genre(mapGenre(properties))
         .listingDetails(listingDetails)
         .releaseYear(ofNullable(properties.get(RELEASE_YEAR_PROPERTY)).orElse(null))
         .build();
+  }
+
+  private String mapName(String title, Map<String, String> properties) {
+    if (properties.containsKey(NAME_PROPERTY)) {
+      return properties.get(NAME_PROPERTY);
+    }
+
+    if (title.toUpperCase().contains(PS4_PLATFORM)) {
+      return title.split(PS4_PLATFORM)[0].replaceAll("[(,)]", "").trim();
+    }
+
+    return null;
   }
 
   private String mapGenre(Map<String, String> properties) {
