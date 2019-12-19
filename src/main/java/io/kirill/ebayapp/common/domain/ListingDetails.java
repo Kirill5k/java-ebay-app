@@ -21,5 +21,6 @@ public class ListingDetails {
   private final Instant dateEnded;
   private final String url;
   private final String image;
+  private final String seller;
   private final BigDecimal price;
 }

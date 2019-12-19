@@ -28,6 +28,7 @@ public class Item {
   private final String itemWebUrl;
   private final List<ItemProperty> localizedAspects;
   private final ItemImage image;
+  private final ItemSeller seller;
   private final Instant itemEndDate;
   private final List<String> buyingOptions;
 }

@@ -1,17 +1,17 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
+
 import io.kirill.ebayapp.common.clients.ebay.models.Price;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
+import io.kirill.ebayapp.common.clients.ebay.models.item.ItemSeller;
 import io.kirill.ebayapp.common.domain.ListingDetails;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
-
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
 
 public interface ItemMapper<T> {
 
@@ -33,6 +33,7 @@ public interface ItemMapper<T> {
         .description(item.getShortDescription())
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .url(item.getItemWebUrl())
+        .seller(ofNullable(item.getSeller()).map(ItemSeller::getUsername).orElse(null))
         .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
         .build();
   }
