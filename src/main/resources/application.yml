@@ -34,4 +34,4 @@ app:
 
 logging:
   pattern:
-    console: '%clr(%msg%n)'
+    console: '%-5level %clr(%msg%n)'
