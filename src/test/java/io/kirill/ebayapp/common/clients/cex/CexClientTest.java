@@ -64,6 +64,7 @@ class CexClientTest {
   void getMinResellPriceWithIncompleteDetails() {
     StepVerifier
         .create(cexClient.getMinResellPrice(iphone6s.withModel(null)))
+        .expectNextMatches(price -> price.getExchange() == null && price.getCash() == null)
         .verifyComplete();
 
     assertThat(mockWebServer.getRequestCount()).isZero();

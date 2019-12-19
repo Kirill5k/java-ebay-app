@@ -34,6 +34,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 public class CexClient {
+  private static final ResellPrice MISSING_RESELL_PRICE = new ResellPrice(null, null);
 
   private final WebClient webClient;
 
@@ -55,7 +56,7 @@ public class CexClient {
     if (!resellableItem.isSearchable()) {
       var listingTitle = resellableItem.getListingDetails().getTitle();
       log.warn("not enough details to query for exchange price: {}; listing title: {}", query, listingTitle);
-      return Mono.empty();
+      return Mono.just(MISSING_RESELL_PRICE);
     }
     var price = resellableItem.originalPrice();
     if (searchResults.containsKey(query)) {
@@ -75,7 +76,7 @@ public class CexClient {
         .map(results -> new ResellPrice(getMinPrice(results, SearchResult::getCashPrice), getMinPrice(results, SearchResult::getExchangePrice)))
         .doOnNext(resellPrice -> searchResults.put(query, resellPrice))
         .doOnError(error -> log.error("error querying for cex resell price for {} (£{}): {}", query, price, error.getMessage()))
-        .onErrorResume(e -> Mono.just(new ResellPrice(null, null)));
+        .onErrorResume(e -> Mono.just(MISSING_RESELL_PRICE));
   }
 
   private BigDecimal getMinPrice(List<SearchResult> results, Function<SearchResult, Integer> priceExtract) {

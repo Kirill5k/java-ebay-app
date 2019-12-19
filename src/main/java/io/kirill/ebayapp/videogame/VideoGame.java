@@ -27,6 +27,6 @@ public class VideoGame implements ResellableItem<VideoGame> {
 
   @Override
   public boolean isSearchable() {
-    return name != null && platform != null;
+    return name != null && !name.isBlank() && platform != null;
   }
 }
