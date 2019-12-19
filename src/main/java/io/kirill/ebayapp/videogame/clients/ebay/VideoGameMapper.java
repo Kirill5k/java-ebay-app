@@ -46,8 +46,8 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     if (title.toUpperCase().contains(PS4_PLATFORM) || title.toUpperCase().contains(PLAYSTATION_4_PLATFORM)) {
       return title.split(PS4_PLATFORM)[0]
           .replaceAll("[(,),/,|]", "")
-          .replaceFirst("\\w+(?=\\s+Edition) Edition", "")
-          .replaceAll("Remastered|Playstation 4| - ", "")
+          .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
+          .replaceAll("(?i)remastered|playstation 4| - |sony", "")
           .trim();
     }
 
