@@ -84,7 +84,7 @@ class EbaySearchClientTest {
   void searchForNewestInCategoryFromWhenError() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(400)
-        .setBody("{\"errors\": [{\"longMessage\": \"error from ebay\"}]}")
+        .setBody("{\"errors\": [{\"message\": \"error from ebay\"}]}")
         .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
 
     var items = ebaySearchClient.search(accessToken, new LinkedMultiValueMap<String, String>());
@@ -115,5 +115,19 @@ class EbaySearchClientTest {
     assertThat(recordedRequest.getHeader("X-EBAY-C-MARKETPLACE-ID")).isEqualTo("EBAY_GB");
     assertThat(recordedRequest.getPath()).isEqualTo("/ebay/item/item-1");
     assertThat(recordedRequest.getMethod()).isEqualTo("GET");
+  }
+
+  @Test
+  void getItemWhen404Error() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(404)
+        .setBody("{\"errors\": [{\"message\": \"item not found\"}]}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var item = ebaySearchClient.getItem(accessToken, "item-1");
+
+    StepVerifier
+        .create(item)
+        .verifyComplete();
   }
 }
