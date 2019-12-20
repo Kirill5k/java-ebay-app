@@ -1,5 +1,8 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbaySearchError;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchError;
@@ -7,20 +10,18 @@ import io.kirill.ebayapp.common.clients.ebay.models.search.SearchErrorResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.common.configs.EbayConfig;
+import java.util.List;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.function.Function;
-
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import reactor.netty.http.client.HttpClient;
 
 @Slf4j
 @Component
@@ -37,6 +38,7 @@ public class EbaySearchClient {
     this.itemPath = ebayConfig.getItemPath();
     this.webClient = webClientBuilder
         .baseUrl(ebayConfig.getBaseUrl())
+        .clientConnector(new ReactorClientHttpConnector(HttpClient.newConnection().compress(true)))
         .defaultHeaders(headers -> headers.setContentType(APPLICATION_JSON))
         .defaultHeaders(headers -> headers.setAccept(List.of(APPLICATION_JSON)))
         .defaultHeaders(headers -> headers.set(MARKET_PLACE_HEADER, GB_MARKET_PLACE))

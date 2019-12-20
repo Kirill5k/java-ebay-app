@@ -34,7 +34,7 @@ public class AppRunner {
         .subscribe();
   }
 
-  @Scheduled(fixedDelay = 120000)
+  @Scheduled(initialDelay = 60000, fixedDelay = 120000)
   void searchForPS4Games() {
     videoGameService.getLatestFromEbay(MINUTES_PERIOD)
         .delayElements(Duration.ofSeconds(2))

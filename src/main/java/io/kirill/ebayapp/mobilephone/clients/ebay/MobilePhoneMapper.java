@@ -67,6 +67,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   private String mapColour(String colour) {
     return ofNullable(colour)
         .map(c -> c.split("[/,]")[0].trim())
+        .map(c -> c.replaceAll("(?i)Gray", "Grey"))
         .orElse(null);
   }
 
