@@ -24,7 +24,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
       "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
-      "is fault",  "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag",
+      "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag",
       "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack", "crack on screen",
       "is badly crack", "is crack", "is slight crack", "cracked display", "got some crack",
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
@@ -79,7 +79,9 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   }
 
   private String mapCondition(Item item) {
-    return mapConditionFromTitle(item).or(() -> mapConditionFromDescription(item)).orElseGet(item::getCondition);
+    return mapConditionFromTitle(item)
+        .or(() -> mapConditionFromDescription(item))
+        .orElseGet(item::getCondition);
   }
 
   private Optional<String> mapConditionFromTitle(Item item) {
