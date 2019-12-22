@@ -5,11 +5,12 @@ import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.videogame.VideoGame;
-import java.time.Instant;
-import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+
+import java.time.Instant;
+import java.util.function.Predicate;
 
 @Component
 @RequiredArgsConstructor
@@ -31,10 +32,14 @@ public class VideoGameEbayClient implements EbayClient {
   private final EbaySearchClient searchClient;
   private final VideoGameMapper videoGameMapper;
 
+
   public Flux<VideoGame> getPS4GamesListedInLastMinutes(int minutes) {
     var filter = searchFilter(NEWLY_LISTED_FILTER, Instant.now().minusSeconds(minutes * 60));
     return authClient.accessToken()
-        .flatMapMany(token -> searchClient.search(token, paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, "PS4")))
+        .flatMapMany(t -> Flux.merge(
+            searchClient.search(t, paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, "PS4")),
+            searchClient.search(t, paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, "SWITCH"))
+        ))
         .filter(hasTrustedSeller)
         .filter(isVideoGame)
         .filter(searchResult -> !ids.containsKey(searchResult.getItemId()))
@@ -44,5 +49,5 @@ public class VideoGameEbayClient implements EbayClient {
   }
 
   private Predicate<SearchResult> isVideoGame = searchResult -> !searchResult.getTitle().toLowerCase()
-        .matches(String.format("^.*?(%s).*$", TITLE_TRIGGER_WORDS));
+      .matches(String.format("^.*?(%s).*$", TITLE_TRIGGER_WORDS));
 }
