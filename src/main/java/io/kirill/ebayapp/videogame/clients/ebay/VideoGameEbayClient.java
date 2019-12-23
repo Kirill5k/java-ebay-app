@@ -3,14 +3,14 @@ package io.kirill.ebayapp.videogame.clients.ebay;
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
+import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.videogame.VideoGame;
+import java.time.Instant;
+import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-
-import java.time.Instant;
-import java.util.function.Predicate;
 
 @Component
 @RequiredArgsConstructor
@@ -40,6 +40,7 @@ public class VideoGameEbayClient implements EbayClient {
             searchClient.search(t, paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, "PS4")),
             searchClient.search(t, paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, "SWITCH"))
         ))
+        .doOnError(e -> e instanceof EbayAuthError, e -> authClient.switchAccount())
         .filter(hasTrustedSeller)
         .filter(isVideoGame)
         .filter(searchResult -> !ids.containsKey(searchResult.getItemId()))

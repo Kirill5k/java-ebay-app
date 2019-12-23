@@ -29,7 +29,8 @@ class EbayAuthClientTest {
   void setup() {
     var baseUri = mockWebServer.url(EBAY_URI).toString();
     var creds = new EbayConfig.Credentials("client-id", "client-secret");
-    var ebayConfig = new EbayConfig(baseUri, "/auth", "/search", "/item", new EbayConfig.Credentials[]{creds});
+    var creds2 = new EbayConfig.Credentials("client-id-2", "client-secret-2");
+    var ebayConfig = new EbayConfig(baseUri, "/auth", "/search", "/item", new EbayConfig.Credentials[]{creds, creds2});
     ebayAuthClient = new EbayAuthClient(WebClient.builder(), ebayConfig);
   }
 
@@ -103,5 +104,52 @@ class EbayAuthClientTest {
         .create(authToken)
         .expectNextMatches(token -> token.equals("new-token"))
         .verifyComplete();
+  }
+
+  @Test
+  void accessTokenWithDifferentAccount() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(200)
+        .setBody("{\"access_token\": \"secret-token\", \"expires_in\": 7200}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    ebayAuthClient.switchAccount();
+    var authToken = ebayAuthClient.accessToken();
+
+    StepVerifier
+        .create(authToken)
+        .expectNextMatches(token -> token.equals("secret-token"))
+        .verifyComplete();
+
+    var recordedRequest = mockWebServer.takeRequest();
+    assertThat(recordedRequest.getHeader(AUTHORIZATION)).isEqualTo(String.format("Basic %s", Base64Utils.encodeToString("client-id-2:client-secret-2".getBytes())));
+    assertThat(recordedRequest.getHeader(CONTENT_TYPE)).startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/auth");
+    assertThat(recordedRequest.getMethod()).isEqualTo("POST");
+    assertThat(recordedRequest.getBody().readUtf8()).isEqualTo("scope=https%3A%2F%2Fapi.ebay.com%2Foauth%2Fapi_scope&grant_type=client_credentials");
+  }
+
+  @Test
+  void accessTokenWithOriginalAccount() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(200)
+        .setBody("{\"access_token\": \"secret-token\", \"expires_in\": 7200}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    ebayAuthClient.switchAccount();
+    ebayAuthClient.switchAccount();
+    var authToken = ebayAuthClient.accessToken();
+
+    StepVerifier
+        .create(authToken)
+        .expectNextMatches(token -> token.equals("secret-token"))
+        .verifyComplete();
+
+    var recordedRequest = mockWebServer.takeRequest();
+    assertThat(recordedRequest.getHeader(AUTHORIZATION)).isEqualTo(String.format("Basic %s", Base64Utils.encodeToString("client-id:client-secret".getBytes())));
+    assertThat(recordedRequest.getHeader(CONTENT_TYPE)).startsWith(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+    assertThat(recordedRequest.getPath()).isEqualTo("/ebay/auth");
+    assertThat(recordedRequest.getMethod()).isEqualTo("POST");
+    assertThat(recordedRequest.getBody().readUtf8()).isEqualTo("scope=https%3A%2F%2Fapi.ebay.com%2Foauth%2Fapi_scope&grant_type=client_credentials");
   }
 }

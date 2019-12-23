@@ -7,6 +7,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import io.kirill.ebayapp.TestUtils;
+import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.common.configs.EbayConfig;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -96,6 +97,20 @@ class EbaySearchClientTest {
   }
 
   @Test
+  void searchForNewestInCategoryFromWhen429Error() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(429)
+        .setBody("{\"errors\": [{\"message\": \"error from ebay\"}]}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var items = ebaySearchClient.search(accessToken, new LinkedMultiValueMap<String, String>());
+
+    StepVerifier
+        .create(items)
+        .verifyErrorMatches(e -> e instanceof EbayAuthError && e.getMessage().equals("error authenticating with ebay: exceeded api limits"));
+  }
+
+  @Test
   void getItem() throws Exception {
     mockWebServer.enqueue(new MockResponse()
         .setResponseCode(200)
@@ -130,5 +145,19 @@ class EbaySearchClientTest {
     StepVerifier
         .create(item)
         .verifyComplete();
+  }
+
+  @Test
+  void getItemWhen429Error() throws Exception {
+    mockWebServer.enqueue(new MockResponse()
+        .setResponseCode(429)
+        .setBody("{\"errors\": [{\"message\": \"too many calls\"}]}")
+        .setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE));
+
+    var item = ebaySearchClient.getItem(accessToken, "item-1");
+
+    StepVerifier
+        .create(item)
+        .verifyErrorMatches(e -> e instanceof EbayAuthError && e.getMessage().equals("error authenticating with ebay: exceeded api limits"));
   }
 }

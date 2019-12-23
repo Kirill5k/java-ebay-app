@@ -3,6 +3,7 @@ package io.kirill.ebayapp.mobilephone.clients.ebay;
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
+import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ public class MobilePhoneEbayClient implements EbayClient {
     var filter = searchFilter(NEWLY_LISTED_FILTER, Instant.now().minusSeconds(minutes * 60));
     return authClient.accessToken()
         .flatMapMany(token -> searchClient.search(token, params(MOBILES_PHONES_CATEGORY_ID, filter)))
+        .doOnError(e -> e instanceof EbayAuthError, e -> authClient.switchAccount())
         .filter(hasTrustedSeller)
         .filter(searchResult -> !ids.containsKey(searchResult.getItemId()))
         .flatMap(sr -> authClient.accessToken().flatMap(token -> searchClient.getItem(token, sr.getItemId())))

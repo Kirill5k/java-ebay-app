@@ -1,25 +1,5 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
-import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
-import io.kirill.ebayapp.common.clients.ebay.models.Seller;
-import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
-import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
-import io.kirill.ebayapp.mobilephone.MobilePhone;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.util.MultiValueMap;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,6 +8,27 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
+import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
+import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
+import io.kirill.ebayapp.common.clients.ebay.models.Seller;
+import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
+import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
+import io.kirill.ebayapp.mobilephone.MobilePhone;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 class MobilePhoneEbayClientTest {
@@ -109,5 +110,23 @@ class MobilePhoneEbayClientTest {
     assertThat(params.getFirst("limit")).isEqualTo("200");
     assertThat(params.getFirst("category_ids")).isEqualTo("9355");
     assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,price:[39..800],priceCurrency:GBP,itemLocationCountry:GB,buyingOptions:%7BFIXED_PRICE%7D,itemStartDate:[");
+  }
+
+  @Test
+  void getPhonesListedInTheLastMinutesWhenError() {
+    doAnswer(inv -> Mono.just(accessToken)).when(ebayAuthClient).accessToken();
+    doAnswer(inv -> Flux.error(new EbayAuthError(HttpStatus.TOO_MANY_REQUESTS, "too many requests")))
+        .when(ebaySearchClient).search(anyString(), any());
+
+    var mobilePhones = mobilePhoneEbayClient.getPhonesListedInTheLastMinutes(10);
+
+    StepVerifier
+        .create(mobilePhones)
+        .verifyErrorMatches(e -> e instanceof EbayAuthError && e.getMessage().equals("error authenticating with ebay: too many requests"));
+
+    verify(ebayAuthClient).accessToken();
+    verify(ebayAuthClient).switchAccount();
+    verify(ebaySearchClient).search(eq(accessToken), any());
+    verify(ebaySearchClient, never()).getItem(anyString(), anyString());
   }
 }

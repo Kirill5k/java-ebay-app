@@ -14,7 +14,7 @@ class VideoGameMapperTest {
   VideoGameMapper videoGameMapper = new VideoGameMapper();
 
   @Test
-  void map() {
+  void mapPs4Game() {
     var item = Item.builder()
         .title("/ Spider-man | Limited Edition - Remastered: Sony Playstation 4 (PS4)")
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
@@ -27,5 +27,21 @@ class VideoGameMapperTest {
 
     assertThat(game.getName()).isEqualTo("Spider-man");
     assertThat(game.getPlatform()).isEqualTo("PS4");
+  }
+
+  @Test
+  void mapSwitchGame() {
+    var item = Item.builder()
+        .title("Zelda Nintendo Switch")
+        .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
+        .seller(new ItemSeller("boris"))
+        .localizedAspects(List.of())
+        .build();
+
+
+    var game = videoGameMapper.map(item);
+
+    assertThat(game.getName()).isEqualTo("Zelda");
+    assertThat(game.getPlatform()).isEqualTo("SWITCH");
   }
 }

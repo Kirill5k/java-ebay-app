@@ -56,4 +56,8 @@ public class EbayAuthClient {
         .bodyToMono(AuthResponse.class)
         .map(authResponse -> new AuthToken(authResponse.getAccessToken(), authResponse.getExpiresIn() - TOKEN_EXPIRY_OFFSET));
   }
+
+  public void switchAccount() {
+    currentAccountIndex = currentAccountIndex + 1 < credentials.length ? currentAccountIndex + 1 : 0;
+  }
 }
