@@ -1,5 +1,11 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import io.kirill.ebayapp.TestUtils;
 import io.kirill.ebayapp.common.configs.EbayConfig;
 import okhttp3.mockwebserver.MockResponse;
@@ -10,12 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 class EbaySearchClientTest {
   private static final String EBAY_URI = "/ebay";
@@ -29,7 +29,8 @@ class EbaySearchClientTest {
   @BeforeEach
   void setup() {
     var baseUri = mockWebServer.url(EBAY_URI).toString();
-    var ebayConfig = new EbayConfig("client-id", "client-secret", baseUri, "/auth", "/search", "/item");
+    var creds = new EbayConfig.Credentials("client-id", "client-secret");
+    var ebayConfig = new EbayConfig(baseUri, "/auth", "/search", "/item", new EbayConfig.Credentials[]{creds});
     ebaySearchClient = new EbaySearchClient(WebClient.builder(), ebayConfig);
   }
 

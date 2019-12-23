@@ -12,10 +12,18 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @RequiredArgsConstructor
 @ConfigurationProperties(prefix="app.ebay")
 public class EbayConfig {
-    private final String clientId;
-    private final String clientSecret;
     private final String baseUrl;
     private final String authPath;
     private final String searchPath;
     private final String itemPath;
+    private final Credentials[] credentials;
+
+    @Getter
+    @Setter
+    @ConstructorBinding
+    @RequiredArgsConstructor
+    public static class Credentials {
+      private final String clientId;
+      private final String clientSecret;
+    }
 }
