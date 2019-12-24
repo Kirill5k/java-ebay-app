@@ -9,11 +9,13 @@ import io.kirill.ebayapp.common.clients.ebay.models.AuthToken;
 import io.kirill.ebayapp.common.clients.ebay.models.auth.AuthErrorResponse;
 import io.kirill.ebayapp.common.clients.ebay.models.auth.AuthResponse;
 import io.kirill.ebayapp.common.configs.EbayConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class EbayAuthClient {
   private static final long TOKEN_EXPIRY_OFFSET = 30;
@@ -58,6 +60,7 @@ public class EbayAuthClient {
   }
 
   public void switchAccount() {
+    log.info("switching ebay account");
     currentAccountIndex = currentAccountIndex + 1 < credentials.length ? currentAccountIndex + 1 : 0;
   }
 }
