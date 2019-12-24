@@ -41,7 +41,7 @@ public class VideoGameEbayClient implements EbayClient {
   }
 
   public Flux<VideoGame> getGamesEndingIn(int minutes) {
-    var filter = searchFilter(NEWLY_LISTED_FILTER, Instant.now().plusSeconds(minutes * 60));
+    var filter = searchFilter(ENDING_SOON_FILTER, Instant.now().plusSeconds(minutes * 60));
     return findGames(filter);
   }
 
