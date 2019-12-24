@@ -4,6 +4,7 @@ import io.kirill.ebayapp.common.domain.ResellPrice;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,9 +50,18 @@ class MobilePhoneTest {
   }
 
   @Test
-  void goodDealMessageForAuction() {
-    var auctionDetails = iphone6s.getListingDetails().withType("AUCTION");
+  void goodDealMessageForEndingSoonItem() {
+    var endingSoonDetails = iphone6s.getListingDetails().withDateEnded(Instant.now().plusSeconds(3*60));
 
-    assertThat(iphone6s.withListingDetails(auctionDetails).goodDealMessage()).isEqualTo("about to end soon \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
+    assertThat(iphone6s.withListingDetails(endingSoonDetails).goodDealMessage())
+        .isEqualTo("about to end soon \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
+  }
+
+  @Test
+  void goodDealMessageForEndingNotTooSoonItem() {
+    var endingSoonDetails = iphone6s.getListingDetails().withDateEnded(Instant.now().plusSeconds(15*60));
+
+    assertThat(iphone6s.withListingDetails(endingSoonDetails).goodDealMessage())
+        .isEqualTo("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
   }
 }

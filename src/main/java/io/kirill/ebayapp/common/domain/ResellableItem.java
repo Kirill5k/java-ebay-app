@@ -1,6 +1,7 @@
 package io.kirill.ebayapp.common.domain;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import static java.util.Optional.ofNullable;
 
@@ -24,8 +25,8 @@ public interface ResellableItem<T> {
 
   default String goodDealMessage() {
     var details = getListingDetails();
-    var type = details.getType();
-    var template = type.equals("BUY_IT_NOW") ? "just listed \"%s\": ebay: £%s, cex: £%s %s" : "about to end soon \"%s\": ebay: £%s, cex: £%s %s";
+    var isAboutToEnd = details.getDateEnded() != null && details.getDateEnded().minusSeconds(60 * 10).isBefore(Instant.now());
+    var template = isAboutToEnd ? "about to end soon \"%s\": ebay: £%s, cex: £%s %s" : "just listed \"%s\": ebay: £%s, cex: £%s %s";
     return String.format(template, searchQuery(), details.getPrice(), getResellPrice().getExchange(), details.getUrl());
   }
 }
