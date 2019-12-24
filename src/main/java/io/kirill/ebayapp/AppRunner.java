@@ -39,8 +39,11 @@ public class AppRunner {
 
   @Scheduled(initialDelay = 60000, fixedDelay = 120000)
   void searchForPS4Games() {
-    videoGameService.getLatestFromEbay(15)
-        .delayElements(Duration.ofSeconds(2))
+    Flux.merge(
+        videoGameService.getLatestFromEbay(15),
+        videoGameService.getEndingSoonestOnEbay(5)
+    )
+        .delayElements(Duration.ofMillis(400))
         .flatMap(videoGameService::findResellPrice)
         .filter(game -> game.isProfitableToResell(-10))
         .flatMap(videoGameService::sendNotification)

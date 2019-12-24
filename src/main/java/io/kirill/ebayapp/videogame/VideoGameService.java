@@ -16,7 +16,11 @@ public class VideoGameService {
   private final TelegramClient telegramClient;
 
   public Flux<VideoGame> getLatestFromEbay(int minutes) {
-    return videoGameEbayClient.getPS4GamesListedInLastMinutes(minutes);
+    return videoGameEbayClient.getGamesListedInLastMinutes(minutes);
+  }
+
+  public Flux<VideoGame> getEndingSoonestOnEbay(int minutes) {
+    return videoGameEbayClient.getGamesEndingIn(minutes);
   }
 
   public Mono<VideoGame> findResellPrice(VideoGame videoGame) {
