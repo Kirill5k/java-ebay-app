@@ -11,13 +11,13 @@ public class MobilePhoneBuilder {
     var resellPrice = new ResellPrice(BigDecimal.ONE, BigDecimal.TEN);
 
     var listingDetails = ListingDetails.builder()
+        .type("BUY_IT_NOW")
         .price(BigDecimal.valueOf(100.0))
         .originalCondition("new")
         .url("ebay.com")
         .image("ebay.com/image.jpeg")
         .description("item description")
         .title("item title")
-        .type("BUY_IT_NOW")
         .datePosted(Instant.now())
         .dateEnded(Instant.now().plusSeconds(1800))
         .build();

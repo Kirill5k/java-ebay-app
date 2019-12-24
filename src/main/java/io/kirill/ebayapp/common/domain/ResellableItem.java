@@ -24,6 +24,8 @@ public interface ResellableItem<T> {
 
   default String goodDealMessage() {
     var details = getListingDetails();
-    return String.format("good deal on \"%s\": ebay: £%s, cex: £%s %s", searchQuery(), details.getPrice(), getResellPrice().getExchange(), details.getUrl());
+    var type = details.getType();
+    var template = type.equals("BUY_IT_NOW") ? "just listed \"%s\": ebay: £%s, cex: £%s %s" : "about to end soon \"%s\": ebay: £%s, cex: £%s %s";
+    return String.format(template, searchQuery(), details.getPrice(), getResellPrice().getExchange(), details.getUrl());
   }
 }

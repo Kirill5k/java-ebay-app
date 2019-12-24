@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -14,7 +15,6 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class AppRunner {
-  private static final int MINUTES_PERIOD = 15;
   private static final int MIN_MARGIN_PERCENTAGE = 25;
 
   private final MobilePhoneService mobilePhoneService;
@@ -22,8 +22,11 @@ public class AppRunner {
 
   @Scheduled(fixedDelay = 120000)
   void searchForPhones() {
-    mobilePhoneService.getLatestFromEbay(MINUTES_PERIOD)
-        .delayElements(Duration.ofMillis(450))
+    Flux.merge(
+        mobilePhoneService.getLatestFromEbay(15),
+        mobilePhoneService.getEndingSoonestOnEbay(5)
+    )
+        .delayElements(Duration.ofMillis(400))
         .filterWhen(mobilePhoneService::isNew)
         .flatMap(mobilePhoneService::findResellPrice)
         .flatMap(mobilePhoneService::save)
@@ -36,7 +39,7 @@ public class AppRunner {
 
   @Scheduled(initialDelay = 60000, fixedDelay = 120000)
   void searchForPS4Games() {
-    videoGameService.getLatestFromEbay(MINUTES_PERIOD)
+    videoGameService.getLatestFromEbay(15)
         .delayElements(Duration.ofSeconds(2))
         .flatMap(videoGameService::findResellPrice)
         .filter(game -> game.isProfitableToResell(-10))

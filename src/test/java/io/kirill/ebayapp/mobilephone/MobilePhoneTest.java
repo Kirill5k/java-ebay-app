@@ -44,7 +44,14 @@ class MobilePhoneTest {
   }
 
   @Test
-  void goodDealMessage() {
-    assertThat(iphone6s.goodDealMessage()).isEqualTo("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
+  void goodDealMessageForBuyItNow() {
+    assertThat(iphone6s.goodDealMessage()).isEqualTo("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
+  }
+
+  @Test
+  void goodDealMessageForAuction() {
+    var auctionDetails = iphone6s.getListingDetails().withType("AUCTION");
+
+    assertThat(iphone6s.withListingDetails(auctionDetails).goodDealMessage()).isEqualTo("about to end soon \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
   }
 }

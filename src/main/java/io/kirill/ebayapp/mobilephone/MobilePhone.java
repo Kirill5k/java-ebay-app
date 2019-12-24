@@ -1,18 +1,19 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static java.util.stream.Collectors.joining;
-
 import io.kirill.ebayapp.common.domain.ListingDetails;
 import io.kirill.ebayapp.common.domain.ResellPrice;
 import io.kirill.ebayapp.common.domain.ResellableItem;
-import java.util.Objects;
-import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Value
 @Document

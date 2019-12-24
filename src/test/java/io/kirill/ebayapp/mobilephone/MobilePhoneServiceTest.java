@@ -1,21 +1,9 @@
 package io.kirill.ebayapp.mobilephone;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
 import io.kirill.ebayapp.common.clients.cex.CexClient;
 import io.kirill.ebayapp.common.clients.telegram.TelegramClient;
 import io.kirill.ebayapp.common.domain.ResellPrice;
 import io.kirill.ebayapp.mobilephone.clients.ebay.MobilePhoneEbayClient;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +15,19 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class MobilePhoneServiceTest {
@@ -50,6 +51,20 @@ class MobilePhoneServiceTest {
   ArgumentCaptor<Instant> dateCaptor;
 
   MobilePhone iphone6s = MobilePhoneBuilder.iphone6s().build().withResellPrice(null);
+
+  @Test
+  void getEndingSoonestOnEbay() {
+    doAnswer(inv -> Flux.just(iphone6s))
+        .when(mobilePhoneEbayClient)
+        .getPhonesEndingSoon(anyInt());
+
+    StepVerifier
+        .create(mobilePhoneService.getEndingSoonestOnEbay(10))
+        .expectNextMatches(phone -> phone.getModel().equals(iphone6s.getModel()))
+        .verifyComplete();
+
+    verify(mobilePhoneEbayClient).getPhonesEndingSoon(10);
+  }
 
   @Test
   void getLatestFromEbay() {
@@ -103,7 +118,7 @@ class MobilePhoneServiceTest {
         .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(new ResellPrice(null, BigDecimal.TEN))))
         .verifyComplete();
 
-    verify(telegramClient).sendMessageToMainChannel("good deal on \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
+    verify(telegramClient).sendMessageToMainChannel("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
   }
 
   @Test

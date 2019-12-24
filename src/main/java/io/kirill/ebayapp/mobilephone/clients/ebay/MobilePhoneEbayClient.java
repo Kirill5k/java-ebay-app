@@ -23,14 +23,23 @@ public class MobilePhoneEbayClient implements EbayClient {
       "itemLocationCountry:GB,";
 
   private final static String NEWLY_LISTED_FILTER = DEFAULT_FILTER + "buyingOptions:{FIXED_PRICE},itemStartDate:[%s]";
-  private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "buyingOptions:{AUCTION},itemEndDate:[%s]";
+  private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "buyingOptions:{AUCTION},itemEndDate:[..%s]";
 
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;
   private final MobilePhoneMapper mobilePhoneMapper;
 
+  public Flux<MobilePhone> getPhonesEndingSoon(int minutes) {
+    var filter = searchFilter(ENDING_SOON_FILTER, Instant.now().plusSeconds(minutes * 60));
+    return findPhones(filter);
+  }
+
   public Flux<MobilePhone> getPhonesListedInTheLastMinutes(int minutes) {
     var filter = searchFilter(NEWLY_LISTED_FILTER, Instant.now().minusSeconds(minutes * 60));
+    return findPhones(filter);
+  }
+
+  private Flux<MobilePhone> findPhones(String filter) {
     return authClient.accessToken()
         .flatMapMany(token -> searchClient.search(token, params(MOBILES_PHONES_CATEGORY_ID, filter)))
         .doOnError(e -> e instanceof EbayAuthError, e -> authClient.switchAccount())

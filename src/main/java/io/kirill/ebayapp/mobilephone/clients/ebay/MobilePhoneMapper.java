@@ -1,16 +1,17 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import static java.util.Optional.ofNullable;
-
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
+
+import static java.util.Optional.ofNullable;
 
 @Component
 class MobilePhoneMapper implements ItemMapper<MobilePhone> {
@@ -19,14 +20,14 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
-      "cracked", "fault", "spares", "repair", "smashed", "no touch", "no face", "broken", "not work", "damag", "no service");
+      "cracked", "fault", "spares", "repair", "smashed", "no touch", "no face", "broken", "not work", "damag", "no service", "screenburn", "screen burn");
 
   private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
       "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
       "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag",
       "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack", "crack on screen",
-      "is badly crack", "is crack", "is slight crack", "cracked display", "got some crack",
+      "is small crack", "is badly crack", "is crack", "is slight crack", "cracked display", "got some crack",
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work",
       "are broke", "is smashed", "is broke", "smashed screen",
