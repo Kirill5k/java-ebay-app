@@ -24,7 +24,7 @@ public class AppRunner {
   void searchForPhones() {
     Flux.merge(
         mobilePhoneService.getLatestFromEbay(15),
-        mobilePhoneService.getEndingSoonestOnEbay(5)
+        mobilePhoneService.getEndingSoonestOnEbay(4)
     )
         .delayElements(Duration.ofMillis(400))
         .filterWhen(mobilePhoneService::isNew)
@@ -41,7 +41,7 @@ public class AppRunner {
   void searchForPS4Games() {
     Flux.merge(
         videoGameService.getLatestFromEbay(15),
-        videoGameService.getEndingSoonestOnEbay(5)
+        videoGameService.getEndingSoonestOnEbay(4)
     )
         .delayElements(Duration.ofMillis(400))
         .flatMap(videoGameService::findResellPrice)
