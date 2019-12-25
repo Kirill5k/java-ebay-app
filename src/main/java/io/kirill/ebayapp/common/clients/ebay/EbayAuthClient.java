@@ -1,9 +1,5 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
-
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.common.clients.ebay.models.AuthToken;
 import io.kirill.ebayapp.common.clients.ebay.models.auth.AuthErrorResponse;
@@ -14,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @Slf4j
 @Component
@@ -62,5 +62,6 @@ public class EbayAuthClient {
   public void switchAccount() {
     log.info("switching ebay account");
     currentAccountIndex = currentAccountIndex + 1 < credentials.length ? currentAccountIndex + 1 : 0;
+    authToken = null;
   }
 }
