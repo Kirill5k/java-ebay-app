@@ -59,7 +59,7 @@ class MobilePhoneMapperTest {
     assertThat(phone.getStorageCapacity()).isEqualTo("16GB");
     assertThat(phone.getMake()).isEqualTo("Apple");
     assertThat(phone.getModel()).isEqualTo("Iphone 6s");
-    assertThat(phone.getColour()).isEqualTo("Space Grey");
+    assertThat(phone.getColour()).isEqualTo("Grey");
     assertThat(phone.getManufacturerColour()).isEqualTo("Space gray midnight, Blue");
     assertThat(phone.getCondition()).isEqualTo("new and awesome");
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
