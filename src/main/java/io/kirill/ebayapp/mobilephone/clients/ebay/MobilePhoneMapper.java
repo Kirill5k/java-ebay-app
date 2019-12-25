@@ -50,9 +50,9 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
     return MobilePhone.builder()
         .make(properties.getOrDefault(MAKE_PROPERTY, item.getBrand()))
         .storageCapacity(mapStorage(properties))
-        .model(properties.getOrDefault(MODEL_PROPERTY, item.getMpn()))
-        .colour(mapColour(properties.getOrDefault(MANUFACTURER_COLOR_PROPERTY, properties.get(COLOUR_PROPERTY))))
-        .manufacturerColour(mapColour(properties.get(MANUFACTURER_COLOR_PROPERTY)))
+        .model(properties.get(MODEL_PROPERTY))
+        .colour(mapColour(properties.getOrDefault(MANUFACTURER_COLOR_PROPERTY, properties.getOrDefault(COLOUR_PROPERTY, item.getColor()))))
+        .manufacturerColour(properties.get(MANUFACTURER_COLOR_PROPERTY))
         .network(mapNetwork(properties))
         .condition(mapCondition(item))
         .mpn(item.getMpn())
@@ -70,7 +70,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
     return ofNullable(colour)
         .map(c -> c.split("[/,]")[0].trim())
         .map(c -> c.replaceAll("(?i)Gray", "Grey"))
-        .map(c -> c.replaceAll("(?i)Platinum", ""))
+        .map(c -> c.replaceAll("(?i)Platinum|Midnight|Phantom|&|Slate|Titanium|Space", ""))
         .map(String::trim)
         .orElse(null);
   }
