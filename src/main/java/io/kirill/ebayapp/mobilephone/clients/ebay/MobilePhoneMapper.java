@@ -18,6 +18,9 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   private static final List<String> VALID_NETWORKS = List.of("unlocked", "o2", "ee", "vodafone", "three", "tesco");
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
+  private static final String COLOURS_TO_REMOVE = String.join("|", "&",
+      "Platinum", "Midnight", "Phantom", "Slate", "Titanium", "Space", "Matte", "\\(PRODUCT\\)", "Shimmery", "Navy", "Carbon", "Sapphire"
+  );
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
       "cracked", "fault", "spares", "repair", "smashed", "no touch", "no face", "broken", "not work", "damag", "no service", "screenburn", "screen burn");
@@ -71,7 +74,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
     return ofNullable(colour)
         .map(c -> c.split("[/,]")[0].trim())
         .map(c -> c.replaceAll("(?i)Gray", "Grey"))
-        .map(c -> c.replaceAll("(?i)Platinum|Midnight|Phantom|&|Slate|Titanium|Space|Matte|\\(PRODUCT\\)", ""))
+        .map(c -> c.replaceAll(String.format("(?i)%s", COLOURS_TO_REMOVE), ""))
         .map(String::trim)
         .orElse(null);
   }

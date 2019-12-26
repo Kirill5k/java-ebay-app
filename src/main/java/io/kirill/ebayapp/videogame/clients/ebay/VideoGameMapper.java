@@ -26,8 +26,10 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
 
   private static final Map<String, String> PLATFORM_MAPPINGS = Map.of(
       "Sony PlayStation 4", "PS4",
+      "Sony PlayStation 3", "PS3",
       "Nintendo Switch", "SWITCH",
-      "NINTENDO SWITCH", "SWITCH"
+      "NINTENDO SWITCH", "SWITCH",
+      "Microsoft Xbox One", "Xbox One"
   );
 
   @Override
@@ -47,9 +49,9 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var upperCaseTitle = title.toUpperCase();
     var platform = PLATFORMS.stream().filter(upperCaseTitle::contains).findFirst();
     var newTitle = platform.map(p -> title.split("(?i)" + p)[0]).filter(t -> !t.isBlank()).orElse(title);
-    return newTitle.replaceAll("[()/|:]", "")
+    return newTitle.replaceAll("[()/|:.]", "")
         .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
-        .replaceAll("(?i)remastered|playstation 4| - |sony|ps4|blu-ray", "")
+        .replaceAll("(?i)remastered|playstation 4| - |sony|ps4|blu-ray|Mirror", "")
         .replaceAll("é", "e")
         .trim();
   }
