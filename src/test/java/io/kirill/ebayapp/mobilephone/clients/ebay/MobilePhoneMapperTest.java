@@ -48,7 +48,7 @@ class MobilePhoneMapperTest {
             new ItemProperty("type", "Network", "Unlocked"),
             new ItemProperty("type", "Model", "Iphone 6s"),
             new ItemProperty("type", "Colour", "Grey"),
-            new ItemProperty("type", "Manufacturer Colour", "Space gray midnight, Blue"),
+            new ItemProperty("type", "Manufacturer Colour", "(PRODUCT)Space gray midnight, Blue"),
             new ItemProperty("type", "Storage Capacity", "16 GB / 32 GB")
         ))
         .build();
@@ -60,7 +60,7 @@ class MobilePhoneMapperTest {
     assertThat(phone.getMake()).isEqualTo("Apple");
     assertThat(phone.getModel()).isEqualTo("Iphone 6s");
     assertThat(phone.getColour()).isEqualTo("Grey");
-    assertThat(phone.getManufacturerColour()).isEqualTo("Space gray midnight, Blue");
+    assertThat(phone.getManufacturerColour()).isEqualTo("(PRODUCT)Space gray midnight, Blue");
     assertThat(phone.getCondition()).isEqualTo("new and awesome");
     assertThat(phone.getMpn()).isEqualTo("MN4U2BA");
 

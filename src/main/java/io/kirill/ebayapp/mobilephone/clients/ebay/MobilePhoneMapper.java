@@ -24,7 +24,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
   private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
-      "is icloud lock", "has icloud lock",  "has activation lock", "icloud locked",
+      "is icloud lock", "has icloud lock",  "has activation lock",
       "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag",
       "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack", "crack on screen",
       "is small crack", "is badly crack", "is crack", "is slight crack", "cracked display", "got some crack",
@@ -35,6 +35,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "has some screen burn", "has screen burn", "needs glass replac", "needs new screen"
       );
   private static final String FAULTY_CONDITION = "Faulty";
+  private static final String NEW_CONDITION = "New";
 
   private static final String MAKE_PROPERTY = "Brand";
   private static final String MODEL_PROPERTY = "Model";
@@ -70,7 +71,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
     return ofNullable(colour)
         .map(c -> c.split("[/,]")[0].trim())
         .map(c -> c.replaceAll("(?i)Gray", "Grey"))
-        .map(c -> c.replaceAll("(?i)Platinum|Midnight|Phantom|&|Slate|Titanium|Space|Matte", ""))
+        .map(c -> c.replaceAll("(?i)Platinum|Midnight|Phantom|&|Slate|Titanium|Space|Matte|\\(PRODUCT\\)", ""))
         .map(String::trim)
         .orElse(null);
   }
@@ -83,6 +84,9 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   }
 
   private String mapCondition(Item item) {
+    if (item.getCondition() != null && item.getCondition().equals(NEW_CONDITION)) {
+      return item.getCondition();
+    }
     return mapConditionFromTitle(item)
         .or(() -> mapConditionFromDescription(item))
         .orElseGet(item::getCondition);
