@@ -54,7 +54,7 @@
           var price = document.createElement("p");
           price.className = "card-text mb-0 pl-3";
           var priceText = document.createElement("small");
-          priceText.innerText = "Ebay price: " + phone.listingDetails.price + " / CEX price: " + (phone.resellPrice.exchange ? phone.resellPrice.exchange : "Unknown");
+          priceText.innerText = "Ebay price: " + phone.listingDetails.price + " / CEX price: " + (phone.resellPrice && phone.resellPrice.exchange ? phone.resellPrice.exchange : "Unknown");
           price.append(priceText);
 
           var condition = document.createElement("p");
