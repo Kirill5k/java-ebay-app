@@ -18,12 +18,11 @@ public class MobilePhoneEbayClient implements EbayClient {
 
   private final static String DEFAULT_FILTER = "conditionIds:{1000|1500|2000|2500|3000|4000|5000}," +
       "deliveryCountry:GB," +
-      "price:[39..800]," +
       "priceCurrency:GBP," +
       "itemLocationCountry:GB,";
 
-  private final static String NEWLY_LISTED_FILTER = DEFAULT_FILTER + "buyingOptions:{FIXED_PRICE},itemStartDate:[%s]";
-  private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "buyingOptions:{AUCTION},itemEndDate:[..%s]";
+  private final static String NEWLY_LISTED_FILTER = DEFAULT_FILTER + "price:[39..1800],buyingOptions:{FIXED_PRICE},itemStartDate:[%s]";
+  private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "price:[0..1800],buyingOptions:{AUCTION},itemEndDate:[..%s]";
 
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;

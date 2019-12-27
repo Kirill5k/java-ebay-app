@@ -103,7 +103,7 @@ class MobilePhoneEbayClientTest {
     var params = paramsCaptor.getValue();
     assertThat(params.getFirst("limit")).isEqualTo("200");
     assertThat(params.getFirst("category_ids")).isEqualTo("9355");
-    assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,price:[39..800],priceCurrency:GBP,itemLocationCountry:GB,buyingOptions:%7BAUCTION%7D,itemEndDate:[..");
+    assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,priceCurrency:GBP,itemLocationCountry:GB,price:[0..1800],buyingOptions:%7BAUCTION%7D,itemEndDate:[..");
   }
 
   @Test
@@ -138,7 +138,7 @@ class MobilePhoneEbayClientTest {
     var params = paramsCaptor.getValue();
     assertThat(params.getFirst("limit")).isEqualTo("200");
     assertThat(params.getFirst("category_ids")).isEqualTo("9355");
-    assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,price:[39..800],priceCurrency:GBP,itemLocationCountry:GB,buyingOptions:%7BFIXED_PRICE%7D,itemStartDate:[");
+    assertThat(params.getFirst("filter")).startsWith("conditionIds:%7B1000|1500|2000|2500|3000|4000|5000%7D,deliveryCountry:GB,priceCurrency:GBP,itemLocationCountry:GB,price:[39..1800],buyingOptions:%7BFIXED_PRICE%7D,itemStartDate:[");
   }
 
   @Test

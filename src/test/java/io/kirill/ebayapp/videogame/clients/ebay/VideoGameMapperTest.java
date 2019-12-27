@@ -18,7 +18,7 @@ class VideoGameMapperTest {
   @Test
   void mapPs4Game() {
     var item = Item.builder()
-        .title("/ Spider-man. | Limited Edition - Remastered: Sony Playstation 4 (PS4)")
+        .title("[/ Spider-man.] | Limited Edition - Remastered: Sony Playstation 4 (PS4)")
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
         .seller(new ItemSeller("boris"))
         .localizedAspects(List.of())

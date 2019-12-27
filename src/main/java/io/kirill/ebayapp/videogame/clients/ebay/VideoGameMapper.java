@@ -49,7 +49,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var upperCaseTitle = title.toUpperCase();
     var platform = PLATFORMS.stream().filter(upperCaseTitle::contains).findFirst();
     var newTitle = platform.map(p -> title.split("(?i)" + p)[0]).filter(t -> !t.isBlank()).orElse(title);
-    return newTitle.replaceAll("[()/|:.]", "")
+    return newTitle.replaceAll("[()/|:.\\[\\]]", "")
         .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
         .replaceAll("(?i)remastered|playstation 4| - |sony|ps4|blu-ray|Mirror", "")
         .replaceAll("é", "e")
