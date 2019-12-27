@@ -11,7 +11,7 @@
 
   <script>
       var loc = window.location;
-      var uri = "ws://" + loc.host + loc.pathname + "ws/mobile-phones/feed";
+      var uri = "wss://" + loc.host + loc.pathname + "ws/mobile-phones/feed";
       var ws = new WebSocket(uri);
       ws.addEventListener("open", function(e) {
         ws.send("give me phone");
