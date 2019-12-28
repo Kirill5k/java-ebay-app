@@ -45,7 +45,7 @@ public class AppRunner {
     )
         .delayElements(Duration.ofMillis(400))
         .flatMap(videoGameService::findResellPrice)
-        .filter(game -> game.isProfitableToResell(-10))
+        .filter(game -> game.isProfitableToResell(0))
         .flatMap(videoGameService::sendNotification)
         .doOnError(error -> log.error("error during app run: {} {}", error.getMessage(), error))
         .onErrorResume(e -> Mono.empty())
