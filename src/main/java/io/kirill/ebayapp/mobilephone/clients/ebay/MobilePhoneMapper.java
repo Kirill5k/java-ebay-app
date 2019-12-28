@@ -5,7 +5,6 @@ import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +14,7 @@ import static java.util.Optional.ofNullable;
 
 @Component
 class MobilePhoneMapper implements ItemMapper<MobilePhone> {
-  private static final List<String> VALID_NETWORKS = List.of("unlocked", "o2", "ee", "vodafone", "tesco");
+  private static final String VALID_NETWORKS = String.join("|", "unlocked", "o2", "ee", "vodafone", "tesco");
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
   private static final String COLOURS_TO_REMOVE = String.join("|", "&",
@@ -67,7 +66,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
   private String mapNetwork(Map<String, String> properties) {
     return ofNullable(properties.get(NETWORK_PROPERTY))
-        .filter(network -> VALID_NETWORKS.contains(network.toLowerCase()))
+        .filter(network -> network.matches(String.format("(?i)%s", VALID_NETWORKS)))
         .orElse(UNLOCKED_NETWORK);
   }
 

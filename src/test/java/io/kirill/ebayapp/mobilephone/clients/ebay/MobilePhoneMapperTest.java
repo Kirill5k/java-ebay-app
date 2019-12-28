@@ -45,7 +45,7 @@ class MobilePhoneMapperTest {
         .seller(new ItemSeller("boris"))
         .localizedAspects(List.of(
             new ItemProperty("type", "Brand", "Apple"),
-            new ItemProperty("type", "Network", "Unlocked"),
+            new ItemProperty("type", "Network", "Vodafone"),
             new ItemProperty("type", "Model", "Iphone 6s"),
             new ItemProperty("type", "Colour", "Grey"),
             new ItemProperty("type", "Manufacturer Colour", "(PRODUCT)Space gray midnight, Blue"),
@@ -55,7 +55,7 @@ class MobilePhoneMapperTest {
 
     var phone = mobilePhoneMapper.map(item);
 
-    assertThat(phone.getNetwork()).isEqualTo("Unlocked");
+    assertThat(phone.getNetwork()).isEqualTo("Vodafone");
     assertThat(phone.getStorageCapacity()).isEqualTo("16GB");
     assertThat(phone.getMake()).isEqualTo("Apple");
     assertThat(phone.getModel()).isEqualTo("Iphone 6s");
