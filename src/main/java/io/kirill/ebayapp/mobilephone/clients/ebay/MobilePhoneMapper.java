@@ -19,11 +19,12 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
   private static final String COLOURS_TO_REMOVE = String.join("|", "&",
       "Platinum", "Midnight", "Phantom", "Slate", "Titanium", "Space", "Matte", "\\(PRODUCT\\)", "Shimmery", "Navy", "Carbon", "Sapphire", "Quite",
-      "Steel", "Piano", "Ocean", "Neptune", "Frost", "Astro"
+      "Steel", "Piano", "Ocean", "Neptune", "Frost", "Astro", "Charcoal", "Ceramic"
   );
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
-      "cracked", "fault", "spares", "repair", "smashed", "no touch", "no face", "broken", "not work", "damag", "no service", "screenburn", "screen burn");
+      "cracked", "fault", "spares", "repair", "smashed", "no touch", "no face", "broken", "not work", "damag", "no service", "screenburn", "screen burn"
+  );
 
   private static final String DESCRIPTION_CONDITION_TRIGGER_WORDS = String.join("|",
       "no touchid", "no touch id", "no faceid", "no face id", "home button fault", "faulty home", "faulty touch",
@@ -31,12 +32,13 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag", "damaged front",
       "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack", "crack on screen",
       "is small crack", "is badly crack", "is crack", "is slight crack", "cracked display", "got some crack", "are crack",
-      "cracked front", "both crack",
+      "cracked front", "both crack", "few crack", "with a slight crack",
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work", "stopped work",
       "are broke", "is smashed", "is broke", "smashed screen",
       "has some screen burn", "has screen burn", "needs glass replac", "needs new screen"
-      );
+  );
+
   private static final String FAULTY_CONDITION = "Faulty";
   private static final String NEW_CONDITION = "New";
 
@@ -83,6 +85,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
     return ofNullable(properties.get(STORAGE_CAPACITY_PROPERTY))
         .map(s -> s.split("[/,]")[0].trim())
         .map(s -> s.replaceAll(" ", ""))
+        .filter(s -> !s.contains("MB"))
         .orElse(null);
   }
 

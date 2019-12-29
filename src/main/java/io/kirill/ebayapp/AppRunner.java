@@ -15,7 +15,7 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class AppRunner {
-  private static final int MIN_MARGIN_PERCENTAGE = 25;
+  private static final int MIN_MARGIN_PERCENTAGE = 29;
 
   private final MobilePhoneService mobilePhoneService;
   private final VideoGameService videoGameService;
