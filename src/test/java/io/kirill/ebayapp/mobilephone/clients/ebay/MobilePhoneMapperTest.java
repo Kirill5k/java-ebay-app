@@ -88,7 +88,8 @@ class MobilePhoneMapperTest {
       "bla bla touch id can't work blah blah",
       "blah blah screen is cracked blah blah",
       "blah blah there is a crack blah blah",
-      "blah spares/repairs blah"
+      "blah spares/repairs blah",
+      "please read needs new screen!. Condition is Used. Dispatched with Royal Mail 1st Class.\n<br>"
   })
   void toMobilePhoneWithFaultyCondition(String description) {
     var item = Item.builder().shortDescription(null).description(description).build();
@@ -109,6 +110,7 @@ class MobilePhoneMapperTest {
       "bla bla touch id can't work blah blah",
       "blah blah screen is cracked blah blah",
       "blah blah there is a crack blah blah",
+      "blah blah NEEDS NEW SCREEN! blah blah",
       "blah spares/repairs blah"
   })
   void toMobilePhoneWithFaultyConditionByAnalyzingShortDescription(String description) {
@@ -128,7 +130,7 @@ class MobilePhoneMapperTest {
       "good but smashed",
       "galaxy s8 smashed screen",
       "iphone for spares repairs",
-      "iphone with cracked screen",
+      "iphone with Cracked Screen",
       "blah spares/repairs blah"
   })
   void toMobilePhoneWithFaultyConditionByAnalyzingListingTitle(String title) {
