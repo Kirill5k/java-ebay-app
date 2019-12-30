@@ -26,6 +26,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
 
   private static final Map<String, String> PLATFORM_MAPPINGS = Map.of(
       "Sony PlayStation 4", "PS4",
+      "PlayStation 4", "PS4",
       "Sony PlayStation 3", "PS3",
       "Nintendo Switch", "SWITCH",
       "NINTENDO SWITCH", "SWITCH",
@@ -51,7 +52,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var newTitle = platform.map(p -> title.split("(?i)" + p)[0]).filter(t -> !t.isBlank()).orElse(title);
     return newTitle.replaceAll("[()/|:.\\[\\]]", "")
         .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
-        .replaceAll("(?i)remastered|playstation 4| - |sony|ps4|blu-ray|Mirror", "")
+        .replaceAll("(?i)remastered|playstation 4| - |sony|ps4|blu-ray|Mirror|New and sealed", "")
         .replaceAll("é", "e")
         .trim();
   }

@@ -26,7 +26,7 @@ public class AppRunner {
         mobilePhoneService.getLatestFromEbay(15),
         mobilePhoneService.getEndingSoonestOnEbay(4)
     )
-        .delayElements(Duration.ofMillis(400))
+        .delayElements(Duration.ofMillis(500))
         .filterWhen(mobilePhoneService::isNew)
         .flatMap(mobilePhoneService::findResellPrice)
         .flatMap(mobilePhoneService::save)
@@ -43,7 +43,7 @@ public class AppRunner {
         videoGameService.getLatestFromEbay(15),
         videoGameService.getEndingSoonestOnEbay(4)
     )
-        .delayElements(Duration.ofMillis(400))
+        .delayElements(Duration.ofMillis(500))
         .flatMap(videoGameService::findResellPrice)
         .filter(game -> game.isProfitableToResell(0))
         .flatMap(videoGameService::sendNotification)

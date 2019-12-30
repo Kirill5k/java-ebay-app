@@ -19,7 +19,8 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
 
   private static final String COLOURS_TO_REMOVE = String.join("|", "&",
       "Platinum", "Midnight", "Phantom", "Slate", "Titanium", "Space", "Matte", "\\(PRODUCT\\)", "Shimmery", "Navy", "Carbon", "Sapphire", "Quite",
-      "Steel", "Piano", "Ocean", "Neptune", "Frost", "Astro", "Charcoal", "Ceramic"
+      "Steel", "Piano", "Ocean", "Neptune", "Frost", "Astro", "Charcoal", "Ceramic", "Dark", "Progressive", "Cloud", "Burgundy", "Pearl", "Shadow",
+      "Copper", "Dark", "Chic", "Marble"
   );
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
@@ -36,7 +37,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work", "stopped work",
       "are broke", "is smashed", "is broke", "smashed screen",
-      "has some screen burn", "has screen burn", "needs glass replac", "needs new screen"
+      "has some screen burn", "has screen burn", "needs glass replac", "needs new screen", "needs replac"
   );
 
   private static final String FAULTY_CONDITION = "Faulty";
