@@ -20,7 +20,7 @@ public class VideoGameEbayClient implements EbayClient {
 
   private final static String DEFAULT_FILTER = "conditionIds:{1000|1500|2000|2500|3000|4000|5000}," +
       "deliveryCountry:GB," +
-      "price:[1..50]," +
+      "price:[0..100]," +
       "priceCurrency:GBP," +
       "itemLocationCountry:GB,";
 
@@ -28,7 +28,7 @@ public class VideoGameEbayClient implements EbayClient {
   private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "buyingOptions:{AUCTION},itemEndDate:[..%s]";
 
   private static final String TITLE_TRIGGER_WORDS = String.join("|",
-      "coin", "skins", "bundle", "dlc", "no game", "digital key", "download key");
+      "coin", "skins", "bundle", "dlc", "no game", "digital key", "download key", "just the case", "cartridge only");
 
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;

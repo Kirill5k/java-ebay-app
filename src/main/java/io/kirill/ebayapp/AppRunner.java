@@ -23,8 +23,7 @@ public class AppRunner {
   @Scheduled(fixedDelay = 120000)
   void searchForPhones() {
     Flux.merge(
-        mobilePhoneService.getLatestFromEbay(15),
-        mobilePhoneService.getEndingSoonestOnEbay(4)
+        mobilePhoneService.getLatestFromEbay(15)
     )
         .delayElements(Duration.ofMillis(500))
         .filterWhen(mobilePhoneService::isNew)
@@ -40,8 +39,7 @@ public class AppRunner {
   @Scheduled(initialDelay = 60000, fixedDelay = 120000)
   void searchForPS4Games() {
     Flux.merge(
-        videoGameService.getLatestFromEbay(15),
-        videoGameService.getEndingSoonestOnEbay(4)
+        videoGameService.getLatestFromEbay(15)
     )
         .delayElements(Duration.ofMillis(500))
         .flatMap(videoGameService::findResellPrice)
