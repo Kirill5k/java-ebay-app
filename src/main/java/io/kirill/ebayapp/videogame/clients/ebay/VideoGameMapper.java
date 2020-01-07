@@ -1,17 +1,16 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.videogame.VideoGame;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Optional.ofNullable;
+import org.springframework.stereotype.Component;
 
 @Component
 public class VideoGameMapper implements ItemMapper<VideoGame> {
@@ -21,6 +20,8 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   private static final String SUB_GENRE_PROPERTY = "Sub-Genre";
   private static final String RELEASE_YEAR_PROPERTY = "Release Year";
 
+  private static final String WORDS_TO_REMOVE_FROM_TITLE = String.join("|",
+      "remastered", "playstation 4", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed", "Brand new", "Sealed");
 
   private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH");
 
@@ -52,7 +53,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var newTitle = platform.map(p -> title.split("(?i)" + p)[0]).filter(t -> !t.isBlank()).orElse(title);
     return newTitle.replaceAll("[()/|:.\\[\\]]", "")
         .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
-        .replaceAll("(?i)remastered|playstation 4| - |sony|ps4|blu-ray|Mirror|New and sealed", "")
+        .replaceAll(String.format("(?i)%s", WORDS_TO_REMOVE_FROM_TITLE), "")
         .replaceAll("é", "e")
         .trim();
   }

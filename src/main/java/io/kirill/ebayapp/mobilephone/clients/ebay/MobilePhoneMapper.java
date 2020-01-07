@@ -1,26 +1,29 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static java.util.Optional.ofNullable;
+import org.springframework.stereotype.Component;
 
 @Component
 class MobilePhoneMapper implements ItemMapper<MobilePhone> {
   private static final String VALID_NETWORKS = String.join("|", "unlocked", "o2", "ee", "vodafone", "tesco");
   private static final String UNLOCKED_NETWORK = "Unlocked";
 
-  private static final String COLOURS_TO_REMOVE = String.join("|", "&",
+  private static final String VALID_COLOURS = String.join("|",
+      "Jet Black", "Black", "Rose Gold", "Gold", "Silver",
+      "White", "Blue", "Grey", "Red", "Purple", "Yellow", "Orange", "Green", "Pink");
+
+  private static final String COLOURS_TO_REMOVE = String.join("|", "&", "Multicoloured", "Colours", "Colors",
       "Platinum", "Midnight", "Phantom", "Slate", "Titanium", "Space", "Matte", "\\(PRODUCT\\)", "Shimmery", "Navy", "Carbon", "Sapphire", "Quite",
       "Steel", "Piano", "Ocean", "Neptune", "Frost", "Astro", "Charcoal", "Ceramic", "Dark", "Progressive", "Cloud", "Burgundy", "Pearl", "Shadow",
-      "Copper", "Dark", "Chic", "Marble", "Graphite", "Mirror", "Light", "Fine", "Camo", "Very", "Pebble", "Coral"
+      "Copper", "Dark", "Chic", "Marble", "Graphite", "Mirror", "Light", "Fine", "Camo", "Very", "Pebble", "Coral", "Various", "Multi"
   );
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
