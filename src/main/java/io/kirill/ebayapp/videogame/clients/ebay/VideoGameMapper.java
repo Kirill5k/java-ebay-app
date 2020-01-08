@@ -21,17 +21,19 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   private static final String RELEASE_YEAR_PROPERTY = "Release Year";
 
   private static final String WORDS_TO_REMOVE_FROM_TITLE = String.join("|",
-      "remastered", "playstation 4", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed", "Brand new", "Sealed");
+      "remastered", "playstation 4", "Nintendo switch", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed",
+      "Brand new", "Sealed", "Game new", ",");
 
   private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH");
 
   private static final Map<String, String> PLATFORM_MAPPINGS = Map.of(
-      "Sony PlayStation 4", "PS4",
-      "PlayStation 4", "PS4",
-      "Sony PlayStation 3", "PS3",
-      "Nintendo Switch", "SWITCH",
+      "SONY PLAYSTATION 4", "PS4",
+      "PLAYSTATION 4", "PS4",
+      "SONY PLAYSTATION 3", "PS3",
+      "SONY PLAYSTATION 2", "PS2",
+      "PLAYSTATION 2", "PS2",
       "NINTENDO SWITCH", "SWITCH",
-      "Microsoft Xbox One", "Xbox One"
+      "MICROSOFT XBOX ONE", "Xbox One"
   );
 
   @Override
@@ -55,6 +57,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
         .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
         .replaceAll(String.format("(?i)%s", WORDS_TO_REMOVE_FROM_TITLE), "")
         .replaceAll("é", "e")
+        .replaceFirst("^-", "")
         .trim();
   }
 
@@ -68,6 +71,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var upperCaseTitle = title.toUpperCase();
     return ofNullable(properties.get(PLATFORM_PROPERTY))
         .or(() -> PLATFORMS.stream().filter(upperCaseTitle::contains).findFirst())
+        .map(String::toUpperCase)
         .map(platform -> PLATFORM_MAPPINGS.getOrDefault(platform, platform))
         .map(platform -> platform.split("/")[0].trim())
         .orElse(null);
