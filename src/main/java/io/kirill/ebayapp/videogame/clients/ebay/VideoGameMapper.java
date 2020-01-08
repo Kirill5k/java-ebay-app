@@ -22,9 +22,9 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
 
   private static final String WORDS_TO_REMOVE_FROM_TITLE = String.join("|",
       "remastered", "playstation 4", "Nintendo switch", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed",
-      "Brand new", "Sealed", "Game new", ",");
+      "Brand new", "Sealed", "Game new", ",", "Microsoft");
 
-  private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH");
+  private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH", "XBOX ONE");
 
   private static final Map<String, String> PLATFORM_MAPPINGS = Map.of(
       "SONY PLAYSTATION 4", "PS4",
@@ -33,7 +33,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
       "SONY PLAYSTATION 2", "PS2",
       "PLAYSTATION 2", "PS2",
       "NINTENDO SWITCH", "SWITCH",
-      "MICROSOFT XBOX ONE", "Xbox One"
+      "MICROSOFT XBOX ONE", "XBOX ONE"
   );
 
   @Override
@@ -70,6 +70,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   private String mapPlatform(String title, Map<String, String> properties) {
     var upperCaseTitle = title.toUpperCase();
     return ofNullable(properties.get(PLATFORM_PROPERTY))
+        .map(platform -> platform.split(",")[0])
         .or(() -> PLATFORMS.stream().filter(upperCaseTitle::contains).findFirst())
         .map(String::toUpperCase)
         .map(platform -> PLATFORM_MAPPINGS.getOrDefault(platform, platform))
