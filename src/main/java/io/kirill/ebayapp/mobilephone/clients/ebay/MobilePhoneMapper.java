@@ -24,7 +24,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "Platinum", "Midnight", "Phantom", "Slate", "Titanium", "Space", "Matte", "\\(PRODUCT\\)", "Shimmery", "Navy", "Carbon", "Sapphire", "Quite",
       "Steel", "Piano", "Ocean", "Neptune", "Frost", "Astro", "Charcoal", "Ceramic", "Dark", "Progressive", "Cloud", "Burgundy", "Pearl", "Shadow",
       "Copper", "Dark", "Chic", "Marble", "Graphite", "Mirror", "Light", "Fine", "Camo", "Very", "Pebble", "Coral", "Various", "Multi",
-      "Gun", "Metal", "Mist"
+      "Gun", "Metal", "Mist", "Blush"
   );
 
   private static final String TITLE_CONDITION_TRIGGER_WORDS = String.join("|",
