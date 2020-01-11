@@ -1,15 +1,16 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
-import static java.util.Optional.ofNullable;
-
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.mobilephone.MobilePhone;
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
+
+import static java.util.Optional.ofNullable;
 
 @Component
 class MobilePhoneMapper implements ItemMapper<MobilePhone> {
@@ -38,7 +39,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "faulty screen", "is damag", "is slight damag", "damaged screen", "badly damag", "light damag", "damaged front", "is heavily damag",
       "has crack", "have crack", "has slight crack", "got crack", "cracked screen", "hairline crack", "has small crack", "some crack", "crack on screen",
       "is small crack", "is badly crack", "is crack", "is slight crack", "cracked display", "got some crack", "are crack",
-      "cracked front", "both crack", "few crack", "with a slight crack",
+      "cracked front", "both crack", "few crack", "with a slight crack", "crack on front", "crack on back",
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work", "stopped work",
       "are broke", "is smashed", "is broke", "smashed screen",
