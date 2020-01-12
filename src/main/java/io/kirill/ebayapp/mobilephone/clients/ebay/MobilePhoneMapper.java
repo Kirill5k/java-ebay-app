@@ -43,7 +43,8 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
       "spares/repair", "spares or parts", "spares or repair", "for parts only", "spares or repair", "parts only", "spares repair", "spares & repair",
       "doesnt work", "dont work", "not work", "cant work", "isnt work", "stopped work",
       "are broke", "is smashed", "is broke", "smashed screen",
-      "has some screen burn", "has screen burn", "needs glass replac", "needs new screen", "needs replac"
+      "has some screen burn", "has screen burn", "needs glass replac", "needs new screen", "needs replac",
+      "bank transfer"
   );
 
   private static final String FAULTY_CONDITION = "Faulty";

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 public class VideoGameEbayClient implements EbayClient {
   private static final int VIDEO_GAMES_CATEGORY_ID = 139973;
 
-  private final static Stream<String> SEARCH_QUERIES = Stream.of("PS4", "SWITCH", "XBOX ONE");
+  private final static List<String> SEARCH_QUERIES = List.of("PS4", "SWITCH", "XBOX ONE");
 
   private final static String DEFAULT_FILTER = "conditionIds:{1000|1500|2000|2500|3000|4000|5000}," +
       "deliveryCountry:GB," +
@@ -54,7 +54,7 @@ public class VideoGameEbayClient implements EbayClient {
   private Flux<VideoGame> findGames(String filter) {
     return authClient.accessToken()
         .flatMapMany(t -> Flux.merge(
-            SEARCH_QUERIES.map(q -> paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, q)).map(p -> searchClient.search(t, p)).collect(toList())
+            SEARCH_QUERIES.stream().map(q -> paramsWithQuery(VIDEO_GAMES_CATEGORY_ID, filter, q)).map(p -> searchClient.search(t, p)).collect(toList())
         ))
         .doOnError(e -> e instanceof EbayAuthError, e -> authClient.switchAccount())
         .filter(hasTrustedSeller)
