@@ -37,9 +37,9 @@ public class EbaySearchClient {
   private final WebClient webClient;
 
   public EbaySearchClient(WebClient.Builder webClientBuilder, EbayConfig ebayConfig) {
-    this.searchPath = ebayConfig.getSearchPath();
-    this.itemPath = ebayConfig.getItemPath();
-    this.webClient = webClientBuilder
+    searchPath = ebayConfig.getSearchPath();
+    itemPath = ebayConfig.getItemPath();
+    webClient = webClientBuilder
         .baseUrl(ebayConfig.getBaseUrl())
         .clientConnector(new ReactorClientHttpConnector(HttpClient.newConnection().compress(true)))
         .defaultHeaders(headers -> headers.setContentType(APPLICATION_JSON))
@@ -51,9 +51,7 @@ public class EbaySearchClient {
   public Flux<SearchResult> search(String accessToken, MultiValueMap<String, String> params) {
     return webClient
         .get()
-        .uri(builder -> builder.path(searchPath)
-            .queryParams(params)
-            .build())
+        .uri(builder -> builder.path(searchPath).queryParams(params).build())
         .headers(headers -> headers.setBearerAuth(accessToken))
         .retrieve()
         .onStatus(HttpStatus::isError, mapErrorResponse)
