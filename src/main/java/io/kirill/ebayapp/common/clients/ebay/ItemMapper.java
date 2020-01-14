@@ -30,7 +30,7 @@ public interface ItemMapper<T> {
         .title(item.getTitle())
         .dateEnded(item.getItemEndDate())
         .datePosted(Instant.now())
-        .description(item.getShortDescription())
+        .description(ofNullable(item.getShortDescription()).map(d -> d.replaceAll("(?i)<[^>]*>", "")).orElse(null))
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .url(item.getItemWebUrl())
         .seller(ofNullable(item.getSeller()).map(ItemSeller::getUsername).orElse(null))
