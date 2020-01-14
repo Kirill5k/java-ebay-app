@@ -1,20 +1,19 @@
 package io.kirill.ebayapp.mobilephone.clients.ebay;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.kirill.ebayapp.common.clients.ebay.models.Price;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemSeller;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class MobilePhoneMapperTest {
   String itemUrl = "http://ebay.com/item";
@@ -35,7 +34,7 @@ class MobilePhoneMapperTest {
         .mpn("MN4U2BA")
         .color("silver")
         .title("title")
-        .shortDescription("description")
+        .shortDescription("<p style=\"{color: blue}\">description</p>")
         .description("full description")
         .brand("apple")
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))

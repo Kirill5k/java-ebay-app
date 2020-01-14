@@ -115,6 +115,7 @@ class MobilePhoneMapper implements ItemMapper<MobilePhone> {
     return Stream.of(item.getDescription(), item.getShortDescription())
         .filter(Objects::nonNull)
         .reduce(String::concat)
+        .map(d -> d.replaceAll("(?i)<[^>]*>", ""))
         .map(cond -> cond.replaceAll(" a ", " ").replaceAll("'|\n", ""))
         .filter(d -> d.matches(String.format("^.*?(?i)(%s).*$", DESCRIPTION_CONDITION_TRIGGER_WORDS)))
         .map($ -> FAULTY_CONDITION);
