@@ -34,7 +34,7 @@ public class VideoGameEbayClient implements EbayClient {
 
   private static final String TITLE_TRIGGER_WORDS = String.join("|",
       "coin", "skins", "bundle", "dlc", "no game", "digital key", "download key", "just the case", "cartridge only",
-      "god roll", "style covers", "no case", "credits");
+      "god roll", "style covers", "no case", "credits", "new takedown", "jager import car");
 
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;

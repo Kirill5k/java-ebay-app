@@ -1,16 +1,17 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
-import static java.util.Optional.ofNullable;
-
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.videogame.VideoGame;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
+
+import static java.util.Optional.ofNullable;
 
 @Component
 public class VideoGameMapper implements ItemMapper<VideoGame> {
@@ -55,7 +56,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
     var upperCaseTitle = title.toUpperCase();
     var platform = PLATFORMS.stream().filter(upperCaseTitle::contains).findFirst();
     var newTitle = platform.map(p -> title.split("(?i)" + p)[0]).filter(t -> !t.isBlank()).orElse(title);
-    return newTitle.replaceAll("[*()/|:.\\[\\]]", "")
+    return newTitle.replaceAll("['*()/|:.\\[\\]]", "")
         .replaceFirst("(?i)\\w+(?=\\s+edition) edition", "")
         .replaceAll(String.format("(?i)%s", WORDS_TO_REMOVE_FROM_TITLE), "")
         .replaceAll("é", "e")
