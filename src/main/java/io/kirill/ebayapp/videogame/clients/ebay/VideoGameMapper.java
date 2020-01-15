@@ -1,17 +1,16 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
+import static java.util.Optional.ofNullable;
+
 import io.kirill.ebayapp.common.clients.ebay.ItemMapper;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.videogame.VideoGame;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Optional.ofNullable;
+import org.springframework.stereotype.Component;
 
 @Component
 public class VideoGameMapper implements ItemMapper<VideoGame> {
@@ -23,7 +22,9 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
 
   private static final String WORDS_TO_REMOVE_FROM_TITLE = String.join("|",
       "remastered", "playstation 4", "Nintendo switch", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed",
-      "Brand new", "Sealed", "Game new", ",", "Microsoft", "Free post", "Used", "xbox one", "Uk pal", "Game code");
+      "Brand new", "Sealed", "Game new", ",", "Microsoft", "Free post", "Used", "xbox one", "Uk pal", "Game code",
+      "Hits", "Tom clancys"
+  );
 
   private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH", "XBOX ONE");
 
