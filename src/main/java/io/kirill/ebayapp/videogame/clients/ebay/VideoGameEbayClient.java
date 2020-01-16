@@ -1,20 +1,19 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
+import static java.util.stream.Collectors.toList;
+
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.videogame.VideoGame;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.function.Predicate;
-
-import static java.util.stream.Collectors.toList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class VideoGameEbayClient implements EbayClient {
   private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "buyingOptions:{AUCTION},itemEndDate:[..%s]";
 
   private static final String TITLE_TRIGGER_WORDS = String.join("|",
-      "coin", "skins", "bundle", "dlc", "no game", "digital key", "download key", "just the case", "cartridge only",
+      "coin", "skins", "bundle", "no game", "digital key", "download key", "just the case", "cartridge only",
       "god roll", "style covers", "no case", "credits", "new takedown", "jager import car");
 
   private final EbayAuthClient authClient;
