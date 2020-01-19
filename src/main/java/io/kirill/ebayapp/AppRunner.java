@@ -20,7 +20,7 @@ public class AppRunner {
   private final MobilePhoneService mobilePhoneService;
   private final VideoGameService videoGameService;
 
-  @Scheduled(fixedDelay = 60000)
+//  @Scheduled(fixedDelay = 60000)
   void searchForPhones() {
     Flux.merge(
         mobilePhoneService.getLatestFromEbay(20)
