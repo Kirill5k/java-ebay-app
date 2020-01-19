@@ -33,10 +33,11 @@ public class VideoGameEbayClient implements EbayClient {
   private final static String ENDING_SOON_FILTER = DEFAULT_FILTER + "buyingOptions:{AUCTION},itemEndDate:[..%s]";
 
   private static final String TITLE_TRIGGER_WORDS = String.join("|",
-      "digital code", "digital-code", "download code", "upgrade code",
+      "digital code", "digital-code", "download code", "upgrade code", "style covers", "no case", "credits",
       "coin", "skins", "bundle", "no game", "digital key", "download key", "just the case", "cartridge only", "disc only",
-      "god roll", "style covers", "no case", "credits", "new takedown", "maliwan takedown", "jager import car", "armor set",
-      "player generator", "card generator", "pve official", "goal explosion");
+      "player generator",
+      "fallout 76(\\s\\w+){4,}", "borderlands 3(\\s\\w+){4,}", "rocket league(\\s\\w+){4,}"
+  );
 
   private final EbayAuthClient authClient;
   private final EbaySearchClient searchClient;
