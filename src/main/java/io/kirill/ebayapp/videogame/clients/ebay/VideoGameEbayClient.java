@@ -1,20 +1,19 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
+import static java.util.stream.Collectors.toList;
+
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.videogame.VideoGame;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.function.Predicate;
-
-import static java.util.stream.Collectors.toList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 @Component
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class VideoGameEbayClient implements EbayClient {
       "digital code", "digital-code", "download code", "upgrade code", "style covers", "no case", "credits",
       "coin", "skins", "bundle", "no game", "digital key", "download key", "just the case", "cartridge only", "disc only",
       "player generator", "pve official",
-      "fallout 76(\\s\\w+){4,}", "borderlands 3(\\s\\w+){4,}", "rocket league(\\s\\w+){4,}"
+      "fallout 76 (\\w+\\s){4,}", "borderlands 3 (\\w+\\s){4,}", "rocket league (\\w+\\s){4,}"
   );
 
   private final EbayAuthClient authClient;
