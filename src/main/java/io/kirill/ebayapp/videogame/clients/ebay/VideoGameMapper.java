@@ -23,7 +23,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
   private static final String WORDS_TO_REMOVE_FROM_TITLE = String.join("|",
       "remastered", "playstation 4", "Nintendo switch", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed",
       "Brand new", "Sealed", "Game new", ",", "Microsoft", "Free post", "Used", "xbox one", "Uk pal", "Game code",
-      "Hits", "Tom clancys", "Great Condition"
+      "Hits", "Tom clancys", "Great Condition", "[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]"
   );
 
   private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH", "XBOX ONE");
