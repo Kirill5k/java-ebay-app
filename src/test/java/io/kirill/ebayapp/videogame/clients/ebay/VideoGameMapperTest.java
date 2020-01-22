@@ -1,14 +1,17 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.kirill.ebayapp.common.clients.ebay.models.Price;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemSeller;
+import io.kirill.ebayapp.common.clients.ebay.models.item.ShippingCost;
+import io.kirill.ebayapp.common.clients.ebay.models.item.ShippingOption;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.util.List;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class VideoGameMapperTest {
 
@@ -21,11 +24,16 @@ class VideoGameMapperTest {
         .price(new Price(BigDecimal.valueOf(9.99), "GBP"))
         .seller(new ItemSeller("boris"))
         .localizedAspects(List.of())
+        .shippingOptions(List.of(
+            new ShippingOption("DPD", "Express", new ShippingCost(BigDecimal.valueOf(100), "GBP")),
+            new ShippingOption("Royal Mail 48", "Economy Delivery", new ShippingCost(BigDecimal.TEN, "GBP"))
+        ))
         .build();
 
 
     var game = videoGameMapper.map(item);
 
+    assertThat(game.getListingDetails().getPrice()).isEqualTo(BigDecimal.valueOf(19.99));
     assertThat(game.getName()).isEqualTo("Spider-man");
     assertThat(game.getPlatform()).isEqualTo("PS4");
   }

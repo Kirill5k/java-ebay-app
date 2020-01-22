@@ -31,4 +31,5 @@ public class Item {
   private final ItemSeller seller;
   private final Instant itemEndDate;
   private final List<String> buyingOptions;
+  private final List<ShippingOption> shippingOptions;
 }

@@ -1,17 +1,21 @@
 package io.kirill.ebayapp.common.clients.ebay;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
-
 import io.kirill.ebayapp.common.clients.ebay.models.Price;
 import io.kirill.ebayapp.common.clients.ebay.models.item.Item;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemImage;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemProperty;
 import io.kirill.ebayapp.common.clients.ebay.models.item.ItemSeller;
+import io.kirill.ebayapp.common.clients.ebay.models.item.ShippingCost;
+import io.kirill.ebayapp.common.clients.ebay.models.item.ShippingOption;
 import io.kirill.ebayapp.common.domain.ListingDetails;
+
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
 
 public interface ItemMapper<T> {
 
@@ -24,6 +28,11 @@ public interface ItemMapper<T> {
   }
 
   default ListingDetails mapDetails(Item item) {
+    var shippingCost = ofNullable(item.getShippingOptions()).stream().flatMap(Collection::stream)
+        .map(ShippingOption::getShippingCost)
+        .map(ShippingCost::getValue)
+        .min(BigDecimal::compareTo)
+        .orElse(BigDecimal.ZERO);
     return ListingDetails.builder()
         .type(ofNullable(item.getBuyingOptions()).filter(opts -> opts.contains("FIXED_PRICE")).map($ -> "BUY_IT_NOW").orElse("AUCTION"))
         .originalCondition(item.getCondition())
@@ -34,7 +43,7 @@ public interface ItemMapper<T> {
         .image(ofNullable(item.getImage()).map(ItemImage::getImageUrl).orElse(null))
         .url(item.getItemWebUrl())
         .seller(ofNullable(item.getSeller()).map(ItemSeller::getUsername).orElse(null))
-        .price(ofNullable(item.getPrice()).map(Price::getValue).orElse(null))
+        .price(ofNullable(item.getPrice()).map(Price::getValue).map(shippingCost::add).orElse(null))
         .build();
   }
 }
