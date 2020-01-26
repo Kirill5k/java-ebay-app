@@ -115,10 +115,10 @@ class MobilePhoneServiceTest {
         .sendMessageToMainChannel(anyString());
 
     StepVerifier
-        .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(new ResellPrice(null, BigDecimal.TEN))))
+        .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(new ResellPrice(BigDecimal.ONE, BigDecimal.TEN))))
         .verifyComplete();
 
-    verify(telegramClient).sendMessageToMainChannel("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: £10 ebay.com");
+    verify(telegramClient).sendMessageToMainChannel("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: (exchange £10, cash £1) ebay.com");
   }
 
   @Test

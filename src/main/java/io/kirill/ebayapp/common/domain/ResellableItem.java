@@ -26,7 +26,9 @@ public interface ResellableItem<T> {
   default String goodDealMessage() {
     var details = getListingDetails();
     var isAboutToEnd = details.getDateEnded() != null && details.getDateEnded().minusSeconds(60 * 10).isBefore(Instant.now());
-    var template = isAboutToEnd ? "about to end soon \"%s\": ebay: £%s, cex: £%s %s" : "just listed \"%s\": ebay: £%s, cex: £%s %s";
-    return String.format(template, searchQuery(), details.getPrice(), getResellPrice().getExchange(), details.getUrl());
+    var template = isAboutToEnd
+        ? "about to end soon \"%s\": ebay: £%s, cex: (exchange £%s, cash £%s) %s"
+        : "just listed \"%s\": ebay: £%s, cex: (exchange £%s, cash £%s) %s";
+    return String.format(template, searchQuery(), details.getPrice(), getResellPrice().getExchange(), getResellPrice().getCash(), details.getUrl());
   }
 }
