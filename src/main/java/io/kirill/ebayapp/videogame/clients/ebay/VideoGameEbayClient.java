@@ -69,5 +69,6 @@ public class VideoGameEbayClient implements EbayClient {
   }
 
   private Predicate<SearchResult> isVideoGame = searchResult -> !searchResult.getTitle().toLowerCase()
+      .replaceAll("[\"()]", "")
       .matches(String.format("^.*?(%s).*$", TITLE_TRIGGER_WORDS));
 }
