@@ -35,7 +35,7 @@ public class VideoGameEbayClient implements EbayClient {
       "digital code", "digital-code", "download code", "upgrade code", "style covers", "no case", "credits",
       "coin", "skins", "bundle", "no game", "digital key", "download key", "just the case", "cartridge only", "disc only",
       "player generator", "pve official", "read description", "see description", "100k", "case box",
-      "fallout 76 (\\w+\\s){4,}", "borderlands 3 (\\w+\\s){4,}", "rocket league (\\w+\\s){4,}"
+      "fallout 76(\\s+\\w+){5,}", "borderlands 3(\\s+\\w+){5,}", "rocket league(\\s+\\w+){5,}"
   );
 
   private final EbayAuthClient authClient;
@@ -68,6 +68,6 @@ public class VideoGameEbayClient implements EbayClient {
   }
 
   private Predicate<SearchResult> isVideoGame = searchResult -> !searchResult.getTitle().toLowerCase()
-      .replaceAll("[\"()]", "").replaceAll(" - ", "")
+      .replaceAll("[\"()\\-]", "")
       .matches(String.format("^.*?(%s).*$", TITLE_TRIGGER_WORDS));
 }
