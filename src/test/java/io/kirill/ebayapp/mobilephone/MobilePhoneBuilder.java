@@ -8,7 +8,7 @@ import java.time.Instant;
 public class MobilePhoneBuilder {
 
   public static MobilePhone.MobilePhoneBuilder iphone6s() {
-    var resellPrice = new ResellPrice(BigDecimal.ONE, BigDecimal.TEN);
+    var resellPrice = new ResellPrice(BigDecimal.ONE, BigDecimal.valueOf(120));
 
     var listingDetails = ListingDetails.builder()
         .type("BUY_IT_NOW")

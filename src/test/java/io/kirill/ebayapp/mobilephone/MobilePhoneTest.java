@@ -1,12 +1,11 @@
 package io.kirill.ebayapp.mobilephone;
 
-import io.kirill.ebayapp.common.domain.ResellPrice;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import io.kirill.ebayapp.common.domain.ResellPrice;
 import java.math.BigDecimal;
 import java.time.Instant;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class MobilePhoneTest {
 
@@ -46,7 +45,7 @@ class MobilePhoneTest {
 
   @Test
   void goodDealMessageForBuyItNow() {
-    assertThat(iphone6s.goodDealMessage()).isEqualTo("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: (exchange £10, cash £1) ebay.com");
+    assertThat(iphone6s.goodDealMessage()).isEqualTo("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(+20)/£1 ebay.com");
   }
 
   @Test
@@ -54,7 +53,7 @@ class MobilePhoneTest {
     var endingSoonDetails = iphone6s.getListingDetails().withDateEnded(Instant.now().plusSeconds(3*60));
 
     assertThat(iphone6s.withListingDetails(endingSoonDetails).goodDealMessage())
-        .isEqualTo("about to end soon \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: (exchange £10, cash £1) ebay.com");
+        .isEqualTo("ENDING \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(+20)/£1 ebay.com");
   }
 
   @Test
@@ -62,6 +61,6 @@ class MobilePhoneTest {
     var endingSoonDetails = iphone6s.getListingDetails().withDateEnded(Instant.now().plusSeconds(15*60));
 
     assertThat(iphone6s.withListingDetails(endingSoonDetails).goodDealMessage())
-        .isEqualTo("just listed \"Apple Iphone 6s 16GB Space Grey Unlocked\": ebay: £100.0, cex: (exchange £10, cash £1) ebay.com");
+        .isEqualTo("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(+20)/£1 ebay.com");
   }
 }

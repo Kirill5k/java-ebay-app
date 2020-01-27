@@ -1,9 +1,9 @@
 package io.kirill.ebayapp.common.domain;
 
+import static java.util.Optional.ofNullable;
+
 import java.math.BigDecimal;
 import java.time.Instant;
-
-import static java.util.Optional.ofNullable;
 
 public interface ResellableItem<T> {
   String searchQuery();
@@ -25,10 +25,10 @@ public interface ResellableItem<T> {
 
   default String goodDealMessage() {
     var details = getListingDetails();
+    var profitPercentage = (int)(getResellPrice().getExchange().doubleValue() * 100 / originalPrice().doubleValue() - 100);
+    var priceTemplate = String.format("ebay: £%s, cex: £%s(+%s)/£%s ", details.getPrice(), getResellPrice().getExchange(), profitPercentage, getResellPrice().getCash());
     var isAboutToEnd = details.getDateEnded() != null && details.getDateEnded().minusSeconds(60 * 10).isBefore(Instant.now());
-    var template = isAboutToEnd
-        ? "about to end soon \"%s\": ebay: £%s, cex: (exchange £%s, cash £%s) %s"
-        : "just listed \"%s\": ebay: £%s, cex: (exchange £%s, cash £%s) %s";
-    return String.format(template, searchQuery(), details.getPrice(), getResellPrice().getExchange(), getResellPrice().getCash(), details.getUrl());
+    var template = isAboutToEnd ? "ENDING \"%s\"" : "NEW \"%s\"";
+    return String.format(template, searchQuery()) + " - " + priceTemplate + getListingDetails().getUrl();
   }
 }
