@@ -35,7 +35,7 @@ public class TelegramClient {
   }
 
   private Mono<Void> sendMessage(String channelId, String message) {
-    log.info(message);
+    log.info("sending {}", message);
     return webClient
         .get()
         .uri(builder -> builder.queryParam("chat_id", channelId).queryParam("text", message).build())
