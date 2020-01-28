@@ -26,7 +26,7 @@ public interface ResellableItem<T> {
   default String goodDealMessage() {
     var details = getListingDetails();
     var profitPercentage = (int)(getResellPrice().getExchange().doubleValue() * 100 / originalPrice().doubleValue() - 100);
-    var priceTemplate = String.format("ebay: £%s, cex: £%s(+%s)/£%s ", details.getPrice(), getResellPrice().getExchange(), profitPercentage, getResellPrice().getCash());
+    var priceTemplate = String.format("ebay: £%s, cex: £%s(%s%%)/£%s ", details.getPrice(), getResellPrice().getExchange(), profitPercentage, getResellPrice().getCash());
     var isAboutToEnd = details.getDateEnded() != null && details.getDateEnded().minusSeconds(60 * 10).isBefore(Instant.now());
     var template = isAboutToEnd ? "ENDING \"%s\"" : "NEW \"%s\"";
     return String.format(template, searchQuery()) + " - " + priceTemplate + getListingDetails().getUrl();

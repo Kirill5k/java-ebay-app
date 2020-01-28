@@ -117,7 +117,7 @@ class MobilePhoneServiceTest {
         .create(mobilePhoneService.informAboutThePhone(iphone6s.withResellPrice(new ResellPrice(BigDecimal.ONE, BigDecimal.TEN))))
         .verifyComplete();
 
-    verify(telegramClient).sendMessageToMainChannel("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £10(+-90)/£1 ebay.com");
+    verify(telegramClient).sendMessageToMainChannel("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £10(-90%)/£1 ebay.com");
   }
 
   @Test

@@ -45,7 +45,7 @@ class MobilePhoneTest {
 
   @Test
   void goodDealMessageForBuyItNow() {
-    assertThat(iphone6s.goodDealMessage()).isEqualTo("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(+20)/£1 ebay.com");
+    assertThat(iphone6s.goodDealMessage()).isEqualTo("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(20%)/£1 ebay.com");
   }
 
   @Test
@@ -53,7 +53,7 @@ class MobilePhoneTest {
     var endingSoonDetails = iphone6s.getListingDetails().withDateEnded(Instant.now().plusSeconds(3*60));
 
     assertThat(iphone6s.withListingDetails(endingSoonDetails).goodDealMessage())
-        .isEqualTo("ENDING \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(+20)/£1 ebay.com");
+        .isEqualTo("ENDING \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(20%)/£1 ebay.com");
   }
 
   @Test
@@ -61,6 +61,6 @@ class MobilePhoneTest {
     var endingSoonDetails = iphone6s.getListingDetails().withDateEnded(Instant.now().plusSeconds(15*60));
 
     assertThat(iphone6s.withListingDetails(endingSoonDetails).goodDealMessage())
-        .isEqualTo("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(+20)/£1 ebay.com");
+        .isEqualTo("NEW \"Apple Iphone 6s 16GB Space Grey Unlocked\" - ebay: £100.0, cex: £120(20%)/£1 ebay.com");
   }
 }
