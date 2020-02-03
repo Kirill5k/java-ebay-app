@@ -1,19 +1,20 @@
 package io.kirill.ebayapp.videogame.clients.ebay;
 
-import static java.util.stream.Collectors.toList;
-
 import io.kirill.ebayapp.common.clients.ebay.EbayAuthClient;
 import io.kirill.ebayapp.common.clients.ebay.EbayClient;
 import io.kirill.ebayapp.common.clients.ebay.EbaySearchClient;
 import io.kirill.ebayapp.common.clients.ebay.exceptions.EbayAuthError;
 import io.kirill.ebayapp.common.clients.ebay.models.search.SearchResult;
 import io.kirill.ebayapp.videogame.VideoGame;
-import java.time.Instant;
-import java.util.List;
-import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 @RequiredArgsConstructor
@@ -69,6 +70,6 @@ public class VideoGameEbayClient implements EbayClient {
   }
 
   private Predicate<SearchResult> isVideoGame = searchResult -> !searchResult.getTitle().toLowerCase()
-      .replaceAll("[\\[\\],”+./“'\"()\\-%]", "")
+      .replaceAll("[^a-zA-Z0-9 ]", "")
       .matches(String.format("^.*?(%s).*$", TITLE_TRIGGER_WORDS));
 }
