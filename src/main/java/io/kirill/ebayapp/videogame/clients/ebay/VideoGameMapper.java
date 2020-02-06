@@ -24,7 +24,7 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
       "remastered", "playstation 4", "Nintendo switch", " - ", "sony", "ps4", "blu-ray", "Mirror", "New and sealed",
       "Brand new", "Factory Sealed", "Sealed", "Game new", ",", "Microsoft", "Free post", "Used", "xbox one", "Uk pal", "Game code",
       "Hits", "Tom clancys", "Great Condition", "Videogame fasting", "switch",
-      "[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]"
+      "[^\\p{L}\\p{N}\\p{P}\\p{Z}]"
   );
 
   private static final List<String> PLATFORMS = List.of("PS4", "PLAYSTATION 4", "NINTENDO SWITCH", "SWITCH", "XBOX ONE");
