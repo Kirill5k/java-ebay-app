@@ -36,7 +36,8 @@ public class VideoGameMapper implements ItemMapper<VideoGame> {
       "SONY PLAYSTATION 2", "PS2",
       "PLAYSTATION 2", "PS2",
       "NINTENDO SWITCH", "SWITCH",
-      "MICROSOFT XBOX ONE", "XBOX ONE"
+      "MICROSOFT XBOX ONE", "XBOX ONE",
+      "MICROSOFT XBOX 360", "XBOX 360"
   );
 
   @Override
